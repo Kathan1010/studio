@@ -54,10 +54,7 @@ export default async function LevelsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <Button 
-                      asChild
-                      className="w-full"
-                    >
+                    <Button asChild className="w-full">
                       <Link href={`/play?level=${level.id}`}>
                         <Play className="mr-2" />
                         Play
