@@ -26,37 +26,13 @@ export default function PlayPage() {
   const [power, setPower] = useState(0);
   const [isHoleComplete, setIsHoleComplete] = useState(false);
   const [gameKey, setGameKey] = useState(Date.now());
-  const isCustomLevel = searchParams.get('level') === 'custom';
   const gameRef = useRef<Game | null>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isCustomLevel) {
-        router.replace('/design');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isCustomLevel, router]);
 
   useEffect(() => {
     const levelId = searchParams.get('level');
     let levelData: Level | undefined | null = null;
     
-    if (levelId === 'custom') {
-        const customLevelData = localStorage.getItem('customLevel');
-        if (customLevelData) {
-            levelData = JSON.parse(customLevelData);
-        } else {
-            // If no custom level data, redirect
-            router.replace('/design');
-            return;
-        }
-    } else if (levelId) {
+    if (levelId) {
         levelData = levels.find(l => l.id === parseInt(levelId));
     }
 
@@ -73,7 +49,7 @@ export default function PlayPage() {
 
   // Effect to save score when hole is completed
   useEffect(() => {
-    if (isHoleComplete && level && level.id !== 99) {
+    if (isHoleComplete && level) {
       // Don't await, just fire and forget
       updateBestScore(level.id, strokes);
     }
@@ -94,10 +70,6 @@ export default function PlayPage() {
     router.push('/levels');
   };
   
-  const handleGoToDesign = () => {
-    router.push('/design');
-  };
-
   const handleReset = () => {
     setStrokes(0);
     setIsHoleComplete(false);
@@ -105,7 +77,7 @@ export default function PlayPage() {
   }
 
   const handleNextLevel = () => {
-    if (!level || level.id === 99) return;
+    if (!level) return;
     const nextLevelId = level.id + 1;
     if (nextLevelId <= levels.length) {
       router.push(`/play?level=${nextLevelId}`);
@@ -132,8 +104,7 @@ export default function PlayPage() {
         strokes={strokes} 
         power={power}
         onReset={handleReset}
-        onGoToLevels={level.id === 99 ? handleGoToDesign : handleGoToLevels}
-        isCustomLevel={level.id === 99}
+        onGoToLevels={handleGoToLevels}
       />
       <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin" />}>
           <GolfCanvas
@@ -159,13 +130,13 @@ export default function PlayPage() {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary mb-4">
                 <PartyPopper className="h-6 w-6 text-primary-foreground" />
               </div>
-              <CardTitle>Hole {level.id === 99 ? 'Custom' : level.id} Complete!</CardTitle>
+              <CardTitle>Hole {level.id} Complete!</CardTitle>
               <CardDescription>
                 You finished in {strokes} strokes (Par {level.par}).
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col space-y-2">
-              {level.id !== 99 && level.id < levels.length && (
+              {level.id < levels.length && (
                 <Button onClick={handleNextLevel}>
                   <ArrowRight className="mr-2 h-4 w-4" />
                   Next Level
@@ -175,9 +146,9 @@ export default function PlayPage() {
                   <RotateCcw className="mr-2 h-4 w-4" />
                   Replay Level
               </Button>
-              <Button onClick={level.id === 99 ? handleGoToDesign : handleGoToLevels} variant="outline">
+              <Button onClick={handleGoToLevels} variant="outline">
                 <Home className="mr-2 h-4 w-4" />
-                {level.id === 99 ? 'Back to Designer' : 'Back to Levels'}
+                Back to Levels
               </Button>
             </CardContent>
           </Card>

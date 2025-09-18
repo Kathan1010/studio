@@ -1,75 +1,63 @@
-'use server';
-
-/**
- * @fileOverview A flow to convert a text description of a golf course into a structured 3D level format.
- *
- * - visualizeCourse - A function that handles the course visualization process.
- * - VisualizeCourseInput - The input type for the visualizeCourse function.
- * - VisualizeCourseOutput - The return type for the visualizeCourse function.
- */
-
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const VisualizeCourseInputSchema = z.object({
-  courseDescription: z.string().describe('A natural language description of a golf course hole.'),
-});
-export type VisualizeCourseInput = z.infer<typeof VisualizeCourseInputSchema>;
-
-const ObstacleSchema = z.object({
-    type: z.enum(['box', 'ramp']).describe("The type of the obstacle."),
-    position: z.array(z.number()).length(3).describe("The [x, y, z] coordinates of the obstacle's center."),
-    size: z.array(z.number()).length(3).describe("The [width, height, depth] of the obstacle."),
-    rotation: z.optional(z.array(z.number()).length(3)).describe("The [x, y, z] Euler rotation of the obstacle in radians."),
-});
-
-const VisualizeCourseOutputSchema = z.object({
-  par: z.number().int().describe('The par for the hole.'),
-  startPosition: z.array(z.number()).length(3).describe('The [x, y, z] starting coordinates for the golf ball. Y should typically be 0.2 to be on the ground.'),
-  holePosition: z.array(z.number()).length(3).describe('The [x, y, z] coordinates for the center of the hole. Y should be 0.01 to be on the ground plane.'),
-  holeRadius: z.number().describe('The radius of the hole.'),
-  obstacles: z.array(ObstacleSchema).describe('An array of obstacles on the course.'),
-});
-export type VisualizeCourseOutput = z.infer<typeof VisualizeCourseOutputSchema>;
-
-
-export async function visualizeCourse(input: VisualizeCourseInput): Promise<VisualizeCourseOutput> {
-  return visualizeCourseFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'visualizeCoursePrompt',
-  input: {schema: VisualizeCourseInputSchema},
-  output: {schema: VisualizeCourseOutputSchema},
-  prompt: `You are a 3D level designer for a minigolf game. Your task is to convert a natural language description of a golf hole into a structured JSON object that can be rendered by a game engine.
-
-The game's coordinate system is centered at (0,0,0). The golf ball starts at a position and the player aims towards the negative Z axis. Positive Z is "behind" the player, negative Z is "in front". Positive X is to the right, negative X is to the left. The ground plane is at Y=0.
-
-Analyze the following course description and generate a valid level object. Be precise with positions and sizes.
-
-Course Description:
-"{{{courseDescription}}}"
-
-- Infer the 'par' from the description.
-- Determine the 'startPosition' array. The Y-coordinate should be 0.2.
-- Determine the 'holePosition' array. The Y-coordinate should be 0.01.
-- Set a reasonable 'holeRadius', typically between 0.2 and 0.3.
-- Create an array of 'obstacles'. Each obstacle must have a 'type', 'position', 'size', and an optional 'rotation'. A 'ramp' is just a 'box' with a rotation on the X or Z axis. Infer the dimensions and placement from the text.
-- IMPORTANT: To ensure good performance, generate a maximum of 10 obstacles.
-- Be creative but stay true to the description. If specific dimensions aren't given, estimate them based on context (e.g., a "small pond" might be 4x1x6 units).
-- The entire playable area should generally be within -25 to 25 on the X and Z axes.
-- A "wall" is a 'box' obstacle. A "ramp" is a 'box' obstacle with rotation.
-- Only output the JSON object.`,
-});
-
-const visualizeCourseFlow = ai.defineFlow(
-  {
-    name: 'visualizeCourseFlow',
-    inputSchema: VisualizeCourseInputSchema,
-    outputSchema: VisualizeCourseOutputSchema,
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  "dependencies": {
+    "@hookform/resolvers": "^4.1.3",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.43.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.3",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "recharts": "^2.15.1",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.164.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/three": "^0.164.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
-);
+}

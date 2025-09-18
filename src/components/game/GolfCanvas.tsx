@@ -138,30 +138,24 @@ export class Game {
     });
 
     // Flag
-    this.flagGroup = new THREE.Group();
-    this.scene.add(this.flagGroup);
+        // Flag
+        this.flagGroup = new THREE.Group();
+        const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
+        const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+        const poleMesh = new THREE.Mesh(poleGeo, poleMat);
+        poleMesh.position.y = 0.75; // Half of height
+        poleMesh.castShadow = true;
+        this.flagGroup.add(poleMesh);
     
-    const flagLoader = new GLTFLoader();
-    flagLoader.load(
-      'https://storage.googleapis.com/studiopanda-assets/golf-flag.glb',
-      (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(0.5, 0.5, 0.5);
-        model.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-          }
-        });
-        this.flagGroup.add(model);
+        const flagGeo = new THREE.PlaneGeometry(0.6, 0.4);
+        const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+        const flagMesh = new THREE.Mesh(flagGeo, flagMat);
+        flagMesh.position.set(0.3, 1.2, 0); // Position relative to the pole top
+        this.flagGroup.add(flagMesh);
         
         this.flagGroup.position.fromArray(this.level.holePosition);
-        this.flagGroup.position.y = 0;
-      },
-      undefined,
-      (error) => {
-        console.error('An error happened while loading the flag model:', error);
-      }
-    );
+        this.flagGroup.position.y = this.level.holePosition[1];
+        this.scene.add(this.flagGroup);
 
 
     // Aim Line

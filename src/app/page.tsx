@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
@@ -84,13 +85,6 @@ export default function Home() {
                 Built for CloneFest 2025. An exercise in web-based 3D.
               </p>
             </div>
-            <Button variant="outline" asChild>
-                <Link
-                href="/design"
-                >
-                Try the AI Course Designer
-                </Link>
-            </Button>
           </div>
         </footer>
       </main>

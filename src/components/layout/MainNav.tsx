@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import Link from "next/link"
@@ -13,10 +14,6 @@ export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
     {
       href: "/levels",
       label: "Levels",
-    },
-    {
-      href: "/design",
-      label: "AI Designer",
     },
   ]
 
