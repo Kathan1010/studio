@@ -100,31 +100,13 @@ export class Game {
   }
 
   private createLevel() {
-    // Load the landscape model
-    const loader = new GLTFLoader();
-    loader.load(
-      // URL to a landscape model. Replace this with your own model's URL.
-      'https://storage.googleapis.com/studiopanda-assets/golf-course-low-poly.glb',
-      (gltf) => {
-        const landscape = gltf.scene;
-        this.scene.add(landscape);
-
-        // Make sure the landscape and all its parts can receive shadows
-        // and that some parts can act as obstacles.
-        landscape.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.receiveShadow = true;
-            // For physics, we'll treat any mesh in the landscape as an obstacle.
-            // For a real game, you'd want to be more specific, e.g., by checking mesh names.
-            this.obstacles.push(child);
-          }
-        });
-      },
-      undefined, // onProgress callback (not used)
-      (error) => {
-        console.error('An error happened while loading the landscape:', error);
-      }
-    );
+    // Ground
+    const groundGeo = new THREE.PlaneGeometry(50, 50);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0x55aa55, roughness: 0.9 });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    this.scene.add(ground);
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
@@ -141,6 +123,19 @@ export class Game {
     this.holeMesh.position.fromArray(this.level.holePosition);
     this.holeMesh.rotation.x = -Math.PI / 2;
     this.scene.add(this.holeMesh);
+
+    // Obstacles
+    this.level.obstacles.forEach(obs => {
+        const obsGeo = new THREE.BoxGeometry(...obs.size);
+        const obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
+        const obstacle = new THREE.Mesh(obsGeo, obsMat);
+        obstacle.position.fromArray(obs.position);
+        if (obs.rotation) obstacle.rotation.fromArray(obs.rotation as [number, number, number]);
+        obstacle.castShadow = true;
+        obstacle.receiveShadow = true;
+        this.scene.add(obstacle);
+        this.obstacles.push(obstacle);
+    });
 
     // Flag
     this.flagGroup = new THREE.Group();
@@ -276,34 +271,26 @@ export class Game {
     const groundLevel = 0.15; // Ball radius
     let onSurface = false;
 
-    // --- Gravity ---
-    this.ballVelocity.add(this.gravity);
-    
-    // --- Ground collision & friction ---
+    // --- Ground collision ---
     if (this.ballMesh.position.y < groundLevel && this.ballVelocity.y < 0) {
         this.ballMesh.position.y = groundLevel;
-        this.ballVelocity.y = -this.ballVelocity.y * 0.3; // Dampen bounce on ground
+        this.ballVelocity.y = -this.ballVelocity.y * 0.3; // Dampen bounce
         onSurface = true;
     }
 
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
-        // Create the bounding box directly from the obstacle mesh
         const obstacleAABB = new THREE.Box3().setFromObject(obstacle);
 
-        // We no longer need to transform the ball into local space, 
-        // so we check against the ball's world position.
         if (obstacleAABB.intersectsSphere(new THREE.Sphere(this.ballMesh.position, ballRadius))) {
             const closestPoint = new THREE.Vector3();
             obstacleAABB.clampPoint(this.ballMesh.position, closestPoint);
 
             const collisionNormalWorld = this.ballMesh.position.clone().sub(closestPoint).normalize();
             
-            // Reflect velocity
             this.ballVelocity.reflect(collisionNormalWorld);
-            this.ballVelocity.multiplyScalar(0.7); // Energy loss on collision
+            this.ballVelocity.multiplyScalar(0.7);
 
-            // Push the ball out of the obstacle slightly to prevent sticking
             this.ballMesh.position.add(collisionNormalWorld.multiplyScalar(0.01));
             
             if (collisionNormalWorld.y > 0) {
@@ -332,6 +319,9 @@ export class Game {
     }
     
     if (this.isBallMoving) {
+      // Apply gravity before moving
+      this.ballVelocity.add(this.gravity);
+      
       // Apply new position
       this.ballMesh.position.add(this.ballVelocity);
       
