@@ -44,7 +44,7 @@ export class Game {
     callbacks: {
         onStroke: () => void;
         onHoleComplete: () => void;
-        setPower: () => void;
+        setPower: (power: number) => void;
         isGamePaused: () => boolean;
     }
   ) {
@@ -154,7 +154,6 @@ export class Game {
         });
         this.flagGroup.add(model);
         
-        // Set position AFTER the model is loaded and added to the group
         this.flagGroup.position.fromArray(this.level.holePosition);
         this.flagGroup.position.y = 0;
       },
@@ -337,7 +336,7 @@ export class Game {
     
     if (!this.isHoleCompleted) {
       const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
-      if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2) {
+      if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2 && this.isBallMoving) {
         const fallDirection = new THREE.Vector3().subVectors(this.holeMesh.position, this.ballMesh.position);
         fallDirection.y = -0.1;
         this.ballMesh.position.add(fallDirection.multiplyScalar(0.2));
@@ -437,13 +436,3 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
-
-    
-    
-
-    
-
-
-
-
-    
