@@ -17,6 +17,7 @@ export class Game {
   private ballMesh: THREE.Mesh;
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
+  private sandpits: THREE.Mesh[] = [];
   private aimLine: THREE.Line;
   private flagGroup: THREE.Group;
 
@@ -99,6 +100,33 @@ export class Game {
     this.scene.add(directionalLight);
   }
 
+  private createTree(position: THREE.Vector3) {
+    const treeGroup = new THREE.Group();
+
+    const trunkGeo = new THREE.CylinderGeometry(0.2, 0.3, 1.5, 8);
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+    const trunkMesh = new THREE.Mesh(trunkGeo, trunkMat);
+    trunkMesh.position.y = 0.75;
+    trunkMesh.castShadow = true;
+    treeGroup.add(trunkMesh);
+
+    const leavesGeo = new THREE.ConeGeometry(1, 2, 8);
+    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x228B22 });
+    const leavesMesh = new THREE.Mesh(leavesGeo, leavesMat);
+    leavesMesh.position.y = 2.5;
+    leavesMesh.castShadow = true;
+    treeGroup.add(leavesMesh);
+
+    treeGroup.position.copy(position);
+    this.scene.add(treeGroup);
+    
+    // Add tree trunk to obstacles for collision
+    const trunkObstacle = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.5, 0.6), new THREE.MeshStandardMaterial({visible: false}));
+    trunkObstacle.position.set(position.x, 0.75, position.z);
+    this.obstacles.push(trunkObstacle);
+    this.scene.add(trunkObstacle);
+  }
+
   private createLevel() {
     // Ground
     const groundGeo = new THREE.PlaneGeometry(50, 50);
@@ -137,25 +165,45 @@ export class Game {
         this.obstacles.push(obstacle);
     });
 
+    // Sandpits
+    if (this.level.sandpits) {
+      this.level.sandpits.forEach(sp => {
+        const sandGeo = new THREE.CircleGeometry(sp.radius, 32);
+        const sandMat = new THREE.MeshStandardMaterial({ color: 0xF4A460, roughness: 1 });
+        const sandpit = new THREE.Mesh(sandGeo, sandMat);
+        sandpit.position.fromArray(sp.position);
+        sandpit.rotation.x = -Math.PI / 2;
+        sandpit.receiveShadow = true;
+        this.scene.add(sandpit);
+        this.sandpits.push(sandpit);
+      });
+    }
+
+    // Trees
+    if (this.level.trees) {
+      this.level.trees.forEach(t => {
+        this.createTree(new THREE.Vector3(...t.position));
+      });
+    }
+
     // Flag
-        // Flag
-        this.flagGroup = new THREE.Group();
-        const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
-        const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
-        const poleMesh = new THREE.Mesh(poleGeo, poleMat);
-        poleMesh.position.y = 0.75; // Half of height
-        poleMesh.castShadow = true;
-        this.flagGroup.add(poleMesh);
+    this.flagGroup = new THREE.Group();
+    const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
+    const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+    const poleMesh = new THREE.Mesh(poleGeo, poleMat);
+    poleMesh.position.y = 0.75; // Half of height
+    poleMesh.castShadow = true;
+    this.flagGroup.add(poleMesh);
+
+    const flagGeo = new THREE.PlaneGeometry(0.6, 0.4);
+    const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    const flagMesh = new THREE.Mesh(flagGeo, flagMat);
+    flagMesh.position.set(0.3, 1.2, 0); // Position relative to the pole top
+    this.flagGroup.add(flagMesh);
     
-        const flagGeo = new THREE.PlaneGeometry(0.6, 0.4);
-        const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-        const flagMesh = new THREE.Mesh(flagGeo, flagMat);
-        flagMesh.position.set(0.3, 1.2, 0); // Position relative to the pole top
-        this.flagGroup.add(flagMesh);
-        
-        this.flagGroup.position.fromArray(this.level.holePosition);
-        this.flagGroup.position.y = this.level.holePosition[1];
-        this.scene.add(this.flagGroup);
+    this.flagGroup.position.fromArray(this.level.holePosition);
+    this.flagGroup.position.y = this.level.holePosition[1];
+    this.scene.add(this.flagGroup);
 
 
     // Aim Line
@@ -255,12 +303,23 @@ export class Game {
     const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
     const groundLevel = 0.15; // Ball radius
     let onSurface = false;
+    let inSand = false;
 
     // --- Ground collision ---
     if (this.ballMesh.position.y < groundLevel && this.ballVelocity.y < 0) {
         this.ballMesh.position.y = groundLevel;
         this.ballVelocity.y = -this.ballVelocity.y * 0.3; // Dampen bounce
         onSurface = true;
+    }
+
+    // --- Sandpit check ---
+    for (const sandpit of this.sandpits) {
+      const distToSandpitCenter = this.ballMesh.position.clone().setY(0).distanceTo(sandpit.position.clone().setY(0));
+      const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
+      if (distToSandpitCenter < sandpitRadius) {
+        inSand = true;
+        break;
+      }
     }
 
     // --- Obstacle collision ---
@@ -286,8 +345,9 @@ export class Game {
 
     // --- Apply friction if on any surface ---
     if(onSurface) {
-        this.ballVelocity.x *= 0.96;
-        this.ballVelocity.z *= 0.96;
+      const friction = inSand ? 0.85 : 0.96;
+      this.ballVelocity.x *= friction;
+      this.ballVelocity.z *= friction;
     }
   }
 
