@@ -1,11 +1,12 @@
 
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { levels } from '@/lib/levels';
 import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { getBestScores, type ScoreInfo } from '@/lib/supabase/scores';
+import { cn } from '@/lib/utils';
 
 export default async function LevelsPage() {
   const scoresData = await getBestScores();
@@ -29,9 +30,9 @@ export default async function LevelsPage() {
               return (
                 <Card 
                   key={level.id} 
-                  className={`transition-all hover:border-primary`}
+                  className={`transition-all hover:border-primary flex flex-col`}
                 >
-                  <CardHeader>
+                  <CardHeader className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
                         <CardDescription>Hole {level.id}</CardDescription>
@@ -48,12 +49,13 @@ export default async function LevelsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <Button asChild className="w-full">
-                      <Link href={`/play?level=${level.id}`}>
+                     <Link 
+                        href={`/play?level=${level.id}`}
+                        className={cn(buttonVariants(), "w-full")}
+                      >
                         <Play className="mr-2" />
                         Play
                       </Link>
-                    </Button>
                   </CardContent>
                 </Card>
               )
