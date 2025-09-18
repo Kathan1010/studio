@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/server';
 export type ScoreInfo = {
   level_id: number;
   strokes: number; // This is the best score
-  last_score: number | null;
 };
 
 // Function to get all best scores for the current user
@@ -20,7 +19,7 @@ export async function getBestScores(): Promise<ScoreInfo[]> {
 
   const { data, error } = await supabase
     .from('scores')
-    .select('level_id, strokes, last_score');
+    .select('level_id, strokes');
 
   if (error) {
     console.error("Error fetching scores:", error.message);
@@ -50,4 +49,3 @@ export async function updateBestScore(levelId: number, strokes: number): Promise
 
   return { error };
 }
-

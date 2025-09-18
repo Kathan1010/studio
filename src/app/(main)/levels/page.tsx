@@ -25,7 +25,6 @@ export default async function LevelsPage() {
             {levels.map((level) => {
               const scoreInfo = scoresMap.get(level.id);
               const bestScore = scoreInfo?.strokes;
-              const lastScore = scoreInfo?.last_score;
 
               return (
                 <Card 
@@ -43,11 +42,6 @@ export default async function LevelsPage() {
                         {bestScore !== undefined && (
                            <Badge variant={bestScore <= level.par ? 'default' : 'secondary'}>
                             Best: {bestScore}
-                          </Badge>
-                        )}
-                        {lastScore !== undefined && (
-                           <Badge variant={'secondary'}>
-                            Last: {lastScore}
                           </Badge>
                         )}
                       </div>
