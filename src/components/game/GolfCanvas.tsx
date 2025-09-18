@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { Level } from '@/lib/levels';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // --- A dedicated class to manage the Three.js game world ---
 export class Game {
@@ -99,13 +100,31 @@ export class Game {
   }
 
   private createLevel() {
-    // Ground
-    const groundGeo = new THREE.PlaneGeometry(50, 50);
-    const groundMat = new THREE.MeshStandardMaterial({ color: 0x55aa55, roughness: 0.9 });
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    this.scene.add(ground);
+    // Load the landscape model
+    const loader = new GLTFLoader();
+    loader.load(
+      // URL to a landscape model. Replace this with your own model's URL.
+      'https://storage.googleapis.com/studiopanda-assets/golf-course-low-poly.glb',
+      (gltf) => {
+        const landscape = gltf.scene;
+        this.scene.add(landscape);
+
+        // Make sure the landscape and all its parts can receive shadows
+        // and that some parts can act as obstacles.
+        landscape.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.receiveShadow = true;
+            // For physics, we'll treat any mesh in the landscape as an obstacle.
+            // For a real game, you'd want to be more specific, e.g., by checking mesh names.
+            this.obstacles.push(child);
+          }
+        });
+      },
+      undefined, // onProgress callback (not used)
+      (error) => {
+        console.error('An error happened while loading the landscape:', error);
+      }
+    );
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
@@ -125,36 +144,39 @@ export class Game {
 
     // Flag
     this.flagGroup = new THREE.Group();
-    const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
-    const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
-    const poleMesh = new THREE.Mesh(poleGeo, poleMat);
-    poleMesh.position.y = 0.75; // Half of height
-    poleMesh.castShadow = true;
-    this.flagGroup.add(poleMesh);
-
-    const flagGeo = new THREE.PlaneGeometry(0.6, 0.4);
-    const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-    const flagMesh = new THREE.Mesh(flagGeo, flagMat);
-    flagMesh.position.set(0.3, 1.2, 0); // Position relative to the pole top
-    this.flagGroup.add(flagMesh);
-    
-    this.flagGroup.position.fromArray(this.level.holePosition);
-    this.flagGroup.position.y = this.level.holePosition[1];
     this.scene.add(this.flagGroup);
-
-
-    // Obstacles
-    this.level.obstacles.forEach(obs => {
-      const obsGeo = new THREE.BoxGeometry(...obs.size);
-      const obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
-      const obstacle = new THREE.Mesh(obsGeo, obsMat);
-      obstacle.position.fromArray(obs.position);
-      if (obs.rotation) obstacle.rotation.fromArray(obs.rotation as [number, number, number]);
-      obstacle.castShadow = true;
-      obstacle.receiveShadow = true;
-      this.scene.add(obstacle);
-      this.obstacles.push(obstacle);
-    });
+    
+    const flagLoader = new GLTFLoader();
+    flagLoader.load(
+      // URL of the 3D model
+      'https://storage.googleapis.com/studiopanda-assets/golf-flag.glb',
+      // The function that runs when the model is loaded
+      (gltf) => {
+        const model = gltf.scene;
+        
+        // Scale and position the model if needed
+        model.scale.set(0.5, 0.5, 0.5);
+        
+        // Ensure all parts of the model cast shadows
+        model.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+          }
+        });
+        
+        // Add the loaded model to our flag group
+        this.flagGroup.add(model);
+        
+        // Position the entire flag group at the hole
+        this.flagGroup.position.fromArray(this.level.holePosition);
+        this.flagGroup.position.y = this.level.holePosition[1];
+      },
+      undefined, // We are not using the 'onProgress' callback
+      (error) => {
+        // This function runs if the model fails to load
+        console.error('An error happened while loading the model:', error);
+      }
+    );
 
     // Aim Line
     const aimLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, depthTest: false });
@@ -266,23 +288,17 @@ export class Game {
 
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
-        obstacle.updateWorldMatrix(true, false);
-        const inverseObstacleMatrix = new THREE.Matrix4().copy(obstacle.matrixWorld).invert();
-        const localBallPosition = this.ballMesh.position.clone().applyMatrix4(inverseObstacleMatrix);
-        
-        const obstacleAABB = new THREE.Box3();
-        obstacle.geometry.computeBoundingBox();
-        obstacleAABB.copy(obstacle.geometry.boundingBox!);
+        // Create the bounding box directly from the obstacle mesh
+        const obstacleAABB = new THREE.Box3().setFromObject(obstacle);
 
-        if (obstacleAABB.intersectsSphere(new THREE.Sphere(localBallPosition, ballRadius))) {
+        // We no longer need to transform the ball into local space, 
+        // so we check against the ball's world position.
+        if (obstacleAABB.intersectsSphere(new THREE.Sphere(this.ballMesh.position, ballRadius))) {
             const closestPoint = new THREE.Vector3();
-            obstacleAABB.clampPoint(localBallPosition, closestPoint);
-            
-            const collisionNormalLocal = localBallPosition.clone().sub(closestPoint).normalize();
-            
-            // Transform the collision normal back to world space
-            const collisionNormalWorld = collisionNormalLocal.clone().transformDirection(obstacle.matrixWorld);
+            obstacleAABB.clampPoint(this.ballMesh.position, closestPoint);
 
+            const collisionNormalWorld = this.ballMesh.position.clone().sub(closestPoint).normalize();
+            
             // Reflect velocity
             this.ballVelocity.reflect(collisionNormalWorld);
             this.ballVelocity.multiplyScalar(0.7); // Energy loss on collision
@@ -440,4 +456,5 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 
 export default GolfCanvas;
 
+    
     
