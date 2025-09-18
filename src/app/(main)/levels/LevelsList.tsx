@@ -1,7 +1,6 @@
 
 "use client";
 
-import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { levels } from '@/lib/levels';
@@ -9,9 +8,9 @@ import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { ScoreInfo } from '@/lib/supabase/scores';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getBestScores } from '@/lib/supabase/scores';
+import { Button } from '@/components/ui/button';
 
 
 type LevelsListProps = {
@@ -20,20 +19,10 @@ type LevelsListProps = {
 
 export default function LevelsList({ initialScores }: LevelsListProps) {
   const router = useRouter();
-  const [scoresMap, setScoresMap] = useState<Map<number, ScoreInfo>>(initialScores);
+  const [scoresMap] = useState<Map<number, ScoreInfo>>(initialScores);
 
-  useEffect(() => {
-    // Optionally, you can re-fetch scores on mount if they might change
-    // while the user is on the page, but for now we'll use the server-fetched data.
-    // async function fetchScores() {
-    //   const scoresData = await getBestScores();
-    //   setScoresMap(new Map(scoresData.map(s => [s.level_id, s])));
-    // }
-    // fetchScores();
-  }, []);
 
-  const handlePlayClick = (e: React.MouseEvent<HTMLAnchorElement>, levelId: number) => {
-    e.preventDefault();
+  const handlePlayClick = (levelId: number) => {
     router.push(`/play?level=${levelId}`);
   };
 
@@ -65,14 +54,13 @@ export default function LevelsList({ initialScores }: LevelsListProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                 <Link 
-                    href={`/play?level=${level.id}`}
-                    onClick={(e) => handlePlayClick(e, level.id)}
-                    className={cn(buttonVariants(), "w-full")}
+                 <Button 
+                    onClick={() => handlePlayClick(level.id)}
+                    className="w-full"
                   >
                     <Play className="mr-2 h-4 w-4" />
                     Play
-                  </Link>
+                  </Button>
               </CardContent>
             </Card>
           )
@@ -80,4 +68,3 @@ export default function LevelsList({ initialScores }: LevelsListProps) {
     </div>
   );
 }
-
