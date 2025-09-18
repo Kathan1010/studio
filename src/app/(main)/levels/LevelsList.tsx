@@ -2,12 +2,10 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { buttonVariants } from '@/components/ui/button';
 import { levels } from '@/lib/levels';
 import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { ScoreInfo } from '@/lib/supabase/scores';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
