@@ -143,35 +143,27 @@ export class Game {
     
     const flagLoader = new GLTFLoader();
     flagLoader.load(
-      // URL of the 3D model
       'https://storage.googleapis.com/studiopanda-assets/golf-flag.glb',
-      // The function that runs when the model is loaded
       (gltf) => {
         const model = gltf.scene;
-        
-        // Scale and position the model if needed
         model.scale.set(0.5, 0.5, 0.5);
-        
-        // Ensure all parts of the model cast shadows
         model.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
           }
         });
-        
-        // Add the loaded model to our flag group
         this.flagGroup.add(model);
         
-        // Position the entire flag group at the hole
+        // Set position AFTER the model is loaded and added to the group
         this.flagGroup.position.fromArray(this.level.holePosition);
-        this.flagGroup.position.y = this.level.holePosition[1];
+        this.flagGroup.position.y = 0;
       },
-      undefined, // We are not using the 'onProgress' callback
+      undefined,
       (error) => {
-        // This function runs if the model fails to load
-        console.error('An error happened while loading the model:', error);
+        console.error('An error happened while loading the flag model:', error);
       }
     );
+
 
     // Aim Line
     const aimLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, depthTest: false });
@@ -450,4 +442,5 @@ export default GolfCanvas;
     
 
     
+
 
