@@ -391,19 +391,19 @@ export class Game {
     if (!this.isHoleCompleted) {
       const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
       if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2 && this.isBallMoving) {
-        const fallDirection = new THREE.Vector3().subVectors(this.holeMesh.position, this.ballMesh.position);
-        fallDirection.y = -0.1;
-        this.ballMesh.position.add(fallDirection.multiplyScalar(0.2));
+        // Start pulling the ball into the hole
+        this.ballVelocity.y = -0.05;
+      }
 
-        if (this.ballMesh.position.y < this.holeMesh.position.y) {
-            this.ballVelocity.set(0, 0, 0);
-            this.isBallMoving = false;
-            this.isHoleCompleted = true;
-            this.onHoleComplete();
-            if (this.flagGroup) {
-              this.flagGroup.visible = false;
-            }
-        }
+      // Check if ball has fallen into the hole
+      if (this.ballMesh.position.y < this.holeMesh.position.y) {
+          this.ballVelocity.set(0, 0, 0);
+          this.isBallMoving = false;
+          this.isHoleCompleted = true;
+          this.onHoleComplete();
+          if (this.flagGroup) {
+            this.flagGroup.visible = false;
+          }
       }
     }
   }
