@@ -299,29 +299,30 @@ export class Game {
     this.renderer.setPixelRatio(window.devicePixelRatio);
   };
   
-  private checkCollisions() {
+ private checkCollisions() {
     const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
-    const groundLevel = 0.15; // Ball radius
     let onSurface = false;
     let inSand = false;
 
     // --- Ground collision ---
-    if (this.ballMesh.position.y < groundLevel && this.ballVelocity.y < 0) {
-        this.ballMesh.position.y = groundLevel;
-        this.ballVelocity.y = -this.ballVelocity.y * 0.3; // Dampen bounce
+    if (this.ballMesh.position.y < ballRadius && this.ballVelocity.y < 0) {
+        this.ballMesh.position.y = ballRadius;
+        this.ballVelocity.y *= -0.3; // Dampen bounce
         onSurface = true;
     }
 
     // --- Sandpit check ---
-    for (const sandpit of this.sandpits) {
-      const distToSandpitCenter = this.ballMesh.position.clone().setY(0).distanceTo(sandpit.position.clone().setY(0));
-      const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
-      if (distToSandpitCenter < sandpitRadius) {
-        inSand = true;
-        break;
-      }
+    if (onSurface) {
+        for (const sandpit of this.sandpits) {
+            const distToSandpitCenter = this.ballMesh.position.clone().setY(0).distanceTo(sandpit.position.clone().setY(0));
+            const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
+            if (distToSandpitCenter < sandpitRadius) {
+                inSand = true;
+                break;
+            }
+        }
     }
-
+    
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
         const obstacleAABB = new THREE.Box3().setFromObject(obstacle);
@@ -330,16 +331,11 @@ export class Game {
             const closestPoint = new THREE.Vector3();
             obstacleAABB.clampPoint(this.ballMesh.position, closestPoint);
 
-            const collisionNormalWorld = this.ballMesh.position.clone().sub(closestPoint).normalize();
+            const collisionNormal = this.ballMesh.position.clone().sub(closestPoint).normalize();
             
-            this.ballVelocity.reflect(collisionNormalWorld);
-            this.ballVelocity.multiplyScalar(0.7);
+            this.ballVelocity.reflect(collisionNormal).multiplyScalar(0.7);
 
-            this.ballMesh.position.add(collisionNormalWorld.multiplyScalar(0.01));
-            
-            if (collisionNormalWorld.y > 0) {
-              onSurface = true;
-            }
+            this.ballMesh.position.add(collisionNormal.multiplyScalar(0.01));
         }
     }
 
@@ -352,67 +348,58 @@ export class Game {
   }
 
   private update() {
-    if (this.isGamePaused()) return;
-    
-    this.updateAimLine();
-    
-    const chargeSpeed = 0.75;
-    if (this.isCharging) {
-        const newPower = Math.min(this.chargePower + chargeSpeed, 100);
-        this.chargePower = newPower;
-        this.setPower(newPower);
+    // If game is paused or hole is completed, do nothing.
+    if (this.isGamePaused() || this.isHoleCompleted) {
+        return;
     }
     
-    // Hole completion logic
-    if (!this.isHoleCompleted) {
+    // Update aim line and power charging
+    this.updateAimLine();
+    if (this.isCharging) {
+        const chargeSpeed = 0.75;
+        this.chargePower = Math.min(this.chargePower + chargeSpeed, 100);
+        this.setPower(this.chargePower);
+    }
+    
+    // --- Physics and Gameplay Logic ---
+    if (this.isBallMoving) {
+        // 1. Check for Hole Completion
         const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
+        const ballIsOnGround = this.ballMesh.position.y <= (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius + 0.01;
         
-        // Check if ball should fall into hole
-        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2 && this.isBallMoving) {
-            this.ballVelocity.y = -0.05; // Start pulling the ball into the hole
+        if (distToHole < this.level.holeRadius && ballIsOnGround && this.ballVelocity.lengthSq() < 0.2) {
+            this.isHoleCompleted = true;
+            this.isBallMoving = false;
+            this.ballVelocity.set(0, 0, 0);
+            this.ballMesh.visible = false; // Hide the ball as it's "in the hole"
+            if (this.flagGroup) this.flagGroup.visible = false;
+            this.onHoleComplete();
+            return; // End update loop for this frame
         }
 
-        // Check if ball has fallen into the hole
-        if (this.ballMesh.position.y < this.holeMesh.position.y) {
+        // 2. Apply Gravity
+        this.ballVelocity.add(this.gravity);
+        
+        // 3. Update Position
+        this.ballMesh.position.add(this.ballVelocity);
+        
+        // 4. Check Collisions
+        this.checkCollisions();
+      
+        // 5. Check for Out of Bounds
+        const { x, y, z } = this.ballMesh.position;
+        if (y < -2 || Math.abs(x) > 25 || Math.abs(z) > 25) {
+            this.onStroke(); // Add penalty stroke
+            this.ballMesh.position.fromArray(this.level.startPosition);
             this.ballVelocity.set(0, 0, 0);
             this.isBallMoving = false;
-            this.isHoleCompleted = true;
-            this.onHoleComplete();
-            if (this.flagGroup) {
-                this.flagGroup.visible = false;
-            }
-            // Stop further updates for this frame once hole is complete
-            return; 
         }
-    }
-
-
-    if (this.isBallMoving) {
-      // Apply gravity before moving
-      this.ballVelocity.add(this.gravity);
-      
-      // Apply new position
-      this.ballMesh.position.add(this.ballVelocity);
-      
-      // Only check collisions if we haven't completed the hole
-      if (!this.isHoleCompleted) {
-        this.checkCollisions();
-      }
-      
-      // Stop condition
-      if (this.ballVelocity.lengthSq() < 0.0001) {
-          this.ballVelocity.set(0, 0, 0);
-          this.isBallMoving = false;
-      }
-      
-      // Out of bounds check
-      const { x, y, z } = this.ballMesh.position;
-      if (y < -2 || Math.abs(x) > 25 || Math.abs(z) > 25) {
-        this.onStroke(); // Add penalty stroke
-        this.ballMesh.position.fromArray(this.level.startPosition);
-        this.ballVelocity.set(0, 0, 0);
-        this.isBallMoving = false;
-      }
+        
+        // 6. Stop Condition
+        if (this.ballVelocity.lengthSq() < 0.0001) {
+            this.ballVelocity.set(0, 0, 0);
+            this.isBallMoving = false;
+        }
     }
   }
 
@@ -498,5 +485,7 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
+
+    
 
     
