@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { levels } from '@/lib/levels';
 import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { getBestScores, type BestScore } from '@/lib/supabase/scores';
+import { getBestScores, type ScoreInfo } from '@/lib/supabase/scores';
 
 export default async function LevelsPage() {
-  const bestScoresData = await getBestScores();
-  const bestScores = new Map(bestScoresData.map(s => [s.level_id, s.strokes]));
+  const scoresData = await getBestScores();
+  const scoresMap = new Map(scoresData.map(s => [s.level_id, s]));
 
   return (
     <div className="container py-8">
@@ -23,7 +23,10 @@ export default async function LevelsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {levels.map((level) => {
-              const bestScore = bestScores.get(level.id);
+              const scoreInfo = scoresMap.get(level.id);
+              const bestScore = scoreInfo?.strokes;
+              const lastScore = scoreInfo?.last_score;
+
               return (
                 <Card 
                   key={level.id} 
@@ -35,11 +38,16 @@ export default async function LevelsPage() {
                         <CardDescription>Hole {level.id}</CardDescription>
                         <CardTitle>{level.name}</CardTitle>
                       </div>
-                      <div className="text-right flex flex-col gap-2">
+                      <div className="text-right flex flex-col gap-2 items-end">
                         <Badge variant={'outline'}>Par {level.par}</Badge>
                         {bestScore !== undefined && (
                            <Badge variant={bestScore <= level.par ? 'default' : 'secondary'}>
                             Best: {bestScore}
+                          </Badge>
+                        )}
+                        {lastScore !== undefined && (
+                           <Badge variant={'secondary'}>
+                            Last: {lastScore}
                           </Badge>
                         )}
                       </div>
