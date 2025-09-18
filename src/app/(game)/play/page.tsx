@@ -167,16 +167,16 @@ export default function PlayPage() {
             <CardContent className="flex flex-col space-y-2">
               {level.id !== 99 && level.id < levels.length && (
                 <Button onClick={handleNextLevel}>
-                  <ArrowRight className="mr-2"/>
+                  <ArrowRight className="mr-2 h-4 w-4" />
                   Next Level
                 </Button>
               )}
                <Button onClick={handleReset} variant="secondary">
-                  <RotateCcw className="mr-2"/>
+                  <RotateCcw className="mr-2 h-4 w-4" />
                   Replay Level
               </Button>
               <Button onClick={level.id === 99 ? handleGoToDesign : handleGoToLevels} variant="outline">
-                <Home className="mr-2"/>
+                <Home className="mr-2 h-4 w-4" />
                 {level.id === 99 ? 'Back to Designer' : 'Back to Levels'}
               </Button>
             </CardContent>

@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { LogOut, Menu, User } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { MainNav } from '@/components/layout/MainNav';
 import { GolfFlagIcon } from '../icons/GolfFlagIcon';
 import { supabase } from '@/lib/supabase/client';
@@ -39,7 +39,7 @@ export function Header() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
