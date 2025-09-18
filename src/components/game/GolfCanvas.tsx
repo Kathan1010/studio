@@ -224,7 +224,7 @@ export class Game {
           return;
       }
 
-      const powerMultiplier = 0.004;
+      const powerMultiplier = 0.007;
       this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
       this.isBallMoving = true;
       this.onStroke();
@@ -373,7 +373,7 @@ export class Game {
   public cleanup() {
     window.removeEventListener('keydown', this.handleKeyDown);
     window.removeEventListener('keyup', this.handleKeyUp);
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this'handleResize);
 
     if (this.mount && this.renderer.domElement) {
         try {
@@ -447,4 +447,6 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 export default GolfCanvas;
 
     
+    
+
     
