@@ -224,7 +224,7 @@ export class Game {
           return;
       }
 
-      const powerMultiplier = 0.0035;
+      const powerMultiplier = 0.004;
       this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
       this.isBallMoving = true;
       this.onStroke();
