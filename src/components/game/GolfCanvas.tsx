@@ -224,7 +224,7 @@ export class Game {
           return;
       }
 
-      const powerMultiplier = 0.003;
+      const powerMultiplier = 0.0035;
       this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
       this.isBallMoving = true;
       this.onStroke();
@@ -446,4 +446,5 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 
 export default GolfCanvas;
 
+    
     
