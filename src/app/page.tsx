@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Bot, Camera, Layers, Mouse, Target, Keyboard } from 'lucide-react';
+import { ArrowRight, Layers, Mouse, Target, Keyboard, Camera } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { HowToPlay } from '@/components/home/HowToPlay';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -58,7 +58,6 @@ export default function Home() {
                 { title: 'Gameplay & State Management', description: 'Manage game state like hole, par, and strokes. Implement goal detection.', icon: <Target/> },
                 { title: 'Player Controls', description: 'Intuitive controls for aiming precision and power, with clear visual feedback.', icon: <Keyboard/> },
                 { title: 'Camera System', description: 'Interactive camera controls (orbit, pan, zoom) to inspect the course.', icon: <Camera/> },
-                { title: 'AI Design Tool', description: 'A tool for programmatically editing course design, tuned using generative AI.', icon: <Bot/> },
               ].map((item) => (
                 <Card key={item.title} className="flex flex-col">
                   <CardHeader>
