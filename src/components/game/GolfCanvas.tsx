@@ -373,7 +373,7 @@ export class Game {
   public cleanup() {
     window.removeEventListener('keydown', this.handleKeyDown);
     window.removeEventListener('keyup', this.handleKeyUp);
-    window.removeEventListener('resize', this'handleResize);
+    window.removeEventListener('resize', this.handleResize);
 
     if (this.mount && this.renderer.domElement) {
         try {
