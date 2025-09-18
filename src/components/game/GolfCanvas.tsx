@@ -44,7 +44,7 @@ export class Game {
     callbacks: {
         onStroke: () => void;
         onHoleComplete: () => void;
-        setPower: (power: number) => void;
+        setPower: () => void;
         isGamePaused: () => boolean;
     }
   ) {
@@ -224,7 +224,7 @@ export class Game {
           return;
       }
 
-      const powerMultiplier = 0.0025;
+      const powerMultiplier = 0.003;
       this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
       this.isBallMoving = true;
       this.onStroke();
