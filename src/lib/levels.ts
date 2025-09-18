@@ -1,3 +1,4 @@
+
 export interface Level {
   id: number;
   name: string;
@@ -74,20 +75,8 @@ export const levels: Level[] = [
         { type: 'box', position: [1, 0.5, 0], size: [0.5, 1, 5] },
     ],
   },
-  {
-    id: 6,
-    name: 'The Bouncer',
-    par: 4,
-    startPosition: [-8, 0.2, 0],
-    holePosition: [8, 0.01, 0],
-    holeRadius: 0.3,
-    obstacles: [
-        { type: 'box', position: [0, 0.5, 8], size: [1, 1, 16], rotation: [0, -0.785, 0] },
-        { type: 'box', position: [0, 0.5, -8], size: [1, 1, 16], rotation: [0, 0.785, 0] },
-    ],
-  },
    {
-    id: 7,
+    id: 6,
     name: 'The Maze',
     par: 5,
     startPosition: [-8, 0.2, 8],
@@ -101,19 +90,7 @@ export const levels: Level[] = [
   },
   // Hard Levels
   {
-    id: 8,
-    name: 'Double Ramp',
-    par: 4,
-    startPosition: [-5, 0.2, 12],
-    holePosition: [5, 1.51, -12],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'ramp', position: [0, 0, 2], size: [4, 1, 8], rotation: [-0.15, 0.2, 0] },
-        { type: 'ramp', position: [2, 0.75, -8], size: [4, 1, 8], rotation: [0.1, -0.2, 0] },
-    ],
-  },
-  {
-    id: 9,
+    id: 7,
     name: 'The Ridge',
     par: 3,
     startPosition: [0, 0.2, 12],
@@ -125,7 +102,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 10,
+    id: 8,
     name: 'Final Putt',
     par: 3,
     startPosition: [0, 0.2, 14],
@@ -139,7 +116,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 11,
+    id: 9,
     name: 'Ricochet',
     par: 5,
     startPosition: [-10, 0.2, 10],
@@ -152,7 +129,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 12,
+    id: 10,
     name: 'The Gauntlet',
     par: 5,
     startPosition: [0, 0.2, 14],
@@ -168,7 +145,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 13,
+    id: 11,
     name: 'Vertigo',
     par: 4,
     startPosition: [0, 0.2, 10],
@@ -181,7 +158,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 14,
+    id: 12,
     name: 'Precision',
     par: 3,
     startPosition: [0, 0.2, 12],
@@ -194,7 +171,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 15,
+    id: 13,
     name: 'Leap of Faith',
     par: 4,
     startPosition: [0, 0.2, 12],
