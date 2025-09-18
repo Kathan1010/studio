@@ -1,12 +1,6 @@
 
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { levels } from '@/lib/levels';
-import { Play } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { getBestScores, type ScoreInfo } from '@/lib/supabase/scores';
-import { cn } from '@/lib/utils';
+import LevelsList from './LevelsList';
 
 export default async function LevelsPage() {
   const scoresData = await getBestScores();
@@ -21,47 +15,7 @@ export default async function LevelsPage() {
                 Challenge yourself with our collection of courses.
             </p>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {levels.map((level) => {
-              const scoreInfo = scoresMap.get(level.id);
-              const bestScore = scoreInfo?.strokes;
-
-              return (
-                <Card 
-                  key={level.id} 
-                  className={`transition-all hover:border-primary flex flex-col`}
-                >
-                  <CardHeader className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardDescription>Hole {level.id}</CardDescription>
-                        <CardTitle>{level.name}</CardTitle>
-                      </div>
-                      <div className="text-right flex flex-col gap-2 items-end">
-                        <Badge variant={'outline'}>Par {level.par}</Badge>
-                        {bestScore !== undefined && (
-                           <Badge variant={bestScore <= level.par ? 'default' : 'secondary'}>
-                            Best: {bestScore}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                     <Link 
-                        href={`/play?level=${level.id}`}
-                        className={cn(buttonVariants(), "w-full")}
-                      >
-                        <Play className="mr-2" />
-                        Play
-                      </Link>
-                  </CardContent>
-                </Card>
-              )
-            })}
-        </div>
-        
+        <LevelsList initialScores={scoresMap} />
       </div>
     </div>
   );
