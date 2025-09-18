@@ -363,6 +363,30 @@ export class Game {
         this.setPower(newPower);
     }
     
+    // Hole completion logic
+    if (!this.isHoleCompleted) {
+        const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
+        
+        // Check if ball should fall into hole
+        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2 && this.isBallMoving) {
+            this.ballVelocity.y = -0.05; // Start pulling the ball into the hole
+        }
+
+        // Check if ball has fallen into the hole
+        if (this.ballMesh.position.y < this.holeMesh.position.y) {
+            this.ballVelocity.set(0, 0, 0);
+            this.isBallMoving = false;
+            this.isHoleCompleted = true;
+            this.onHoleComplete();
+            if (this.flagGroup) {
+                this.flagGroup.visible = false;
+            }
+            // Stop further updates for this frame once hole is complete
+            return; 
+        }
+    }
+
+
     if (this.isBallMoving) {
       // Apply gravity before moving
       this.ballVelocity.add(this.gravity);
@@ -370,7 +394,10 @@ export class Game {
       // Apply new position
       this.ballMesh.position.add(this.ballVelocity);
       
-      this.checkCollisions();
+      // Only check collisions if we haven't completed the hole
+      if (!this.isHoleCompleted) {
+        this.checkCollisions();
+      }
       
       // Stop condition
       if (this.ballVelocity.lengthSq() < 0.0001) {
@@ -385,25 +412,6 @@ export class Game {
         this.ballMesh.position.fromArray(this.level.startPosition);
         this.ballVelocity.set(0, 0, 0);
         this.isBallMoving = false;
-      }
-    }
-    
-    if (!this.isHoleCompleted) {
-      const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
-      if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2 && this.isBallMoving) {
-        // Start pulling the ball into the hole
-        this.ballVelocity.y = -0.05;
-      }
-
-      // Check if ball has fallen into the hole
-      if (this.ballMesh.position.y < this.holeMesh.position.y) {
-          this.ballVelocity.set(0, 0, 0);
-          this.isBallMoving = false;
-          this.isHoleCompleted = true;
-          this.onHoleComplete();
-          if (this.flagGroup) {
-            this.flagGroup.visible = false;
-          }
       }
     }
   }
@@ -490,3 +498,5 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
+
+    
