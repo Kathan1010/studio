@@ -58,7 +58,7 @@ export default function Home() {
                 { title: 'Gameplay & State Management', description: 'Manage game state like hole, par, and strokes. Implement goal detection.', icon: <Target/> },
                 { title: 'Player Controls', description: 'Intuitive controls for aiming precision and power, with clear visual feedback.', icon: <Keyboard/> },
                 { title: 'Camera System', description: 'Interactive camera controls (orbit, pan, zoom) to inspect the course.', icon: <Camera/> },
-                { title: 'Challenging Levels', description: 'Test your skills across a variety of handcrafted courses, each with unique layouts and obstacles.', icon: <Trophy /> },
+                { title: 'Player Accounts & Scoring', description: 'Create an account to save your best scores for each level and track your progress over time.', icon: <Trophy /> },
               ].map((item) => (
                 <Card key={item.title} className="flex flex-col">
                   <CardHeader>
