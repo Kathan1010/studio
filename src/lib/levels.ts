@@ -49,8 +49,8 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
-        { type: 'ramp', position: [0, 0, 4], size: [4, 0.5, 8], rotation: [0.2, 0, 0] },
-        { type: 'ramp', position: [0, 0, -4], size: [4, 0.5, 8], rotation: [-0.2, 0, 0] },
+        { type: 'ramp', position: [0, 0.2, 3], size: [4, 0.5, 8], rotation: [0.25, 0, 0] },
+        { type: 'ramp', position: [0, 0.2, -5], size: [4, 0.5, 8], rotation: [-0.25, 0, 0] },
     ],
     sandpits: [
         { position: [4, 0.02, 0], radius: 2 }
@@ -77,9 +77,9 @@ export const levels: Level[] = [
       { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [0, 0.5, -8], size: [12, 1, 1] },
       
-      // Horizontal barriers
-      { type: 'box', position: [0, 0.5, 4], size: [12, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 0.5] },
+      // Staggered horizontal barriers
+      { type: 'box', position: [1.5, 0.5, 4], size: [9, 1, 0.5] }, // From right wall
+      { type: 'box', position: [-1.5, 0.5, -2], size: [9, 1, 0.5] }, // From left wall
 
       // Small blocks to make it harder
       { type: 'box', position: [0, 0.25, -4.5], size: [0.75, 0.5, 0.75] },
