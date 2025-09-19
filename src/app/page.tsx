@@ -23,7 +23,7 @@ export default function Home() {
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-          <div className="relative z-10 p-4 max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
+          <div className="relative z-10 p-4 max-w-4xl mx-auto flex flex-col items-center justify-center h-full mt-16">
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter [text-shadow:2px_2px_4px_rgba(0,0,0,0.5)]">
                 Web Golf
               </h1>
