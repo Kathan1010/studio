@@ -62,15 +62,15 @@ export const levels: Level[] = [
   },
   {
     id: 3,
-    name: 'Ricochet',
+    name: 'The Tunnel',
     par: 5,
     startPosition: [-10, 0.2, 10],
     holePosition: [10, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
-        { type: 'box', position: [0, 0.5, 0], size: [1, 1, 20], rotation: [0, 0.785, 0] },
-        { type: 'box', position: [10, 0.5, 0], size: [1, 1, 10] },
-        { type: 'box', position: [-10, 0.5, 0], size: [1, 1, 10] },
+        { type: 'box', position: [0, 0.5, 0], size: [0.5, 1, 15] },
+        { type: 'box', position: [10, 0.5, 5], size: [0.5, 1, 10] },
+        { type: 'box', position: [-10, 0.5, -5], size: [0.5, 1, 10] },
     ],
     trees: [
         { position: [5, 0, 8] },
@@ -87,6 +87,9 @@ export const levels: Level[] = [
     obstacles: [
         { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
         { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
+        { type: 'box', position: [1, 0.25, -11], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [-1, 0.25, -11], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -10], size: [0.5, 0.5, 0.5] },
     ],
     sandpits: [
         { position: [0, 0.02, -8], radius: 2}
