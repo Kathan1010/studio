@@ -67,6 +67,33 @@ export const levels: Level[] = [
   },
   {
     id: 3,
+    name: 'The Corridor',
+    par: 3,
+    startPosition: [0, 0.2, 14],
+    holePosition: [0, 0.01, -14],
+    holeRadius: 0.25,
+    obstacles: [
+      // Main corridor walls
+      { type: 'box', position: [2.5, 0.5, 0], size: [0.5, 1, 20] },
+      { type: 'box', position: [-2.5, 0.5, 0], size: [0.5, 1, 20] },
+      
+      // Small blocks near the hole
+      { type: 'box', position: [0, 0.25, -12], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [-1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
+    ],
+    sandpits: [
+      { position: [0, 0.02, 5], radius: 2 },
+      { position: [-4, 0.02, -10], radius: 1.5 },
+    ],
+    trees: [
+      { position: [6, 0, 8] },
+      { position: [-6, 0, 2] },
+      { position: [5, 0, -15] },
+    ]
+  },
+  {
+    id: 4,
     name: "The Slingshot",
     par: 4,
     startPosition: [0, 0.2, 14],
@@ -97,33 +124,6 @@ export const levels: Level[] = [
       { position: [-8, 0, 8] },
       { position: [8, 0, -10] },
       { position: [-8, 0, -10] },
-    ]
-  },
-  {
-    id: 4,
-    name: 'The Corridor',
-    par: 3,
-    startPosition: [0, 0.2, 14],
-    holePosition: [0, 0.01, -14],
-    holeRadius: 0.25,
-    obstacles: [
-      // Main corridor walls
-      { type: 'box', position: [2.5, 0.5, 0], size: [0.5, 1, 20] },
-      { type: 'box', position: [-2.5, 0.5, 0], size: [0.5, 1, 20] },
-      
-      // Small blocks near the hole
-      { type: 'box', position: [0, 0.25, -12], size: [0.5, 0.5, 0.5] },
-      { type: 'box', position: [-1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
-      { type: 'box', position: [1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
-    ],
-    sandpits: [
-      { position: [0, 0.02, 5], radius: 2 },
-      { position: [-4, 0.02, -10], radius: 1.5 },
-    ],
-    trees: [
-      { position: [6, 0, 8] },
-      { position: [-6, 0, 2] },
-      { position: [5, 0, -15] },
     ]
   },
   {
