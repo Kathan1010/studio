@@ -34,6 +34,10 @@ export class Game {
   // Constants
   private gravity = new THREE.Vector3(0, -0.01, 0);
 
+  // Sound Effects
+  private sounds: { [key: string]: HTMLAudioElement } = {};
+
+
   // Callbacks
   private onStroke: () => void;
   private onHoleComplete: () => void;
@@ -78,10 +82,32 @@ export class Game {
     this.controls.target.set(this.level.startPosition[0], this.level.startPosition[1], this.level.startPosition[2]);
 
     this.addLights();
+    this.loadSounds();
     this.createLevel();
     this.bindEventHandlers();
     this.updateAimLine();
   }
+
+  private loadSounds() {
+    this.sounds.hit = new Audio('/sounds/hit.mp3');
+    this.sounds.collision = new Audio('/sounds/collision.mp3');
+    this.sounds.hole = new Audio('/sounds/hole.mp3');
+    this.sounds.reset = new Audio('/sounds/reset.mp3');
+    
+    // Set volume for all sounds
+    Object.values(this.sounds).forEach(sound => {
+        sound.volume = 0.7;
+    });
+  }
+
+  private playSound(soundName: string) {
+    const sound = this.sounds[soundName];
+    if (sound) {
+        sound.currentTime = 0; // Rewind to start
+        sound.play().catch(e => console.log("Sound play failed", e));
+    }
+  }
+
 
   private addLights() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
@@ -163,7 +189,7 @@ export class Game {
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
-    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 });
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.1 });
     this.ballMesh = new THREE.Mesh(ballGeo, ballMat);
     this.ballMesh.castShadow = true;
     this.ballMesh.position.fromArray(this.level.startPosition);
@@ -176,28 +202,6 @@ export class Game {
     this.holeMesh.position.fromArray(this.level.holePosition);
     this.holeMesh.rotation.x = -Math.PI / 2;
     this.scene.add(this.holeMesh);
-
-    // Boundaries
-    const boundaryMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
-    const boundaryHeight = 0.5;
-    const boundaryThickness = 0.5;
-
-    const boundaries = [
-      { size: [50 + boundaryThickness, boundaryHeight, boundaryThickness], position: [0, boundaryHeight / 2, 25] }, // Bottom
-      { size: [50 + boundaryThickness, boundaryHeight, boundaryThickness], position: [0, boundaryHeight / 2, -25] }, // Top
-      { size: [boundaryThickness, boundaryHeight, 50 + boundaryThickness], position: [25, boundaryHeight / 2, 0] }, // Right
-      { size: [boundaryThickness, boundaryHeight, 50 + boundaryThickness], position: [-25, boundaryHeight / 2, 0] } // Left
-    ];
-
-    boundaries.forEach(b => {
-      const boundaryGeo = new THREE.BoxGeometry(...(b.size as [number,number,number]));
-      const boundaryMesh = new THREE.Mesh(boundaryGeo, boundaryMat);
-      boundaryMesh.position.fromArray(b.position as [number,number,number]);
-      boundaryMesh.castShadow = true;
-      boundaryMesh.receiveShadow = true;
-      this.scene.add(boundaryMesh);
-      this.obstacles.push(boundaryMesh);
-    });
 
     // Obstacles
     const obstacleMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
@@ -312,6 +316,7 @@ export class Game {
       const powerMultiplier = 0.007;
       this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
       this.isBallMoving = true;
+      this.playSound('hit');
       this.onStroke();
 
       // Reset charge state AFTER the shot is taken
@@ -381,6 +386,7 @@ export class Game {
             // Check if the intersection is closer than the ball's intended movement
             if (intersection.distance <= movementDistance + ballRadius) {
                 collisionDetected = true;
+                this.playSound('collision');
                 const collisionNormal = intersection.face!.normal.clone();
                 // Make sure normal is pointing out of the face from the obstacle's perspective
                 collisionNormal.transformDirection(intersection.object.matrixWorld).normalize();
@@ -490,6 +496,7 @@ export class Game {
             this.ballVelocity.set(0, 0, 0); // Stop all movement
             this.ballMesh.position.copy(this.holeMesh.position).setY(this.holeMesh.position.y + ballRadius); // Center it
             if (this.flagGroup) this.flagGroup.visible = false;
+            this.playSound('hole');
             this.onHoleComplete();
             return; // Exit update loop for this frame
         }
@@ -508,6 +515,7 @@ export class Game {
         // --- Out of Bounds Check ---
         const { x, y, z } = this.ballMesh.position;
         if (y < -2) { // Only reset if it falls below the boundaries
+            this.playSound('reset');
             this.onStroke(); // Penalty stroke
             this.ballMesh.position.fromArray(this.level.startPosition);
             this.ballVelocity.set(0, 0, 0);
@@ -607,43 +615,3 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    

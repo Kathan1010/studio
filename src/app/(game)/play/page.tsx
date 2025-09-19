@@ -8,7 +8,7 @@ import { levels, type Level } from '@/lib/levels';
 import { GameUI } from '@/components/game/GameUI';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PartyPopper, Loader2, Home, RotateCcw, ArrowRight } from 'lucide-react';
+import { PartyPopper, Loader2, Home, RotateCcw, ArrowRight, Music, MusicOff } from 'lucide-react';
 import type { Game } from '@/components/game/GolfCanvas';
 import { MobileControls } from '@/components/game/MobileControls';
 import { updateBestScore } from '@/lib/supabase/scores';
@@ -31,6 +31,9 @@ export default function PlayPage() {
   const [isHoleComplete, setIsHoleComplete] = useState(false);
   const [gameKey, setGameKey] = useState(Date.now());
   const gameRef = useRef<Game | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
 
   useEffect(() => {
     const levelId = searchParams.get('level');
@@ -50,6 +53,31 @@ export default function PlayPage() {
     setIsHoleComplete(false);
     setGameKey(Date.now());
   }, [searchParams, router]);
+
+  // Effect to manage background music
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+        if (!audioRef.current) {
+            audioRef.current = new Audio('/music/game-music.mp3');
+            audioRef.current.loop = true;
+            audioRef.current.volume = 0.3;
+        }
+
+        if (isHoleComplete) {
+            audioRef.current.pause();
+        } else if (!isMuted) {
+            audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+        } else {
+            audioRef.current.pause();
+        }
+    }
+    // Cleanup on unmount
+    return () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+    };
+  }, [isHoleComplete, isMuted]);
 
   // Effect to save score when hole is completed
   useEffect(() => {
@@ -90,6 +118,9 @@ export default function PlayPage() {
     }
   };
 
+  const toggleMute = () => {
+    setIsMuted(prev => !prev);
+  }
 
   if (!level) {
     return (
@@ -110,6 +141,11 @@ export default function PlayPage() {
         onReset={handleReset}
         onGoToLevels={handleGoToLevels}
       />
+      <div className="absolute top-4 right-4 z-10">
+        <Button onClick={toggleMute} variant="ghost" size="icon" aria-label="Toggle Music">
+          {isMuted ? <MusicOff className="h-5 w-5" /> : <Music className="h-5 w-5" />}
+        </Button>
+      </div>
       <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin" />}>
           <GolfCanvas
               key={gameKey}
@@ -161,5 +197,3 @@ export default function PlayPage() {
     </div>
   );
 }
-
-    

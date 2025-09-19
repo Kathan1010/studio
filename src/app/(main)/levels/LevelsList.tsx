@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ScoreInfo } from '@/lib/supabase/scores';
 import type { Level } from '@/lib/levels';
@@ -18,8 +18,35 @@ type LevelsListProps = {
 export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
   const router = useRouter();
   const [scoresMap] = useState(initialScoresMap);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Ensure this only runs on the client
+    if (typeof window !== "undefined") {
+      if (!audioRef.current) {
+        audioRef.current = new Audio('/music/levels-music.mp3');
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.5;
+      }
+      
+      // Play music when component mounts
+      audioRef.current.play().catch(error => {
+        console.error("Audio play failed:", error);
+      });
+
+      // Pause music when component unmounts
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+      };
+    }
+  }, []);
 
   const handlePlayClick = (levelId: number) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
     router.push(`/play?level=${levelId}`);
   };
 
