@@ -150,28 +150,24 @@ export const levels: Level[] = [
   },
   {
     id: 6,
-    name: 'The Funnel',
+    name: 'The Gauntlet',
     par: 4,
     startPosition: [0, 0.2, 12],
     holePosition: [0, 0.01, -12],
     holeRadius: 0.3,
     obstacles: [
-      // Funnel walls
-      { type: 'box', position: [6, 0.5, 6], size: [1, 1, 12], rotation: [0, -0.785, 0] }, // Right diagonal
-      { type: 'box', position: [-6, 0.5, 6], size: [1, 1, 12], rotation: [0, 0.785, 0] }, // Left diagonal
-      
-      // Central gap walls
-      { type: 'box', position: [3, 0.5, 0], size: [4, 1, 1] },
-      { type: 'box', position: [-3, 0.5, 0], size: [4, 1, 1] },
-      
-      // Back area
-      { type: 'box', position: [0, 0.5, -8], size: [10, 1, 1] },
-      { type: 'box', position: [5, 0.5, -4], size: [1, 1, 8] },
-      { type: 'box', position: [-5, 0.5, -4], size: [1, 1, 8] },
+        // Outer walls
+        { type: 'box', position: [5.5, 0.5, 0], size: [1, 1, 28] },
+        { type: 'box', position: [-5.5, 0.5, 0], size: [1, 1, 28] },
+
+        // Path walls
+        { type: 'box', position: [0, 0.5, 10], size: [10, 1, 1] },
+        { type: 'box', position: [0, 0.5, 4], size: [10, 1, 1] },
+        { type: 'box', position: [2.5, 0.5, -1], size: [5, 1, 1] },
+        { type: 'box', position: [-2.5, 0.5, -6], size: [5, 1, 1] },
+        { type: 'box', position: [0, 0.5, -10], size: [10, 1, 1] },
     ],
-    sandpits: [
-       { position: [0, 0.02, -4], radius: 2.5 }
-    ],
+    sandpits: [],
     trees: []
   }
 ];
