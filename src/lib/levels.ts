@@ -62,14 +62,21 @@ export const levels: Level[] = [
   },
    {
     id: 3,
-    name: "The Ramps",
-    par: 3,
-    startPosition: [0, 0.2, 14],
-    holePosition: [0, 0.01, -14],
+    name: "The Ascent",
+    par: 4,
+    startPosition: [0, 0.2, 12],
+    holePosition: [-4, 2.51, -12],
     holeRadius: 0.25,
     obstacles: [
-      { type: 'ramp', position: [-2, 0.5, 4], size: [4, 1, 6], rotation: [0.25, 0, 0] },
-      { type: 'ramp', position: [2, 0.5, -6], size: [4, 1, 6], rotation: [0.25, 0, 0] },
+      // Ramp path
+      { type: 'box', position: [0, 0, 8], size: [5, 0.2, 8], rotation: [0.15, 0, 0] },
+      { type: 'box', position: [0, 1.2, 0], size: [5, 0.2, 8], rotation: [0, 0, 0] },
+      { type: 'box', position: [-2, 1.8, -6], size: [9, 0.2, 8], rotation: [0, -0.3, 0] },
+      
+      // Side walls
+      { type: 'box', position: [2.5, 0.8, 4], size: [0.2, 1, 16] },
+      { type: 'box', position: [-6.5, 2.5, -4], size: [0.2, 1, 12], rotation: [0, -0.3, 0] },
+      { type: 'box', position: [2.2, 2.5, -8], size: [0.2, 1, 8], rotation: [0, -0.3, 0] },
     ],
   },
   {
@@ -134,16 +141,17 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
-      // Maze layout with multiple paths
-      { type: 'box', position: [-5, 0.5, 6], size: [10, 1, 0.5] },
-      { type: 'box', position: [5, 0.5, 2], size: [10, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 0.5] },
-      { type: 'box', position: [-5, 0.5, -6], size: [10, 1, 0.5] },
+      // Path 1 (Center-Right)
+      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] },
+      { type: 'box', position: [2, 0.5, 2], size: [16, 1, 0.5] },
+      { type: 'box', position: [-2, 0.5, -2], size: [16, 1, 0.5] },
+      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] },
       
-      { type: 'box', position: [-2, 0.5, 1], size: [0.5, 1, 8] },
-      { type: 'box', position: [2, 0.5, 6], size: [0.5, 1, 4] },
-      { type: 'box', position: [-6, 0.5, -2], size: [0.5, 1, 4] },
-      { type: 'box', position: [6, 0.5, -6], size: [0.5, 1, 4] },
+      // Path 2 (Left)
+      { type: 'box', position: [-6, 0.5, 1], size: [0.5, 1, 8] },
+      
+      // Path 3 (Top)
+      { type: 'box', position: [0, 0.5, 6], size: [0.5, 1, 8] },
     ],
     sandpits: [],
     trees: []
