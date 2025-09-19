@@ -153,23 +153,20 @@ export const levels: Level[] = [
     name: 'The Labyrinth',
     par: 4,
     startPosition: [-8, 0.2, 8],
-    holePosition: [0, 0.01, 0],
-    holeRadius: 0.25,
+    holePosition: [8, 0.01, -8],
+    holeRadius: 0.3,
     obstacles: [
-      // Outer Walls
-      { type: 'box', position: [0, 0.5, 10], size: [20, 1, 0.5] },  // North
-      { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] }, // South
-      { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },  // East
-      { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] }, // West
+        // Outer Walls
+        { type: 'box', position: [0, 0.5, 10], size: [20, 1, 0.5] },  // North
+        { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] }, // South
+        { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },  // East
+        { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] }, // West
 
-      // Inner Spiral
-      { type: 'box', position: [0, 0.5, 7], size: [14, 1, 0.5] },   // 1st horizontal
-      { type: 'box', position: [-7, 0.5, 1], size: [0.5, 1, 12] },  // 1st vertical
-      
-      { type: 'box', position: [0, 0.5, -5], size: [14, 1, 0.5] },   // 2nd horizontal
-      { type: 'box', position: [7, 0.5, -1], size: [0.5, 1, 8] },   // 2nd vertical
-
-      { type: 'box', position: [1.5, 0.5, 3], size: [11, 1, 0.5] },  // 3rd horizontal
+        // Maze Walls
+        { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, 
+        { type: 'box', position: [2, 0.5, 2], size: [16, 1, 0.5] }, 
+        { type: 'box', position: [-2, 0.5, -2], size: [16, 1, 0.5] },
+        { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] },
     ],
     sandpits: [],
     trees: []
