@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from '@/lib/supabase/client';
 import { Mail } from 'lucide-react';
 import Link from 'next/link';
-import { GolfFlagIcon } from '@/components/icons/GolfFlagIcon';
+import { AuthHeader } from '@/components/layout/AuthHeader';
 
 async function handlePasswordReset(email: string): Promise<{ error: any }> {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -45,12 +45,9 @@ export default function ResetPasswordPage() {
     };
   
   return (
-    <div className="min-h-dvh w-full flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-4">
-        <div className="w-full max-w-sm">
-            <Link href="/" className="flex flex-col items-center mb-6">
-                <GolfFlagIcon className="h-10 w-10 mb-4" />
-            </Link>
-
+    <div className="relative min-h-dvh w-full flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-4">
+        <AuthHeader />
+        <div className="w-full max-w-sm pt-16">
             {isSubmitted ? (
                  <Card className="text-center">
                     <CardHeader>
