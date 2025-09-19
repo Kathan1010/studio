@@ -49,8 +49,8 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -8],
     holeRadius: 0.25,
     obstacles: [
-       { type: 'ramp', position: [0, 0, 2], size: [2.5, 0.2, 4], rotation: [-0.2, 0, 0] },
-       { type: 'ramp', position: [0, 0.4, -2], size: [2.5, 0.2, 4], rotation: [0.2, 0, 0] }
+       { type: 'ramp', position: [0, 0, 2], size: [2.5, 0.2, 5], rotation: [-0.25, 0, 0] },
+       { type: 'ramp', position: [0, 0.6, -3], size: [2.5, 0.2, 5], rotation: [0.25, 0, 0] }
     ],
     sandpits: [
       { position: [3, 0.02, -4], radius: 1 },
