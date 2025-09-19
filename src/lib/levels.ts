@@ -160,30 +160,28 @@ export const levels: Level[] = [
     holeRadius: 0.3,
     obstacles: [
       // Outer walls
-      { type: 'box', position: [0, 0.5, 12], size: [24, 1, 1] }, // Top
-      { type: 'box', position: [0, 0.5, -12], size: [24, 1, 1] }, // Bottom
-      { type: 'box', position: [-12, 0.5, 0], size: [1, 1, 24] }, // Left
-      { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] }, // Right
+      { type: 'box', position: [0, 0.5, 12], size: [24, 1, 1] },
+      { type: 'box', position: [0, 0.5, -12], size: [24, 1, 1] },
+      { type: 'box', position: [-12, 0.5, 0], size: [1, 1, 24] },
+      { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] },
+      
+      // New Maze layout
+      { type: 'box', position: [-6, 0.5, 6], size: [1, 1, 12] },
+      { type: 'box', position: [0, 0.5, 8], size: [12, 1, 1] },
+      { type: 'box', position: [6, 0.5, 2], size: [1, 1, 12] },
+      { type: 'box', position: [0, 0.5, -4], size: [12, 1, 1] },
+      { type: 'box', position: [-6, 0.5, -8], size: [1, 1, 8] },
+      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 1] },
+      { type: 'box', position: [-4, 0.5, -2], size: [1, 1, 4] },
+      { type: 'box', position: [4, 0.5, -8], size: [1, 1, 8] },
+      { type: 'box', position: [8, 0.5, -6], size: [8, 1, 1] },
 
-      // Internal maze walls
-      { type: 'box', position: [-2, 0.5, 8], size: [20, 1, 1] },
-      { type: 'box', position: [2, 0.5, 4], size: [20, 1, 1] },
-      { type: 'box', position: [-2, 0.5, 0], size: [20, 1, 1] },
-      { type: 'box', position: [2, 0.5, -4], size: [20, 1, 1] },
-      { type: 'box', position: [-2, 0.5, -8], size: [20, 1, 1] },
-
-      // Vertical connectors
-      { type: 'box', position: [-10, 0.5, 10], size: [1, 1, 4] },
-      { type: 'box', position: [8, 0.5, 6], size: [1, 1, 4] },
-      { type: 'box', position: [-8, 0.5, 2], size: [1, 1, 4] },
-      { type: 'box', position: [8, 0.5, -2], size: [1, 1, 4] },
-      { type: 'box', position: [-8, 0.5, -6], size: [1, 1, 4] },
     ],
     sandpits: [],
     trees: [
       { position: [-10.5, 0, -10.5] },
       { position: [10.5, 0, 10.5] },
-      { position: [0, 0, 0] },
+      { position: [0, 0, 6] },
     ]
   }
 ];
