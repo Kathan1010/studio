@@ -74,9 +74,10 @@ export const levels: Level[] = [
     holeRadius: 0.25,
     obstacles: [
       // Small blocks near the hole
-      { type: 'box', position: [0, 0.25, -12], size: [0.5, 0.5, 0.5] },
-      { type: 'box', position: [-1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
-      { type: 'box', position: [1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [0, 0.25, -12.5], size: [0.5, 0.5, 0.5] }, // Front
+      { type: 'box', position: [0, 0.25, -15.5], size: [0.5, 0.5, 0.5] }, // Back
+      { type: 'box', position: [1.5, 0.25, -14], size: [0.5, 0.5, 0.5] },  // Right
+      { type: 'box', position: [-1.5, 0.25, -14], size: [0.5, 0.5, 0.5] }, // Left
     ],
     sandpits: [
       { position: [0, 0.02, 5], radius: 2 },
@@ -155,13 +156,12 @@ export const levels: Level[] = [
       { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] },
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
-
-      // Simple Zig-Zag Maze Path
-      // Path: Start -> Right -> Down -> Right -> Down -> Right -> End
-      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] },      // Wall 1 (Top) - Opening on left
-      { type: 'box', position: [-1, 0.5, 2], size: [18, 1, 0.5] },     // Wall 2 - Opening on right
-      { type: 'box', position: [1, 0.5, -2], size: [18, 1, 0.5] },     // Wall 3 - Opening on left
-      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },    // Wall 4 (Bottom) - Opening on right
+  
+      // Simple Winding Path
+      { type: 'box', position: [0, 0.5, 4], size: [16, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, -4], size: [16, 1, 0.5] },
+      { type: 'box', position: [8, 0.5, 0], size: [0.5, 1, 8] },
+      { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 8] },
     ],
     sandpits: [],
     trees: []
