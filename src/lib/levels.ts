@@ -51,6 +51,11 @@ export const levels: Level[] = [
     obstacles: [
         { type: 'ramp', position: [0, 0.2, 3], size: [4, 0.5, 8], rotation: [0.25, 0, 0] },
         { type: 'ramp', position: [0, 0.2, -5], size: [4, 0.5, 8], rotation: [-0.25, 0, 0] },
+        // Railings for the bridge
+        { type: 'box', position: [2.25, 0.8, 3], size: [0.5, 0.5, 8], rotation: [0.25, 0, 0] },
+        { type: 'box', position: [-2.25, 0.8, 3], size: [0.5, 0.5, 8], rotation: [0.25, 0, 0] },
+        { type: 'box', position: [2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
+        { type: 'box', position: [-2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
     ],
     sandpits: [
         { position: [4, 0.02, 0], radius: 2 }
