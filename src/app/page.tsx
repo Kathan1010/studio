@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Layers, Mouse, Target, Keyboard, Camera, Trophy, User, Tv } from 'lucide-react';
+import { ArrowRight, Layers, MousePointer, Target, Gamepad, Camera, Tv, Trophy, Database } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { HowToPlay } from '@/components/home/HowToPlay';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -51,14 +51,16 @@ export default function Home() {
             <p className="text-center text-muted-foreground mb-8">
               An exercise in 3D web graphics, rendering, and interaction.
             </p>
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
                 { title: 'Scene & Asset Rendering', description: 'Initialized a Three.js scene with camera, lighting, and rendering. Loaded 3D models for the course and rendered the golf ball.', icon: <Layers/> },
-                { title: 'Basic Physics & Interaction', description: 'Implemented user input to apply velocity to the ball, with simplified friction for realistic movement.', icon: <Mouse/> },
+                { title: 'Basic Physics & Interaction', description: 'Implemented user input to apply velocity to the ball, with simplified friction for realistic movement.', icon: <MousePointer/> },
                 { title: 'Core Gameplay & State', description: 'Managed game state like hole, par, and strokes, and implemented goal detection to complete levels.', icon: <Target/> },
-                { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.', icon: <Keyboard/> },
+                { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.', icon: <Gamepad/> },
                 { title: 'Interactive Camera System', description: 'Provided interactive camera controls, including orbit, pan, and zoom, for inspecting the course.', icon: <Camera/> },
                 { title: 'User Interface (UI)', description: 'A clean UI displays essential game info like hole number and stroke count, and provides interactive controls.', icon: <Tv /> },
+                { title: 'Level Management', description: 'A system for loading multiple levels with terrain variations like slopes and ramps. A level navigator allows players to transition between holes.', icon: <Trophy /> },
+                { title: 'Persistent Scoring', description: 'Tracked total scores across all levels, saved in a database linked to email-based authentication so players can continue their progress across sessions.', icon: <Database /> },
               ].map((item) => (
                 <Card key={item.title} className="flex flex-col">
                   <CardHeader>
@@ -74,32 +76,6 @@ export default function Home() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </section>
-
-          <section id="bonus-features">
-            <h2 className="text-3xl font-bold text-center mb-2">
-              Bonus Objectives
-            </h2>
-             <p className="text-center text-muted-foreground mb-8">
-              Going above and beyond the core requirements.
-            </p>
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-               <Card className="lg:col-span-3">
-                  <CardHeader>
-                    <CardTitle className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Trophy />
-                      </div>
-                      <span>Level Management & Persistent Scoring</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">
-                      Expanded the experience with a multi-level system featuring terrain variations. A level navigator allows players to transition between holes, while persistent scoring, linked to email-based authentication, tracks total scores across sessions.
-                    </p>
-                  </CardContent>
-                </Card>
             </div>
           </section>
         </div>
