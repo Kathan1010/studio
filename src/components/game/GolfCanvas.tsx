@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { Level } from '@/lib/levels';
 import { useIsMobile } from '@/hooks/use-mobile';
-import type { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // --- A dedicated class to manage the Three.js game world ---
 export class Game {
@@ -127,7 +127,7 @@ export class Game {
     this.scene.add(trunkObstacle);
   }
 
-  private async createLevel() {
+  private createLevel() {
     // Ground
     const groundGeo = new THREE.PlaneGeometry(50, 50);
     const groundMat = new THREE.MeshStandardMaterial({ color: 0x55aa55, roughness: 0.9 });
@@ -153,9 +153,6 @@ export class Game {
     this.scene.add(this.holeMesh);
 
     // Obstacles
-    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
-    const loader = new (GLTFLoader as any)();
-
     this.level.obstacles.forEach(obs => {
         const obsGeo = new THREE.BoxGeometry(...obs.size);
         const obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
