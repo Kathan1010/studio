@@ -76,6 +76,11 @@ export const levels: Level[] = [
       // The bottleneck walls
       { type: 'box', position: [1.5, 0.5, 0], size: [1, 1, 6] },
       { type: 'box', position: [-1.5, 0.5, 0], size: [1, 1, 6] },
+      // Blocks around the hole
+      { type: 'box', position: [0, 0.25, -9.2], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [0, 0.25, -10.8], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [0.8, 0.25, -10], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [-0.8, 0.25, -10], size: [0.5, 0.5, 0.5] }
     ],
     sandpits: [
       { position: [0, 0.02, 5], radius: 2.5 },
@@ -98,10 +103,10 @@ export const levels: Level[] = [
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
         // Blocks around the hole, spaced out
-        { type: 'box', position: [0, 0.25, -10.5], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0, 0.25, -13.5], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [1.5, 0.25, -12], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-1.5, 0.25, -12], size: [0.5, 0.5, 0.5] }
+        { type: 'box', position: [0, 0.25, -11.2], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -12.8], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0.8, 0.25, -12], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [-0.8, 0.25, -12], size: [0.5, 0.5, 0.5] }
     ],
     sandpits: [
         { position: [4, 0.02, 8], radius: 1.5 },
