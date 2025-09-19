@@ -60,26 +60,9 @@ export const levels: Level[] = [
       { position: [-5, 0, -5] },
     ]
   },
-  // Medium Levels
-  {
-    id: 3,
-    name: 'The Tunnel',
-    par: 2,
-    startPosition: [0, 0.2, 10],
-    holePosition: [0, 0.01, -10],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'box', position: [-1, 0.5, 0], size: [0.5, 1, 5] },
-        { type: 'box', position: [1, 0.5, 0], size: [0.5, 1, 5] },
-    ],
-    trees: [
-        { position: [4, 0, 3] },
-        { position: [-4, 0, -3] },
-    ]
-  },
   // Hard Levels
   {
-    id: 4,
+    id: 3,
     name: 'The Ridge',
     par: 4,
     startPosition: [0, 0.2, 12],
@@ -97,7 +80,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 5,
+    id: 4,
     name: 'Ricochet',
     par: 5,
     startPosition: [-10, 0.2, 10],
@@ -114,7 +97,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 6,
+    id: 5,
     name: 'The Gauntlet',
     par: 5,
     startPosition: [0, 0.2, 14],
@@ -133,7 +116,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 7,
+    id: 6,
     name: 'Vertigo',
     par: 4,
     startPosition: [0, 0.2, 10],
@@ -146,7 +129,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 8,
+    id: 7,
     name: 'Precision',
     par: 3,
     startPosition: [0, 0.2, 12],
@@ -163,7 +146,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 9,
+    id: 8,
     name: 'Leap of Faith',
     par: 4,
     startPosition: [0, 0.2, 12],
