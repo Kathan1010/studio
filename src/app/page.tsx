@@ -53,7 +53,7 @@ export default function Home() {
             </p>
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { title: 'Scene & Asset Rendering', description: 'Initialize a Three.js scene, load a 3D model for the course, and render a golf ball.', icon: <Layers/> },
+                { title: 'Scene & Asset Rendering', description: 'Initialized a Three.js scene, loaded 3D models for the courses, and rendered the golf ball.', icon: <Layers/> },
                 { title: 'Basic Physics & Interaction', description: 'Implement user input to apply velocity to the ball, with simplified friction.', icon: <Mouse/> },
                 { title: 'Gameplay & State Management', description: 'Manage game state like hole, par, and strokes. Implement goal detection.', icon: <Target/> },
                 { title: 'Player Controls', description: 'Intuitive controls for aiming precision and power, with clear visual feedback.', icon: <Keyboard/> },
