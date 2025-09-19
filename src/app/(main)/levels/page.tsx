@@ -1,15 +1,12 @@
 
 'use server';
 
-import { getBestScores, type ScoreInfo } from '@/lib/supabase/scores';
+import { getBestScores } from '@/lib/supabase/scores';
 import { levels } from '@/lib/levels';
 import { LevelsList } from './LevelsList';
 
 export default async function LevelsPage() {
   const scoresData = await getBestScores();
-  
-  // Create a Map for easy lookup
-  const scoresMap = new Map<number, ScoreInfo>(scoresData.map(s => [s.level_id, s]));
 
   return (
     <div className="container py-8">
@@ -21,7 +18,7 @@ export default async function LevelsPage() {
           </p>
         </div>
         
-        <LevelsList levels={levels} initialScoresMap={scoresMap} />
+        <LevelsList levels={levels} scores={scoresData} />
 
       </div>
     </div>

@@ -8,14 +8,17 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useMemo } from 'react';
 
 type LevelsListProps = {
   levels: Level[];
-  initialScoresMap: Map<number, ScoreInfo>;
+  scores: ScoreInfo[];
 };
 
-export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
+export function LevelsList({ levels, scores }: LevelsListProps) {
   const router = useRouter();
+
+  const scoresMap = useMemo(() => new Map(scores.map(s => [s.level_id, s])), [scores]);
 
   const handlePlayClick = (levelId: number) => {
     router.push(`/play?level=${levelId}`);
@@ -24,7 +27,7 @@ export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {levels.map((level) => {
-        const scoreInfo = initialScoresMap.get(level.id);
+        const scoreInfo = scoresMap.get(level.id);
         const bestScore = scoreInfo?.strokes;
 
         return (
