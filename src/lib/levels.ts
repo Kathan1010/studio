@@ -91,7 +91,7 @@ export const levels: Level[] = [
    {
     id: 4,
     name: "Precision",
-    par: 4,
+    par: 3,
     startPosition: [0, 0.2, 12],
     holePosition: [0, 0.01, -12],
     holeRadius: 0.2,
@@ -155,17 +155,16 @@ export const levels: Level[] = [
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
       // Maze Walls
-      // Path: Down, Right, Down, Left, Down, Right
-      { type: 'box', position: [0, 0.5, 6], size: [16, 1, 0.5] },      // Top wall, open on left
-      { type: 'box', position: [-2, 0.5, 2], size: [16, 1, 0.5] },     // 2nd wall, open on right
-      { type: 'box', position: [2, 0.5, -2], size: [16, 1, 0.5] },     // 3rd wall, open on left
-      { type: 'box', position: [0, 0.5, -6], size: [16, 1, 0.5] },      // Bottom wall, open on right
-      
-      // Vertical connectors to make it a maze
-      { type: 'box', position: [-8, 0.5, 8], size: [0.5, 1, 4] },    // Connects top wall to start area
-      { type: 'box', position: [6, 0.5, 4], size: [0.5, 1, 4] },      // Connects 2nd wall to 1st
-      { type: 'box', position: [-6, 0.5, 0], size: [0.5, 1, 4] },     // Connects 3rd wall to 2nd
-      { type: 'box', position: [8, 0.5, -4], size: [0.5, 1, 4] },    // Connects bottom wall to 3rd
+      // Path: Right, Down, Left, Down, Right
+      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] },      // Wall 1 (Top) - Opening on left
+      { type: 'box', position: [-1, 0.5, 2], size: [18, 1, 0.5] },     // Wall 2 - Opening on right
+      { type: 'box', position: [1, 0.5, -2], size: [18, 1, 0.5] },     // Wall 3 - Opening on left
+      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },    // Wall 4 (Bottom) - Opening on right
+
+      // Vertical Dividers
+      { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 4] },      // Divider between wall 2 and 3 on left
+      { type: 'box', position: [8, 0.5, 4], size: [0.5, 1, 4] },       // Divider between wall 1 and 2 on right
+      { type: 'box', position: [0, 0.5, -4], size: [0.5, 1, 4] },      // Center divider between wall 3 and 4
     ],
     sandpits: [],
     trees: []
