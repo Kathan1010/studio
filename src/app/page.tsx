@@ -1,5 +1,4 @@
 
-
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
@@ -49,7 +48,7 @@ export default function Home() {
               Project Features
             </h2>
             <p className="text-center text-muted-foreground mb-8">
-              An exercise in 3D web graphics, rendering, and interaction.
+              An exercise in web-based 3D.
             </p>
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
@@ -59,7 +58,7 @@ export default function Home() {
                 { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.', icon: <Gamepad/> },
                 { title: 'Interactive Camera System', description: 'Provided interactive camera controls, including orbit, pan, and zoom, for inspecting the course.', icon: <Camera/> },
                 { title: 'User Interface (UI)', description: 'A clean UI displays essential game info like hole number and stroke count, and provides interactive controls.', icon: <Tv /> },
-                { title: 'Level Management', description: 'A system for loading multiple levels with terrain variations like slopes and ramps.', icon: <Map /> },
+                { title: 'Level Management', description: 'A system was implemented for loading multiple levels with terrain variations like slopes and ramps.', icon: <Map /> },
                 { title: 'Level Navigator', description: 'Created a UI for players to select levels and transition between them after completing a hole.', icon: <CheckSquare /> },
                 { title: 'Persistent Scoring', description: 'Tracked total scores across all levels, saved in a database linked to email-based authentication so players can continue their progress across sessions.', icon: <Database /> },
               ].map((item) => (
@@ -85,7 +84,7 @@ export default function Home() {
           <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
             <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
               <p className="text-center text-sm leading-loose md:text-left text-muted-foreground">
-                Built by team Igniv0x
+                Made for CloneFest2025 by team Igniv0x
               </p>
             </div>
           </div>
