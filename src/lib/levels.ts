@@ -65,7 +65,7 @@ export const levels: Level[] = [
     name: "The Slingshot",
     par: 4,
     startPosition: [0, 0.2, 14],
-    holePosition: [0, 0.01, 8],
+    holePosition: [0, 0.01, -6],
     holeRadius: 0.25,
     obstacles: [
       // U-shaped structure
@@ -73,9 +73,10 @@ export const levels: Level[] = [
       { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [0, 0.5, -8], size: [12, 1, 1] },
       
-      // Funnel towards the hole
-      { type: 'ramp', position: [2.5, 0.25, 4], size: [1, 0.5, 4], rotation: [0, -0.4, 0] },
-      { type: 'ramp', position: [-2.5, 0.25, 4], size: [1, 0.5, 4], rotation: [0, 0.4, 0] }
+      // Small blocks to make it harder
+      { type: 'box', position: [0, 0.25, -4.5], size: [0.75, 0.5, 0.75] },
+      { type: 'box', position: [2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
+      { type: 'box', position: [-2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
     ],
     trees: [
       { position: [8, 0, 8] },
