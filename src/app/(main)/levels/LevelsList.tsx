@@ -46,7 +46,7 @@ export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
             <CardContent className="flex-1">
               {bestScore !== undefined && (
                 <div className="flex items-center justify-end">
-                    <Badge variant={bestScore <= level.par ? 'default' : 'secondary'}>
+                    <Badge variant={'default'}>
                       Best: {bestScore}
                     </Badge>
                 </div>
