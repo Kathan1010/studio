@@ -327,18 +327,6 @@ export class Game {
         onSurface = true;
     }
 
-    // --- Sandpit check ---
-    if (onSurface) {
-        for (const sandpit of this.sandpits) {
-            const distToSandpitCenter = this.ballMesh.position.clone().setY(0).distanceTo(sandpit.position.clone().setY(0));
-            const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
-            if (distToSandpitCenter < sandpitRadius) {
-                inSand = true;
-                break;
-            }
-        }
-    }
-
     // --- Obstacle Collision (with Raycasting for Tunneling) ---
     const movementVector = this.ballVelocity.clone();
     const movementDistance = movementVector.length();
@@ -374,6 +362,21 @@ export class Game {
                         this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
                     }
                 }
+            }
+        }
+    }
+    
+    // --- Sandpit check ---
+    // This check should happen after obstacle collision has determined if we are `onSurface`.
+    // It determines if the surface the ball is on is sand.
+    if (onSurface) {
+        for (const sandpit of this.sandpits) {
+            const distToSandpitCenter = this.ballMesh.position.clone().setY(sandpit.position.y).distanceTo(sandpit.position);
+            const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
+            // Check if ball is horizontally within the sandpit and vertically very close to it.
+            if (distToSandpitCenter < sandpitRadius && Math.abs(this.ballMesh.position.y - (sandpit.position.y + ballRadius)) < 0.2) {
+                inSand = true;
+                break;
             }
         }
     }
@@ -581,6 +584,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
