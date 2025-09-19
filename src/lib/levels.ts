@@ -56,6 +56,8 @@ export const levels: Level[] = [
         { type: 'box', position: [-2.25, 0.8, 3], size: [0.5, 0.5, 8], rotation: [0.25, 0, 0] },
         { type: 'box', position: [2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
         { type: 'box', position: [-2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
+        // Backstop behind the hole
+        { type: 'box', position: [0, 0.25, -11], size: [4, 0.5, 0.5] },
     ],
     sandpits: [
         { position: [4, 0.02, 0], radius: 2 },
@@ -151,34 +153,35 @@ export const levels: Level[] = [
   },
   {
     id: 6,
-    name: 'The Labyrinth',
+    name: "The Labyrinth",
     par: 4,
     startPosition: [-4, 0.2, 12],
     holePosition: [4, 0.01, -12],
     holeRadius: 0.3,
     obstacles: [
-      // Outer walls
-      { type: 'box', position: [0, 0.5, 14], size: [12, 1, 1] },   // Top
-      { type: 'box', position: [0, 0.5, -14], size: [12, 1, 1] },  // Bottom
-      { type: 'box', position: [6, 0.5, 0], size: [1, 1, 28] },    // Right
-      { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 28] },   // Left
+      // Outer walls are part of the default course boundaries now
 
       // Internal maze walls
-      { type: 'box', position: [-2, 0.5, 10], size: [8, 1, 1] },
-      { type: 'box', position: [2, 0.5, 6], size: [8, 1, 1] },
-      { type: 'box', position: [ -4, 0.5, 2 ], size: [4, 1, 1] },
-      { type: 'box', position: [ 0, 0.5, 0 ], size: [1, 1, 5] },
-      { type: 'box', position: [-2, 0.5, -2], size: [8, 1, 1] },
-      { type: 'box', position: [2, 0.5, -6], size: [8, 1, 1] },
-      { type: 'box', position: [ -2, 0.5, -10 ], size: [8, 1, 1] },
+      { type: 'box', position: [0, 0.5, 10], size: [12, 1, 1] },
+      { type: 'box', position: [0, 0.5, 6], size: [12, 1, 1] },
+      { type: 'box', position: [ -2, 0.5, 8 ], size: [1, 1, 4] },
+      { type: 'box', position: [ 2, 0.5, 8 ], size: [1, 1, 4] },
+      
+      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 1] },
+      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 1] },
+
+      { type: 'box', position: [ -4, 0.5, 0 ], size: [1, 1, 4] },
+      { type: 'box', position: [ 4, 0.5, 0 ], size: [1, 1, 4] },
+      { type: 'box', position: [ -2, 0.5, -4 ], size: [1, 1, 4] },
+      { type: 'box', position: [ 2, 0.5, -4 ], size: [1, 1, 4] },
+
+      { type: 'box', position: [0, 0.5, -6], size: [12, 1, 1] },
+      { type: 'box', position: [0, 0.5, -10], size: [12, 1, 1] },
     ],
     sandpits: [],
     trees: [
       { position: [5, 0, 12] },
-      { position: [-5, 0, 5] },
-      { position: [5, 0, 0] },
       { position: [-5, 0, -5] },
-      { position: [5, 0, -10] },
     ]
   }
 ];
