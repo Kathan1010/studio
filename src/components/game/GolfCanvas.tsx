@@ -130,33 +130,8 @@ export class Game {
 
   private createLevel() {
     // Ground
-    const groundSize = 50;
-    const checkerSize = 2; // Size of each square in the checker pattern
-    const textureSize = 128; // Power of 2 for texture quality
-
-    const canvas = document.createElement('canvas');
-    canvas.width = textureSize;
-    canvas.height = textureSize;
-    const context = canvas.getContext('2d')!;
-
-    const color1 = '#2A6A2A'; // Darker green
-    const color2 = '#3A7A3A'; // Lighter green
-    const squareSize = textureSize / 2;
-
-    context.fillStyle = color1;
-    context.fillRect(0, 0, textureSize, textureSize);
-    context.fillStyle = color2;
-    context.fillRect(0, 0, squareSize, squareSize);
-    context.fillRect(squareSize, squareSize, squareSize, squareSize);
-
-    const groundTexture = new THREE.CanvasTexture(canvas);
-    groundTexture.wrapS = THREE.RepeatWrapping;
-    groundTexture.wrapT = THREE.RepeatWrapping;
-    const repeatValue = groundSize / checkerSize;
-    groundTexture.repeat.set(repeatValue / 2, repeatValue / 2); // Divide by 2 because our canvas texture has a 2x2 pattern
-
-    const groundGeo = new THREE.PlaneGeometry(groundSize, groundSize);
-    const groundMat = new THREE.MeshStandardMaterial({ map: groundTexture, roughness: 0.9 });
+    const groundGeo = new THREE.PlaneGeometry(50, 50);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0x228B22, roughness: 0.8 });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
     ground.receiveShadow = true;
@@ -630,6 +605,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
