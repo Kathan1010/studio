@@ -29,16 +29,15 @@ export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
         audioRef.current.volume = 0.5;
       }
       
+      const audio = audioRef.current;
       // Play music when component mounts
-      audioRef.current.play().catch(error => {
+      audio.play().catch(error => {
         console.error("Audio play failed:", error);
       });
 
       // Pause music when component unmounts
       return () => {
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
+        audio.pause();
       };
     }
   }, []);
