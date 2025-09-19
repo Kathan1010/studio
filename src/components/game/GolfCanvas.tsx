@@ -317,6 +317,7 @@ export class Game {
     const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
     let onSurface = false;
     let inSand = false;
+    let surfaceNormal = new THREE.Vector3(0, 1, 0); // Default to flat ground
     
     // --- Ground collision ---
     const groundLevel = 0;
@@ -388,6 +389,7 @@ export class Game {
             // If the normal is pointing mostly upwards, we are on top of the obstacle
             if (collisionNormal.y > 0.7) {
                  onSurface = true;
+                 surfaceNormal = collisionNormal; // This is a slope!
                  if (this.ballVelocity.y < 0) {
                      this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
                  }
@@ -396,14 +398,24 @@ export class Game {
     }
 
 
-    // --- Apply friction if on any surface ---
+    // --- Apply friction and slope gravity if on any surface ---
     if(onSurface) {
+      const isFlat = surfaceNormal.y > 0.99; // Check if the surface is nearly flat
       const friction = inSand ? 0.85 : 0.98;
+      
       this.ballVelocity.x *= friction;
       this.ballVelocity.z *= friction;
+      
       // Also apply a little friction to vertical bounce on surfaces
       if (Math.abs(this.ballVelocity.y) < 0.01) {
           this.ballVelocity.y = 0;
+      }
+      
+      // Apply slope gravity if not flat
+      if (!isFlat) {
+          const slopeGravity = this.gravity.clone();
+          const slide = slopeGravity.sub(surfaceNormal.clone().multiplyScalar(slopeGravity.dot(surfaceNormal)));
+          this.ballVelocity.add(slide);
       }
     }
   }
@@ -433,10 +445,11 @@ export class Game {
 
     // --- Gameplay Physics ---
     if (this.isBallMoving) {
+        // Apply global gravity before checking collisions
         this.ballVelocity.add(this.gravity);
         
         // Move and check for collisions
-        // We move first, then correct position if a collision happened.
+        // The checkCollisions method now also handles slope gravity
         this.ballMesh.position.add(this.ballVelocity);
         this.checkCollisions();
 
@@ -478,8 +491,10 @@ export class Game {
         }
         
         // --- Stop Condition ---
-        // If the ball is moving very slowly, bring it to a complete stop.
-        if (this.ballVelocity.lengthSq() < 0.0001) {
+        // If the ball is moving very slowly on a near-flat surface, bring it to a complete stop.
+        // This threshold is now checked inside checkCollisions where we know the surface normal.
+        const onAnySurface = this.ballMesh.position.y <= (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius + 0.01;
+        if (onAnySurface && this.ballVelocity.lengthSq() < 0.0001) {
             this.ballVelocity.set(0, 0, 0);
             this.isBallMoving = false;
         }
@@ -584,6 +599,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
