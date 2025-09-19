@@ -151,7 +151,7 @@ export const levels: Level[] = [
   {
     id: 6,
     name: 'The Labyrinth',
-    par: 5,
+    par: 4,
     startPosition: [-8, 0.2, 8],
     holePosition: [8, 0.01, -8],
     holeRadius: 0.25,
@@ -161,13 +161,13 @@ export const levels: Level[] = [
       { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] },
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
-      
+
       // Inner Maze Walls
-      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, // Top horizontal
-      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] }, // Bottom horizontal
-      { type: 'box', position: [6, 0.5, 2], size: [0.5, 1, 8] },   // Right vertical
-      { type: 'box', position: [-6, 0.5, -2], size: [0.5, 1, 8] }, // Left vertical
-      { type: 'box', position: [-2, 0.5, -2], size: [8, 1, 0.5] },  // Center horizontal
+      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] },
+      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] },
+      { type: 'box', position: [6, 0.5, 1], size: [0.5, 1, 10] },
+      { type: 'box', position: [-6, 0.5, -1], size: [0.5, 1, 10] },
+      { type: 'box', position: [0, 0.5, 0], size: [12, 1, 0.5] },
     ],
     sandpits: [],
     trees: []
