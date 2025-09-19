@@ -78,8 +78,8 @@ export const levels: Level[] = [
       { type: 'box', position: [0, 0.5, -8], size: [12, 1, 1] },
       
       // Horizontal barriers
-      { type: 'box', position: [0, 0.5, 4], size: [10, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, -2], size: [10, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, 4], size: [12, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 0.5] },
 
       // Small blocks to make it harder
       { type: 'box', position: [0, 0.25, -4.5], size: [0.75, 0.5, 0.75] },
