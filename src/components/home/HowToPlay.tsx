@@ -44,7 +44,7 @@ export function HowToPlay() {
           <CardContent>
             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
               <li>
-                <strong>Aim:</strong> Use the <strong>Left and Right arrow keys</strong> to set your direction.
+                <strong>Aim:</strong> Use the <strong>A/D</strong> or <strong>Left/Right arrow keys</strong> to set your direction.
               </li>
               <li>
                 <strong>Power:</strong> Press and hold the <strong>Spacebar</strong> to charge your shot, then release to shoot.
