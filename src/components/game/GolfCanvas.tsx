@@ -359,12 +359,16 @@ export class Game {
              
             // Check if the collision is with a "floor" surface of the obstacle
             // We use a small threshold to consider it a floor
-            const localNormal = collisionNormal.clone();
-            const worldNormal = localNormal.transformDirection(obstacle.matrixWorld).normalize();
+            const worldNormal = collisionNormal.clone().transformDirection(obstacle.matrixWorld).normalize().sub(obstacle.position).normalize();
+
 
             // If the normal is pointing mostly upwards, we are on top of the obstacle
             if (worldNormal.y > 0.7) {
                  onSurface = true;
+                 // Dampen bounce on the obstacle's surface
+                 if (this.ballVelocity.y < 0) {
+                     this.ballVelocity.y *= -0.3;
+                 }
             }
         }
     }
