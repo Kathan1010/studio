@@ -150,7 +150,7 @@ export const levels: Level[] = [
   },
   {
     id: 6,
-    name: 'The Maze',
+    name: 'The Labyrinth',
     par: 5,
     startPosition: [-8, 0.2, 8],
     holePosition: [8, 0.01, -8],
@@ -161,15 +161,17 @@ export const levels: Level[] = [
       { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] },
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
+      
+      // Inner Maze Walls
+      { type: 'box', position: [-5, 0.5, 6], size: [10, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, 2], size: [10, 1, 0.5] },
+      { type: 'box', position: [-2, 0.5, -2], size: [10, 1, 0.5] },
+      { type: 'box', position: [3, 0.5, -6], size: [14, 1, 0.5] },
 
-      // Path
-      { type: 'box', position: [-2.25, 0.5, 7.5], size: [15, 1, 0.5] },
-      { type: 'box', position: [5.5, 0.5, 4], size: [0.5, 1, 7] },
-      { type: 'box', position: [0.5, 0.5, 0.5], size: [10, 1, 0.5] },
-      { type: 'box', position: [-4.5, 0.5, -2], size: [0.5, 1, 5] },
-      { type: 'box', position: [2.5, 0.5, -4.5], size: [15, 1, 0.5] },
-      { type: 'box', position: [2.5, 0.5, -8], size: [0.5, 1, 4] },
-
+      { type: 'box', position: [-7, 0.5, 0], size: [0.5, 1, 8] },
+      { type: 'box', position: [7, 0.5, 4], size: [0.5, 1, 8] },
+      { type: 'box', position: [-2, 0.5, -6], size: [0.5, 1, 8] },
+      { type: 'box', position: [3, 0.5, -1], size: [0.5, 1, 6] },
     ],
     sandpits: [],
     trees: []
