@@ -384,7 +384,7 @@ export class Game {
     // --- Apply friction and slope gravity if on any surface ---
     if(onSurface) {
       const isFlat = surfaceNormal.y > 0.99; // Check if the surface is nearly flat
-      const friction = inSand ? 0.7 : 0.98;
+      const friction = inSand ? 0.8 : 0.98;
       
       this.ballVelocity.x *= friction;
       this.ballVelocity.z *= friction;
@@ -583,6 +583,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
