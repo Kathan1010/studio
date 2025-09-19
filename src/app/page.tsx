@@ -1,12 +1,10 @@
 
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight, Layers, MousePointer, Target, Gamepad, Camera, Tv, Trophy, Database, Map, CheckSquare } from 'lucide-react';
+import { Layers, MousePointer, Target, Gamepad, Camera, Tv, Map, CheckSquare, Database } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { HowToPlay } from '@/components/home/HowToPlay';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { HeroButtons } from '@/components/home/HeroButtons';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-golf-course');
@@ -30,18 +28,7 @@ export default function Home() {
               <p className="mt-4 text-lg md:text-xl text-white/90 [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]">
                 Challenge the course in this 3D minigolf adventure, beautifully rebuilt for the modern web.
               </p>
-              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                <Button asChild size="lg">
-                  <Link href="/levels">
-                    Play Now <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="text-white border-white bg-transparent hover:bg-white hover:text-primary">
-                   <Link href="/login?view=sign_up">
-                    Sign Up
-                  </Link>
-                </Button>
-              </div>
+              <HeroButtons />
           </div>
         </section>
 
