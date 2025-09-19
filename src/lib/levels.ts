@@ -68,7 +68,7 @@ export const levels: Level[] = [
   {
     id: 3,
     name: "The Slingshot",
-    par: 5,
+    par: 4,
     startPosition: [0, 0.2, 14],
     holePosition: [0, 0.01, -6],
     holeRadius: 0.25,
