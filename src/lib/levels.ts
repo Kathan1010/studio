@@ -155,17 +155,17 @@ export const levels: Level[] = [
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
       // Maze Walls
-      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 0.5] },
-      { type: 'box', position: [2.5, 0.5, -2], size: [15, 1, 0.5] },
-      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },
+      // Path: Down, Right, Down, Left, Down, Right
+      { type: 'box', position: [0, 0.5, 6], size: [16, 1, 0.5] },      // Top wall, open on left
+      { type: 'box', position: [-2, 0.5, 2], size: [16, 1, 0.5] },     // 2nd wall, open on right
+      { type: 'box', position: [2, 0.5, -2], size: [16, 1, 0.5] },     // 3rd wall, open on left
+      { type: 'box', position: [0, 0.5, -6], size: [16, 1, 0.5] },      // Bottom wall, open on right
       
-      // Vertical walls
-      { type: 'box', position: [-4, 0.5, 8], size: [0.5, 1, 4] },
-      { type: 'box', position: [6, 0.5, 4], size: [0.5, 1, 4] },
-      { type: 'box', position: [-7.5, 0.5, 0], size: [0.5, 1, 4] },
-      { type: 'box', position: [-2.5, 0.5, -4], size: [0.5, 1, 4] },
-      { type: 'box', position: [8, 0.5, -4], size: [0.5, 1, 4] },
+      // Vertical connectors to make it a maze
+      { type: 'box', position: [-8, 0.5, 8], size: [0.5, 1, 4] },    // Connects top wall to start area
+      { type: 'box', position: [6, 0.5, 4], size: [0.5, 1, 4] },      // Connects 2nd wall to 1st
+      { type: 'box', position: [-6, 0.5, 0], size: [0.5, 1, 4] },     // Connects 3rd wall to 2nd
+      { type: 'box', position: [8, 0.5, -4], size: [0.5, 1, 4] },    // Connects bottom wall to 3rd
     ],
     sandpits: [],
     trees: []
