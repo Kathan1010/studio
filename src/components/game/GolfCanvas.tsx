@@ -341,77 +341,52 @@ export class Game {
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
         obstacle.updateWorldMatrix(true, false);
-        const inverseMatrix = new THREE.Matrix4().copy(obstacle.matrixWorld).invert();
-        
-        // Transform the ball's position and velocity into the obstacle's local space
-        const localBallPosition = this.ballMesh.position.clone().applyMatrix4(inverseMatrix);
-        const localBallVelocity = this.ballVelocity.clone().transformDirection(inverseMatrix);
+        const box = new THREE.Box3().setFromObject(obstacle);
 
+        // Broad-phase: simple BBox check
+        const ballBBox = new THREE.Box3().setFromObject(this.ballMesh);
+        if (!box.intersectsBox(ballBBox)) {
+            continue;
+        }
+
+        // Narrow-phase: OBB vs Sphere
         const halfSize = (obstacle.geometry as THREE.BoxGeometry).parameters;
-        const boxMin = new THREE.Vector3(-halfSize.width / 2, -halfSize.height / 2, -halfSize.depth / 2);
-        const boxMax = new THREE.Vector3(halfSize.width / 2, halfSize.height / 2, halfSize.depth / 2);
-
-        // Swept AABB collision detection
-        let collisionTime = 1.0;
-        let collisionNormal = new THREE.Vector3();
-        let hit = false;
+        const boxHalfSize = new THREE.Vector3(halfSize.width / 2, halfSize.height / 2, halfSize.depth / 2);
         
-        // Check for collision on each axis
-        for (let i = 0; i < 3; i++) {
-            const axis = i === 0 ? 'x' : i === 1 ? 'y' : 'z';
-            if (localBallVelocity[axis] === 0) continue;
+        const boxPosition = new THREE.Vector3();
+        const boxQuaternion = new THREE.Quaternion();
+        obstacle.matrixWorld.decompose(boxPosition, boxQuaternion, new THREE.Vector3());
 
-            const entryTime = (boxMin[axis] - localBallPosition[axis] - (localBallVelocity[axis] > 0 ? ballRadius : -ballRadius)) / localBallVelocity[axis];
-            const exitTime = (boxMax[axis] - localBallPosition[axis] - (localBallVelocity[axis] > 0 ? -ballRadius : ballRadius)) / localBallVelocity[axis];
-            
-            if (entryTime > collisionTime || entryTime < 0) continue;
-            
-            const newPos = localBallPosition.clone().add(localBallVelocity.clone().multiplyScalar(entryTime));
-            const otherAxes = [0, 1, 2].filter(a => a !== i);
-            let inBounds = true;
-            for(const otherAxisIdx of otherAxes) {
-                const otherAxis = otherAxisIdx === 0 ? 'x' : otherAxisIdx === 1 ? 'y' : 'z';
-                if(newPos[otherAxis] < boxMin[otherAxis] - ballRadius || newPos[otherAxis] > boxMax[otherAxis] + ballRadius) {
-                    inBounds = false;
-                    break;
-                }
-            }
+        const spherePosition = this.ballMesh.position;
 
-            if (inBounds) {
-                collisionTime = entryTime;
-                collisionNormal.set(0,0,0);
-                collisionNormal[axis] = -Math.sign(localBallVelocity[axis]);
-                hit = true;
-            }
-        }
+        // Transform sphere center to box's local space
+        const sphereLocalPosition = spherePosition.clone().sub(boxPosition).applyQuaternion(boxQuaternion.clone().invert());
         
-        // Check for static overlap if no swept collision is found (for slow moving balls)
-        const closestPoint = new THREE.Vector3().copy(localBallPosition).clamp(boxMin, boxMax);
-        const distance = localBallPosition.distanceTo(closestPoint);
+        // Find the closest point on the OBB to the sphere's center
+        const closestPointLocal = new THREE.Vector3().copy(sphereLocalPosition);
+        closestPointLocal.clamp(boxHalfSize.clone().negate(), boxHalfSize);
 
-        if (!hit && distance < ballRadius) {
-             hit = true;
-             collisionTime = 0;
-             collisionNormal = localBallPosition.clone().sub(closestPoint).normalize();
-        }
+        const closestPointWorld = closestPointLocal.clone().applyQuaternion(boxQuaternion).add(boxPosition);
+        
+        const distance = spherePosition.distanceTo(closestPointWorld);
+        
+        if (distance < ballRadius) {
+            // Collision detected
+            const collisionNormal = spherePosition.clone().sub(closestPointWorld).normalize();
 
-        if (hit && collisionTime >= 0 && collisionTime < 1.0) {
-            // Reposition the ball to the point of collision
-            this.ballMesh.position.add(this.ballVelocity.clone().multiplyScalar(collisionTime));
+            // Resolve penetration
+            const penetrationDepth = ballRadius - distance;
+            this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(penetrationDepth));
             
-            // Transform normal to world space
-            const worldNormal = collisionNormal.clone().transformDirection(new THREE.Matrix4().extractRotation(obstacle.matrixWorld));
-
             // Reflect velocity
-            this.ballVelocity.reflect(worldNormal);
-            this.ballVelocity.multiplyScalar(0.7); // Collision dampening
-
-            // Apply remaining velocity
-            const remainingTime = 1.0 - collisionTime;
-            this.ballMesh.position.add(this.ballVelocity.clone().multiplyScalar(remainingTime));
+            this.ballVelocity.reflect(collisionNormal);
+            
+            // Apply dampening
+            const collisionDampening = 0.7; 
+            this.ballVelocity.multiplyScalar(collisionDampening);
              
             // If the normal is pointing mostly upwards, we are on top of the obstacle
-            if (worldNormal.y > 0.7) {
+            if (collisionNormal.y > 0.7) {
                  onSurface = true;
                  if (this.ballVelocity.y < 0) {
                      this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
@@ -609,6 +584,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
