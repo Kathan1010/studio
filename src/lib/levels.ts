@@ -43,13 +43,14 @@ export const levels: Level[] = [
   },
   {
     id: 2,
-    name: 'The Wall',
+    name: 'The Bridge',
     par: 3,
     startPosition: [0, 0.2, 8],
     holePosition: [0, 0.01, -8],
     holeRadius: 0.25,
     obstacles: [
-       { type: 'ramp', position: [0, 0, 0], size: [2.5, 0.2, 8], rotation: [0.2, 0, 0] },
+       { type: 'ramp', position: [0, 0, 2], size: [2.5, 0.2, 4], rotation: [-0.2, 0, 0] },
+       { type: 'ramp', position: [0, 0.4, -2], size: [2.5, 0.2, 4], rotation: [0.2, 0, 0] }
     ],
     sandpits: [
       { position: [3, 0.02, -4], radius: 1 },
