@@ -68,8 +68,8 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -12],
     holeRadius: 0.25,
     obstacles: [
-      { type: 'box', position: [-2, 0.5, 0], size: [0.5, 1, 18] },
-      { type: 'box', position: [2, 0.5, 0], size: [0.5, 1, 18] },
+      { type: 'box', position: [-1.5, 0.5, 0], size: [0.5, 1, 18] },
+      { type: 'box', position: [1.5, 0.5, 0], size: [0.5, 1, 18] },
     ],
   },
   {
@@ -123,27 +123,24 @@ export const levels: Level[] = [
   {
     id: 6,
     name: 'The Maze',
-    par: 6,
-    startPosition: [-10, 0.2, 10],
-    holePosition: [10, 0.01, -10],
+    par: 5,
+    startPosition: [-8, 0.2, 8],
+    holePosition: [8, 0.01, -8],
     holeRadius: 0.25,
     obstacles: [
-      // Outer walls
-      { type: 'box', position: [0, 0.5, 12], size: [24, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, -12], size: [24, 1, 0.5] },
-      { type: 'box', position: [12, 0.5, 0], size: [0.5, 1, 24] },
-      { type: 'box', position: [-12, 0.5, 0], size: [0.5, 1, 24] },
-      // Maze walls
-      { type: 'box', position: [-6, 0.5, 8], size: [12, 1, 0.5] },
-      { type: 'box', position: [6, 0.5, 4], size: [12, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, 0], size: [12, 1, 0.5] },
-      { type: 'box', position: [-6, 0.5, -4], size: [12, 1, 0.5] },
-      { type: 'box', position: [6, 0.5, -8], size: [12, 1, 0.5] },
+      // A solvable maze layout
+      { type: 'box', position: [-4, 0.5, 8], size: [8, 1, 0.5] },
+      { type: 'box', position: [4, 0.5, 4], size: [8, 1, 0.5] },
+      { type: 'box', position: [-8, 0.5, 0], size: [8, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 0.5] },
+      { type: 'box', position: [8, 0.5, -4], size: [8, 1, 0.5] },
+      { type: 'box', position: [-4, 0.5, -8], size: [8, 1, 0.5] },
+
       // vertical walls
-      { type: 'box', position: [-6, 0.5, 0], size: [0.5, 1, 8] },
-      { type: 'box', position: [0, 0.5, 6], size: [0.5, 1, 8] },
-      { type: 'box', position: [6, 0.5, -2], size: [0.5, 1, 8] },
-      { type: 'box', position: [0, 0.5, -8], size: [0.5, 1, 8] },
+      { type: 'box', position: [0, 0.5, 10], size: [0.5, 1, 4] },
+      { type: 'box', position: [-4, 0.5, 2], size: [0.5, 1, 4] },
+      { type: 'box', position: [4, 0.5, -2], size: [0.5, 1, 4] },
+      { type: 'box', position: [0, 0.5, -6], size: [0.5, 1, 4] },
     ],
     sandpits: [],
     trees: []
