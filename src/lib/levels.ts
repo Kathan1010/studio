@@ -43,22 +43,27 @@ export const levels: Level[] = [
   },
   {
     id: 2,
-    name: 'The Bridge',
-    par: 3,
-    startPosition: [0, 0.2, 8],
-    holePosition: [0, 0.01, -8],
+    name: "Creekside Crossing",
+    par: 4,
+    startPosition: [0, 0.2, 12],
+    holePosition: [0, 0.01, -12],
     holeRadius: 0.25,
     obstacles: [
-       { type: 'ramp', position: [0, 0, 2], size: [2.5, 0.2, 5], rotation: [-0.25, 0, 0] },
-       { type: 'ramp', position: [0, 0.6, -3], size: [2.5, 0.2, 5], rotation: [0.25, 0, 0] }
+      // Bridge
+      { type: 'box', position: [0, 0.2, -2], size: [3, 0.4, 4] },
+      { type: 'box', position: [-1.5, 0.5, -2], size: [0.2, 0.6, 4] },
+      { type: 'box', position: [1.5, 0.5, -2], size: [0.2, 0.6, 4] },
     ],
     sandpits: [
-      { position: [3, 0.02, -4], radius: 1 },
-      { position: [-3, 0.02, 4], radius: 1 },
+      { position: [3, 0.02, -12], radius: 2 },
+      { position: [-3.5, 0.02, -11], radius: 1.5 },
+      { position: [0, 0.02, 2], radius: 3},
     ],
     trees: [
-      { position: [5, 0, 5] },
-      { position: [-5, 0, -5] },
+      { position: [6, 0, -8] },
+      { position: [-7, 0, -5] },
+      { position: [8, 0, 0] },
+      { position: [-9, 0, 4] },
     ]
   },
    {
@@ -82,8 +87,8 @@ export const levels: Level[] = [
     holeRadius: 0.25,
     obstacles: [
       // Main corridor walls
-      { type: 'ramp', position: [0, 0.5, 5], size: [4, 0.2, 8], rotation: [-0.15, 0, 0] },
-      { type: 'ramp', position: [0, 0.5, -5], size: [4, 0.2, 8], rotation: [0.15, 0, 0] },
+      { type: 'box', position: [2.5, 0.5, 0], size: [0.5, 1, 20] },
+      { type: 'box', position: [-2.5, 0.5, 0], size: [0.5, 1, 20] },
       
       // Small blocks near the hole
       { type: 'box', position: [0, 0.25, -12], size: [0.5, 0.5, 0.5] },
