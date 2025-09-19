@@ -112,7 +112,7 @@ export class Game {
     treeGroup.add(trunkMesh);
 
     const leavesGeo = new THREE.ConeGeometry(1, 2, 8);
-    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x228B22 });
+    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x006400 });
     const leavesMesh = new THREE.Mesh(leavesGeo, leavesMat);
     leavesMesh.position.y = 2.5;
     leavesMesh.castShadow = true;
@@ -605,6 +605,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
