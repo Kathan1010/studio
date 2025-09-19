@@ -54,11 +54,11 @@ export default function Home() {
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
                 { title: 'Scene & Asset Rendering', description: 'Initialized a Three.js scene, loaded 3D models for the courses, and rendered the golf ball.', icon: <Layers/> },
-                { title: 'Basic Physics & Interaction', description: 'Implement user input to apply velocity to the ball, with simplified friction.', icon: <Mouse/> },
-                { title: 'Gameplay & State Management', description: 'Manage game state like hole, par, and strokes. Implement goal detection.', icon: <Target/> },
-                { title: 'Player Controls', description: 'Intuitive controls for aiming precision and power, with clear visual feedback.', icon: <Keyboard/> },
-                { title: 'Camera System', description: 'Interactive camera controls (orbit, pan, zoom) to inspect the course.', icon: <Camera/> },
-                { title: 'Player Accounts & Scoring', description: 'Create an account to save your best scores for each level and track your progress over time.', icon: <Trophy /> },
+                { title: 'Basic Physics & Interaction', description: 'Implemented user input to apply velocity to the ball, with simplified friction for realistic movement.', icon: <Mouse/> },
+                { title: 'Gameplay & State Management', description: 'Managed game state like hole, par, and strokes, and implemented goal detection.', icon: <Target/> },
+                { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback.', icon: <Keyboard/> },
+                { title: 'Camera System', description: 'Provided interactive camera controls (orbit, pan, zoom) for inspecting the course.', icon: <Camera/> },
+                { title: 'Player Accounts & Scoring', description: 'Users can create an account to save their best scores for each level and track progress over time.', icon: <Trophy /> },
               ].map((item) => (
                 <Card key={item.title} className="flex flex-col">
                   <CardHeader>
