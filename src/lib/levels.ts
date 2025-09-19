@@ -87,9 +87,6 @@ export const levels: Level[] = [
     obstacles: [
         { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
         { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
-        { type: 'box', position: [1, 0.25, -11], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-1, 0.25, -11], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0, 0.25, -10], size: [0.5, 0.5, 0.5] },
     ],
     sandpits: [
         { position: [0, 0.02, -8], radius: 2}
