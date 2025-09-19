@@ -71,16 +71,23 @@ export const levels: Level[] = [
       // Corridor walls
       { type: 'box', position: [2, 0.5, 8], size: [1, 1, 8] },
       { type: 'box', position: [-2, 0.5, 8], size: [1, 1, 8] },
-
+  
       // U-shaped structure
       { type: 'box', position: [6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [0, 0.5, -8], size: [12, 1, 1] },
       
+      // Horizontal barriers
+      { type: 'box', position: [0, 0.5, 4], size: [10, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, -2], size: [10, 1, 0.5] },
+
       // Small blocks to make it harder
       { type: 'box', position: [0, 0.25, -4.5], size: [0.75, 0.5, 0.75] },
       { type: 'box', position: [2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
       { type: 'box', position: [-2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
+    ],
+    sandpits: [
+      { position: [0, 0.02, 1], radius: 1.5 }
     ],
     trees: [
       { position: [8, 0, 8] },
