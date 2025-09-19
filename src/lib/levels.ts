@@ -135,18 +135,15 @@ export const levels: Level[] = [
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
       // A solvable maze layout
-      { type: 'box', position: [-4, 0.5, 8], size: [8, 1, 0.5] },
-      { type: 'box', position: [4, 0.5, 4], size: [8, 1, 0.5] },
-      { type: 'box', position: [-8, 0.5, 0], size: [8, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 0.5] },
-      { type: 'box', position: [8, 0.5, -4], size: [8, 1, 0.5] },
-      { type: 'box', position: [-4, 0.5, -8], size: [8, 1, 0.5] },
-
-      // vertical walls
-      { type: 'box', position: [0, 0.5, 10], size: [0.5, 1, 4] },
-      { type: 'box', position: [-4, 0.5, 2], size: [0.5, 1, 4] },
-      { type: 'box', position: [4, 0.5, -2], size: [0.5, 1, 4] },
-      { type: 'box', position: [0, 0.5, -6], size: [0.5, 1, 4] },
+      { type: 'box', position: [-6, 0.5, 6], size: [8, 1, 0.5] }, // Top-left horizontal
+      { type: 'box', position: [6, 0.5, 2], size: [8, 1, 0.5] },  // Mid-right horizontal
+      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 0.5] },// Mid-center horizontal
+      { type: 'box', position: [-2, 0.5, -6], size: [16, 1, 0.5] },// Bottom horizontal
+      
+      { type: 'box', position: [-2, 0.5, 2], size: [0.5, 1, 8] }, // Top-left vertical
+      { type: 'box', position: [2, 0.5, 6], size: [0.5, 1, 8] },  // Top-right vertical
+      { type: 'box', position: [-6, 0.5, -2], size: [0.5, 1, 8] },// Bottom-left vertical
+      { type: 'box', position: [6, 0.5, -6], size: [0.5, 1, 8] }, // Bottom-right vertical
     ],
     sandpits: [],
     trees: []
