@@ -79,21 +79,6 @@ export const levels: Level[] = [
   },
   {
     id: 4,
-    name: 'The Ridge',
-    par: 4,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
-    ],
-    sandpits: [
-        { position: [0, 0.02, -8], radius: 2}
-    ]
-  },
-  {
-    id: 5,
     name: 'The Gauntlet',
     par: 5,
     startPosition: [0, 0.2, 14],
@@ -112,7 +97,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 6,
+    id: 5,
     name: 'Vertigo',
     par: 4,
     startPosition: [0, 0.2, 10],
@@ -125,7 +110,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 7,
+    id: 6,
     name: 'Precision',
     par: 3,
     startPosition: [0, 0.2, 12],
