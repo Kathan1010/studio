@@ -73,10 +73,6 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -14],
     holeRadius: 0.25,
     obstacles: [
-      // Main corridor walls
-      { type: 'box', position: [2.5, 0.5, 0], size: [0.5, 1, 20] },
-      { type: 'box', position: [-2.5, 0.5, 0], size: [0.5, 1, 20] },
-      
       // Small blocks near the hole
       { type: 'box', position: [0, 0.25, -12], size: [0.5, 0.5, 0.5] },
       { type: 'box', position: [-1.5, 0.25, -13], size: [0.5, 0.5, 0.5] },
@@ -139,6 +135,8 @@ export const levels: Level[] = [
       { position: [0, 0.02, 10], radius: 2 },
       { position: [0, 0.02, 1], radius: 1.5 },
       { position: [4.5, 0.02, -5], radius: 1 },
+      { position: [0, 0.02, -1], radius: 1 },
+      { position: [-4.5, 0.02, 3], radius: 1 },
     ],
     trees: [
       { position: [8, 0, 8] },
@@ -161,17 +159,11 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
-      // Path 1 (Center-Right)
-      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] },
-      { type: 'box', position: [2, 0.5, 2], size: [16, 1, 0.5] },
-      { type: 'box', position: [-2, 0.5, -2], size: [16, 1, 0.5] },
-      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] },
-      
-      // Path 2 (Left)
-      { type: 'box', position: [-6, 0.5, 1], size: [0.5, 1, 8] },
-      
-      // Path 3 (Top)
-      { type: 'box', position: [0, 0.5, 6], size: [0.5, 1, 8] },
+      // Maze Walls
+      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, // Top wall, opening on left
+      { type: 'box', position: [6, 0.5, 2], size: [8, 1, 0.5] }, // 2nd wall, opening on left
+      { type: 'box', position: [-6, 0.5, -2], size: [8, 1, 0.5] },// 3rd wall, opening on right
+      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] }, // 4th wall, opening on left
     ],
     sandpits: [],
     trees: []
