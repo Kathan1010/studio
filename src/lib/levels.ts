@@ -67,19 +67,29 @@ export const levels: Level[] = [
   },
   {
     id: 3,
-    name: "The Island",
-    par: 3,
-    startPosition: [0, 0.2, 10],
-    holePosition: [0, 0.01, -5],
+    name: "The Serpent",
+    par: 5,
+    startPosition: [-6, 0.2, 12],
+    holePosition: [6, 0.01, -12],
     holeRadius: 0.25,
-    obstacles: [],
-    sandpits: [
-      { position: [0, 0.02, -5], radius: 4.5 }
+    obstacles: [
+      // Outer Walls
+      { type: 'box', position: [0, 0.5, 14], size: [16, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, -14], size: [16, 1, 0.5] },
+      { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 28] },
+      { type: 'box', position: [8, 0.5, 0], size: [0.5, 1, 28] },
+      // Inner Serpent Walls
+      { type: 'box', position: [2, 0.5, 8], size: [12, 1, 0.5] },
+      { type: 'box', position: [-2, 0.5, 2], size: [12, 1, 0.5] },
+      { type: 'box', position: [2, 0.5, -4], size: [12, 1, 0.5] },
+      { type: 'box', position: [-2, 0.5, -10], size: [12, 1, 0.5] },
     ],
-    trees: [
-        { position: [-8, 0, 2] },
-        { position: [8, 0, 2] },
-    ]
+    sandpits: [
+        { position: [-6, 0.02, 5], radius: 1.8 },
+        { position: [6, 0.02, -1], radius: 1.8 },
+        { position: [-6, 0.02, -7], radius: 1.8 },
+    ],
+    trees: []
   },
    {
     id: 4,
