@@ -72,13 +72,7 @@ export const levels: Level[] = [
     startPosition: [0, 0.2, 14],
     holePosition: [0, 0.01, -14],
     holeRadius: 0.25,
-    obstacles: [
-      // Small blocks near the hole
-      { type: 'box', position: [0, 0.25, -12.5], size: [0.5, 0.5, 0.5] }, // Front
-      { type: 'box', position: [0, 0.25, -15.5], size: [0.5, 0.5, 0.5] }, // Back
-      { type: 'box', position: [1.5, 0.25, -14], size: [0.5, 0.5, 0.5] },  // Right
-      { type: 'box', position: [-1.5, 0.25, -14], size: [0.5, 0.5, 0.5] }, // Left
-    ],
+    obstacles: [],
     sandpits: [
       { position: [0, 0.02, 5], radius: 2 },
       { position: [-4, 0.02, -10], radius: 1.5 },
@@ -151,7 +145,7 @@ export const levels: Level[] = [
   {
     id: 6,
     name: 'The Maze',
-    par: 6,
+    par: 5,
     startPosition: [-8, 0.2, 8],
     holePosition: [8, 0.01, -8],
     holeRadius: 0.25,
@@ -162,11 +156,11 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
-      // Simplified Winding Path
-      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, 
-      { type: 'box', position: [2, 0.5, 2], size: [16, 1, 0.5] },
-      { type: 'box', position: [-2, 0.5, -2], size: [16, 1, 0.5] },
-      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] },
+      // Simplified Winding Path (Guaranteed Solvable)
+      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] }, 
+      { type: 'box', position: [-1, 0.5, 2], size: [18, 1, 0.5] },
+      { type: 'box', position: [1, 0.5, -2], size: [18, 1, 0.5] },
+      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },
     ],
     sandpits: [],
     trees: []
