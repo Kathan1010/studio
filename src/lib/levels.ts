@@ -60,24 +60,29 @@ export const levels: Level[] = [
       { position: [6, 0, -5] },
     ]
   },
-   {
+  {
     id: 3,
-    name: "The Ascent",
+    name: "The Slingshot",
     par: 4,
-    startPosition: [0, 0.2, 12],
-    holePosition: [-4, 2.51, -12],
+    startPosition: [0, 0.2, 14],
+    holePosition: [0, 0.01, 8],
     holeRadius: 0.25,
     obstacles: [
-      // Ramp path
-      { type: 'box', position: [0, 0, 8], size: [5, 0.2, 8], rotation: [0.15, 0, 0] },
-      { type: 'box', position: [0, 1.2, 0], size: [5, 0.2, 8], rotation: [0, 0, 0] },
-      { type: 'box', position: [-2, 1.8, -6], size: [9, 0.2, 8], rotation: [0, -0.3, 0] },
+      // U-shaped structure
+      { type: 'box', position: [6, 0.5, 0], size: [1, 1, 16] },
+      { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
+      { type: 'box', position: [0, 0.5, -8], size: [12, 1, 1] },
       
-      // Side walls
-      { type: 'box', position: [2.5, 0.8, 4], size: [0.2, 1, 16] },
-      { type: 'box', position: [-6.5, 2.5, -4], size: [0.2, 1, 12], rotation: [0, -0.3, 0] },
-      { type: 'box', position: [2.2, 2.5, -8], size: [0.2, 1, 8], rotation: [0, -0.3, 0] },
+      // Funnel towards the hole
+      { type: 'ramp', position: [2.5, 0.25, 4], size: [1, 0.5, 4], rotation: [0, -0.4, 0] },
+      { type: 'ramp', position: [-2.5, 0.25, 4], size: [1, 0.5, 4], rotation: [0, 0.4, 0] }
     ],
+    trees: [
+      { position: [8, 0, 8] },
+      { position: [-8, 0, 8] },
+      { position: [8, 0, -10] },
+      { position: [-8, 0, -10] },
+    ]
   },
   {
     id: 4,
