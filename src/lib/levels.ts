@@ -44,7 +44,7 @@ export const levels: Level[] = [
   {
     id: 2,
     name: "The Bridge",
-    par: 1,
+    par: 2,
     startPosition: [0, 0.2, 10],
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
@@ -57,7 +57,7 @@ export const levels: Level[] = [
         { type: 'box', position: [2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
         { type: 'box', position: [-2.25, 0.8, -5], size: [0.5, 0.5, 8], rotation: [-0.25, 0, 0] },
         // Backstop behind the hole
-        { type: 'box', position: [0, 0.25, -11], size: [4, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -11.5], size: [4, 0.5, 0.5] },
     ],
     sandpits: [
         { position: [4, 0.02, 0], radius: 2 },
@@ -154,7 +154,7 @@ export const levels: Level[] = [
   {
     id: 6,
     name: "The Labyrinth",
-    par: 4,
+    par: 5,
     startPosition: [-10, 0.2, 10],
     holePosition: [10, 0.01, -10],
     holeRadius: 0.3,
@@ -166,16 +166,11 @@ export const levels: Level[] = [
       { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] },
       
       // New Maze layout
-      { type: 'box', position: [-6, 0.5, 10], size: [1, 1, 4] },
-      { type: 'box', position: [6, 0.5, -10], size: [1, 1, 4] },
-      { type: 'box', position: [-9, 0.5, 2], size: [6, 1, 1] },
-      { type: 'box', position: [9, 0.5, -2], size: [6, 1, 1] },
-      
-      { type: 'box', position: [0, 0.5, 6], size: [12, 1, 1] },
-      { type: 'box', position: [0, 0.5, -6], size: [12, 1, 1] },
-      
-      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 8], rotation: [0, Math.PI / 4, 0]},
-
+      { type: 'box', position: [-4, 0.5, 8], size: [16, 1, 1] },
+      { type: 'box', position: [4, 0.5, 4], size: [16, 1, 1] },
+      { type: 'box', position: [-4, 0.5, 0], size: [16, 1, 1] },
+      { type: 'box', position: [4, 0.5, -4], size: [16, 1, 1] },
+      { type: 'box', position: [-8, 0.5, -8], size: [8, 1, 1] },
     ],
     sandpits: [],
     trees: [
