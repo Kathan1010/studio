@@ -63,13 +63,13 @@ export const levels: Level[] = [
   {
     id: 3,
     name: 'Island Hop',
-    par: 4,
+    par: 3,
     startPosition: [0, 0.2, 10],
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
-        { type: 'box', position: [0, -0.5, 8], size: [6, 1, 8] },
-        { type: 'box', position: [0, -0.5, -8], size: [6, 1, 8] },
+        { type: 'box', position: [0, -0.5, 8], size: [4, 1, 8] },
+        { type: 'box', position: [0, -0.5, -8], size: [4, 1, 8] },
     ],
     sandpits: [
         { position: [0, 0.02, -6], radius: 1.5 }
