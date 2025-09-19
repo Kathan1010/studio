@@ -140,7 +140,7 @@ export class Game {
     if (context) {
         const color1 = '#228B22'; // ForestGreen
         const color2 = '#006400'; // DarkGreen
-        const checks = 16;
+        const checks = 8;
         const size = canvas.width / checks;
 
         for (let x = 0; x < checks; x++) {
@@ -629,6 +629,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
