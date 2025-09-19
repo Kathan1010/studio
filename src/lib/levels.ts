@@ -49,7 +49,7 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -8],
     holeRadius: 0.25,
     obstacles: [
-      { type: 'box', position: [0, 0.5, 0], size: [4, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, 0], size: [2, 1, 0.5] },
     ],
     sandpits: [
       { position: [3, 0.02, -4], radius: 1 },
