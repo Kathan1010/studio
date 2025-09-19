@@ -131,7 +131,31 @@ export class Game {
   private createLevel() {
     // Ground
     const groundGeo = new THREE.PlaneGeometry(50, 50);
-    const groundMat = new THREE.MeshStandardMaterial({ color: 0x228B22, roughness: 0.8 });
+    
+    // --- Checkerboard Texture ---
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const context = canvas.getContext('2d');
+    if (context) {
+        const color1 = '#228B22'; // ForestGreen
+        const color2 = '#006400'; // DarkGreen
+        const checks = 16;
+        const size = canvas.width / checks;
+
+        for (let x = 0; x < checks; x++) {
+            for (let y = 0; y < checks; y++) {
+                context.fillStyle = (x + y) % 2 === 0 ? color1 : color2;
+                context.fillRect(x * size, y * size, size, size);
+            }
+        }
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(8, 8);
+
+    const groundMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.8 });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
     ground.receiveShadow = true;
@@ -605,6 +629,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
