@@ -163,17 +163,15 @@ export const levels: Level[] = [
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
       
       // Inner Maze Walls
-      { type: 'box', position: [-5, 0.5, 6], size: [10, 1, 0.5] }, // Horizontal wall, top
-      { type: 'box', position: [5, 0.5, 2], size: [10, 1, 0.5] },  // Horizontal wall, upper-mid
-      { type: 'box', position: [-5, 0.5, -2], size: [10, 1, 0.5] },// Horizontal wall, lower-mid
-      { type: 'box', position: [5, 0.5, -6], size: [10, 1, 0.5] }, // Horizontal wall, bottom
+      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, // Top-most horizontal
+      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] }, // Bottom-most horizontal
+      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 0.5] },  // Middle horizontal
+      { type: 'box', position: [-4, 0.5, -2], size: [12, 1, 0.5] },// Lower-middle horizontal
 
-      { type: 'box', position: [0, 0.5, 8], size: [0.5, 1, 4] },  // Vertical wall, top-left
-      { type: 'box', position: [0, 0.5, -8], size: [0.5, 1, 4] }, // Vertical wall, bottom-right
-      { type: 'box', position: [0, 0.5, 0], size: [0.5, 1, 4] },   // Vertical wall, center
-      
-      { type: 'box', position: [-5, 0.5, 0], size: [0.5, 1, 4] }, // Vertical wall, center-left
-      { type: 'box', position: [5, 0.5, 0], size: [0.5, 1, 4] },  // Vertical wall, center-right
+      { type: 'box', position: [6, 0.5, 8], size: [0.5, 1, 4] },   // Top-right vertical
+      { type: 'box', position: [-6, 0.5, -8], size: [0.5, 1, 4] },  // Bottom-left vertical
+      { type: 'box', position: [-6, 0.5, 0], size: [0.5, 1, 4] },  // Mid-left vertical
+      { type: 'box', position: [6, 0.5, 0], size: [0.5, 1, 4] },   // Mid-right vertical
     ],
     sandpits: [],
     trees: []
