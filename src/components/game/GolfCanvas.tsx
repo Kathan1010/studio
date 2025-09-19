@@ -140,7 +140,7 @@ export class Game {
     if (context) {
         const color1 = '#228B22'; // ForestGreen
         const color2 = '#006400'; // DarkGreen
-        const checks = 8;
+        const checks = 2;
         const size = canvas.width / checks;
 
         for (let x = 0; x < checks; x++) {
@@ -163,7 +163,7 @@ export class Game {
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
-    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0 });
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 });
     this.ballMesh = new THREE.Mesh(ballGeo, ballMat);
     this.ballMesh.castShadow = true;
     this.ballMesh.position.fromArray(this.level.startPosition);
@@ -644,3 +644,6 @@ export default GolfCanvas;
 
 
 
+
+
+    
