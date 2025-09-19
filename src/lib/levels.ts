@@ -63,11 +63,15 @@ export const levels: Level[] = [
   {
     id: 3,
     name: "The Slingshot",
-    par: 4,
+    par: 5,
     startPosition: [0, 0.2, 14],
     holePosition: [0, 0.01, -6],
     holeRadius: 0.25,
     obstacles: [
+      // Corridor walls
+      { type: 'box', position: [2, 0.5, 8], size: [1, 1, 8] },
+      { type: 'box', position: [-2, 0.5, 8], size: [1, 1, 8] },
+
       // U-shaped structure
       { type: 'box', position: [6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
