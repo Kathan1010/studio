@@ -338,61 +338,42 @@ export class Game {
             }
         }
     }
-    
-    // --- Obstacle collision ---
-    for (const obstacle of this.obstacles) {
-        obstacle.updateWorldMatrix(true, false);
-        const box = new THREE.Box3().setFromObject(obstacle);
 
-        // Broad-phase: simple BBox check
-        const ballBBox = new THREE.Box3().setFromObject(this.ballMesh);
-        if (!box.intersectsBox(ballBBox)) {
-            continue;
-        }
+    // --- Obstacle Collision (with Raycasting for Tunneling) ---
+    const movementVector = this.ballVelocity.clone();
+    const movementDistance = movementVector.length();
 
-        // Narrow-phase: OBB vs Sphere
-        const halfSize = (obstacle.geometry as THREE.BoxGeometry).parameters;
-        const boxHalfSize = new THREE.Vector3(halfSize.width / 2, halfSize.height / 2, halfSize.depth / 2);
-        
-        const boxPosition = new THREE.Vector3();
-        const boxQuaternion = new THREE.Quaternion();
-        obstacle.matrixWorld.decompose(boxPosition, boxQuaternion, new THREE.Vector3());
+    if (movementDistance > 0) {
+        const raycaster = new THREE.Raycaster(this.ballMesh.position, movementVector.normalize(), 0, movementDistance + ballRadius);
+        const intersects = raycaster.intersectObjects(this.obstacles);
 
-        const spherePosition = this.ballMesh.position;
+        if (intersects.length > 0) {
+            const intersection = intersects[0];
+            // Check if the intersection is closer than the ball's intended movement
+            if (intersection.distance <= movementDistance + ballRadius) {
+                const collisionNormal = intersection.face!.normal.clone();
+                // Make sure normal is pointing out of the face from the obstacle's perspective
+                collisionNormal.transformDirection(intersection.object.matrixWorld);
 
-        // Transform sphere center to box's local space
-        const sphereLocalPosition = spherePosition.clone().sub(boxPosition).applyQuaternion(boxQuaternion.clone().invert());
-        
-        // Find the closest point on the OBB to the sphere's center
-        const closestPointLocal = new THREE.Vector3().copy(sphereLocalPosition);
-        closestPointLocal.clamp(boxHalfSize.clone().negate(), boxHalfSize);
-
-        const closestPointWorld = closestPointLocal.clone().applyQuaternion(boxQuaternion).add(boxPosition);
-        
-        const distance = spherePosition.distanceTo(closestPointWorld);
-        
-        if (distance < ballRadius) {
-            // Collision detected
-            const collisionNormal = spherePosition.clone().sub(closestPointWorld).normalize();
-
-            // Resolve penetration
-            const penetrationDepth = ballRadius - distance;
-            this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(penetrationDepth));
-            
-            // Reflect velocity
-            this.ballVelocity.reflect(collisionNormal);
-            
-            // Apply dampening
-            const collisionDampening = 0.7; 
-            this.ballVelocity.multiplyScalar(collisionDampening);
-             
-            // If the normal is pointing mostly upwards, we are on top of the obstacle
-            if (collisionNormal.y > 0.7) {
-                 onSurface = true;
-                 surfaceNormal = collisionNormal; // This is a slope!
-                 if (this.ballVelocity.y < 0) {
-                     this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
-                 }
+                // Position the ball at the point of collision
+                this.ballMesh.position.copy(intersection.point);
+                this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(ballRadius));
+                
+                // Reflect velocity
+                this.ballVelocity.reflect(collisionNormal);
+                
+                // Apply dampening
+                const collisionDampening = 0.7; 
+                this.ballVelocity.multiplyScalar(collisionDampening);
+                
+                // If the normal is pointing mostly upwards, we are on top of the obstacle
+                if (collisionNormal.y > 0.7) {
+                    onSurface = true;
+                    surfaceNormal = collisionNormal; // This is a slope!
+                    if (this.ballVelocity.y < 0) {
+                        this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
+                    }
+                }
             }
         }
     }
@@ -449,9 +430,10 @@ export class Game {
         this.ballVelocity.add(this.gravity);
         
         // Move and check for collisions
-        // The checkCollisions method now also handles slope gravity
-        this.ballMesh.position.add(this.ballVelocity);
+        // The checkCollisions method now also handles slope gravity and tunneling
         this.checkCollisions();
+        this.ballMesh.position.add(this.ballVelocity);
+
 
         const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
         const distToHole = this.ballMesh.position.distanceTo(this.holeMesh.position);
@@ -599,6 +581,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
