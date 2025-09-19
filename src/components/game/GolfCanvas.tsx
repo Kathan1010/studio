@@ -348,12 +348,10 @@ export class Game {
   }
 
   private update() {
-    // If game is paused or hole is completed, do nothing.
-    if (this.isGamePaused() || this.isHoleCompleted) {
+    if (this.isGamePaused()) {
         return;
     }
-    
-    // Update aim line and power charging
+
     this.updateAimLine();
     if (this.isCharging) {
         const chargeSpeed = 0.75;
@@ -361,41 +359,55 @@ export class Game {
         this.setPower(this.chargePower);
     }
     
-    // --- Physics and Gameplay Logic ---
+    if (this.isHoleCompleted) {
+        this.ballMesh.position.y -= 0.05; // Make the ball sink
+        this.ballMesh.scale.multiplyScalar(0.95); // Shrink the ball
+        if (this.ballMesh.scale.x < 0.1) {
+            this.ballMesh.visible = false;
+        }
+        return;
+    }
+
     if (this.isBallMoving) {
-        // 1. Check for Hole Completion
-        const distToHole = this.ballMesh.position.clone().setY(0).distanceTo(this.holeMesh.position.clone().setY(0));
-        const ballIsOnGround = this.ballMesh.position.y <= (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius + 0.01;
+        const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
+        const distToHole = this.ballMesh.position.distanceTo(this.holeMesh.position);
         
-        if (distToHole < this.level.holeRadius && ballIsOnGround && this.ballVelocity.lengthSq() < 0.2) {
+        // --- HOLE COMPLETION LOGIC ---
+        // Condition to sink the ball
+        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2) {
             this.isHoleCompleted = true;
             this.isBallMoving = false;
             this.ballVelocity.set(0, 0, 0);
-            this.ballMesh.visible = false; // Hide the ball as it's "in the hole"
+            this.ballMesh.position.copy(this.holeMesh.position).setY(ballRadius);
             if (this.flagGroup) this.flagGroup.visible = false;
             this.onHoleComplete();
-            return; // End update loop for this frame
+            return;
         }
 
-        // 2. Apply Gravity
+        // --- HOLE GRAVITY LOGIC ---
+        // If ball is near the hole, moving at a reasonable speed, and on the ground
+        if (distToHole < this.level.holeRadius * 2 && this.ballVelocity.lengthSq() < 1.0 && this.ballMesh.position.y <= ballRadius + 0.05) {
+            const pullVector = this.holeMesh.position.clone().sub(this.ballMesh.position).normalize();
+            pullVector.multiplyScalar(0.005); // Adjust pull strength
+            this.ballVelocity.add(pullVector);
+            this.ballVelocity.multiplyScalar(0.97); // Dampen velocity near hole
+        }
+
+        // --- Standard Physics ---
         this.ballVelocity.add(this.gravity);
-        
-        // 3. Update Position
         this.ballMesh.position.add(this.ballVelocity);
-        
-        // 4. Check Collisions
         this.checkCollisions();
-      
-        // 5. Check for Out of Bounds
+
+        // --- Out of Bounds Check ---
         const { x, y, z } = this.ballMesh.position;
         if (y < -2 || Math.abs(x) > 25 || Math.abs(z) > 25) {
-            this.onStroke(); // Add penalty stroke
+            this.onStroke(); // Penalty stroke
             this.ballMesh.position.fromArray(this.level.startPosition);
             this.ballVelocity.set(0, 0, 0);
             this.isBallMoving = false;
         }
         
-        // 6. Stop Condition
+        // --- Stop Condition ---
         if (this.ballVelocity.lengthSq() < 0.0001) {
             this.ballVelocity.set(0, 0, 0);
             this.isBallMoving = false;
@@ -485,6 +497,8 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
+
+    
 
     
 
