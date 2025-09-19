@@ -29,7 +29,7 @@ export const levels: Level[] = [
   {
     id: 1,
     name: 'The First Tee',
-    par: 2,
+    par: 1,
     startPosition: [0, 0.2, 8],
     holePosition: [0, 0.01, -8],
     holeRadius: 0.25,
@@ -44,7 +44,7 @@ export const levels: Level[] = [
   {
     id: 2,
     name: "The Bridge",
-    par: 3,
+    par: 1,
     startPosition: [0, 0.2, 10],
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
@@ -76,16 +76,13 @@ export const levels: Level[] = [
       // The bottleneck walls
       { type: 'box', position: [1.5, 0.5, 0], size: [1, 1, 6] },
       { type: 'box', position: [-1.5, 0.5, 0], size: [1, 1, 6] },
-      // Blocks around the hole
-      { type: 'box', position: [0, 0.25, -9.2], size: [0.5, 0.5, 0.5] },
+       // Blocks around the hole
       { type: 'box', position: [0, 0.25, -10.8], size: [0.5, 0.5, 0.5] },
+      { type: 'box', position: [0, 0.25, -9.2], size: [0.5, 0.5, 0.5] },
       { type: 'box', position: [0.8, 0.25, -10], size: [0.5, 0.5, 0.5] },
       { type: 'box', position: [-0.8, 0.25, -10], size: [0.5, 0.5, 0.5] }
     ],
-    sandpits: [
-      { position: [0, 0.02, 5], radius: 2.5 },
-      { position: [4, 0.02, -5], radius: 2 },
-    ],
+    sandpits: [],
     trees: [
       { position: [-6, 0, 8] },
       { position: [6, 0, -2] },
