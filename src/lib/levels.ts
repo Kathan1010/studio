@@ -68,7 +68,7 @@ export const levels: Level[] = [
   {
     id: 3,
     name: "The Bottleneck",
-    par: 3,
+    par: 2,
     startPosition: [0, 0.2, 10],
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
@@ -86,10 +86,7 @@ export const levels: Level[] = [
         { position: [4, 0.02, 6], radius: 2 },
         { position: [-4, 0.02, -6], radius: 2 },
     ],
-    trees: [
-      { position: [-6, 0, 8] },
-      { position: [6, 0, -2] },
-    ]
+    trees: []
   },
    {
     id: 4,
@@ -102,11 +99,11 @@ export const levels: Level[] = [
         { type: 'box', position: [0, 0.5, 5], size: [8, 1, 0.5] },
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
-        // Blocks around the hole, spaced out
-        { type: 'box', position: [0, 0.25, -13], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0, 0.25, -11], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [1, 0.25, -12], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-1, 0.25, -12], size: [0.5, 0.5, 0.5] }
+        // Blocks around the hole
+        { type: 'box', position: [0, 0.25, -13.5], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -10.5], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [1.5, 0.25, -12], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [-1.5, 0.25, -12], size: [0.5, 0.5, 0.5] }
     ],
     sandpits: [
         { position: [4, 0.02, 8], radius: 1.5 },
