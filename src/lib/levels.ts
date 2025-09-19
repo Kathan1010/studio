@@ -150,23 +150,40 @@ export const levels: Level[] = [
   },
   {
     id: 7,
-    name: 'Island Hop',
-    par: 4,
-    startPosition: [0, 0.2, 10],
-    holePosition: [0, 0.01, -10],
+    name: 'The Serpent',
+    par: 5,
+    startPosition: [-8, 0.2, 12],
+    holePosition: [12, 0.01, -12],
     holeRadius: 0.25,
     obstacles: [
-        // Starting platform
-        { type: 'box', position: [0, -0.5, 10], size: [6, 1, 8] },
-        // Target platform
-        { type: 'box', position: [0, -0.5, -10], size: [6, 1, 8] },
+      // Outer boundary
+      { type: 'box', position: [-10.5, 0.5, 4], size: [1, 1, 18] },
+      { type: 'box', position: [0, 0.5, 14.5], size: [22, 1, 1] },
+      { type: 'box', position: [10.5, 0.5, 8.5], size: [1, 1, 13] },
+      { type: 'box', position: [4.5, 0.5, 2.5], size: [13, 1, 1] },
+
+      // Inner U-turn
+      { type: 'box', position: [-6.5, 0.5, 8], size: [1, 1, 10] },
+      { type: 'box', position: [-2, 0.5, 10.5], size: [9, 1, 1] },
+      { type: 'box', position: [2.5, 0.5, 6.5], size: [1, 1, 9] },
+      
+      // Path to castles
+      { type: 'box', position: [-2.5, 0.5, 2.5], size: [11, 1, 1] },
+      { type: 'box', position: [-7.5, 0.5, -2], size: [1, 1, 9] },
+      { type: 'box', position: [-2, 0.5, -6.5], size: [11, 1, 1] },
+      { type: 'box', position: [3.5, 0.5, -2.5], size: [1, 1, 9] },
+
+      // Castles
+      { type: 'box', position: [-4, 0.75, 0], size: [1, 1.5, 1] },
+      { type: 'box', position: [0, 0.75, 0], size: [1, 1.5, 1] },
+
+      // Fork path
+      { type: 'box', position: [9, 0.5, -6.5], size: [10, 1, 1] },
+      { type: 'box', position: [14, 0.5, -10.5], size: [1, 1, 9] },
+      { type: 'box', position: [9, 0.5, -14.5], size: [10, 1, 1] },
+      { type: 'box', position: [4, 0.5, -10.5], size: [1, 1, 9] },
     ],
-    sandpits: [
-      { position: [0, 0.02, -12], radius: 1.5 },
-    ],
-    trees: [
-        { position: [-4, 0.5, -10] },
-        { position: [4, 0.5, -10] },
-    ]
+    sandpits: [],
+    trees: []
   }
 ];
