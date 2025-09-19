@@ -175,17 +175,5 @@ export const levels: Level[] = [
     ],
     sandpits: [],
     trees: []
-  },
-  {
-    id: 7,
-    name: "The Tunnel",
-    par: 3,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.25,
-    obstacles: [
-      { type: 'box', position: [-1.5, 0.5, 0], size: [0.5, 1, 18] },
-      { type: 'box', position: [1.5, 0.5, 0], size: [0.5, 1, 18] },
-    ],
   }
 ];
