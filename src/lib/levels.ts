@@ -43,27 +43,21 @@ export const levels: Level[] = [
   },
   {
     id: 2,
-    name: "Creekside Crossing",
-    par: 4,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
+    name: "The Bridge",
+    par: 3,
+    startPosition: [0, 0.2, 10],
+    holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
-      // Bridge
-      { type: 'box', position: [0, 0.2, -2], size: [3, 0.4, 4] },
-      { type: 'box', position: [-1.5, 0.5, -2], size: [0.2, 0.6, 4] },
-      { type: 'box', position: [1.5, 0.5, -2], size: [0.2, 0.6, 4] },
+        { type: 'ramp', position: [0, 0, 4], size: [4, 0.5, 8], rotation: [0.2, 0, 0] },
+        { type: 'ramp', position: [0, 0, -4], size: [4, 0.5, 8], rotation: [-0.2, 0, 0] },
     ],
     sandpits: [
-      { position: [3, 0.02, -12], radius: 2 },
-      { position: [-3.5, 0.02, -11], radius: 1.5 },
-      { position: [0, 0.02, 2], radius: 3},
+        { position: [4, 0.02, 0], radius: 2 }
     ],
     trees: [
-      { position: [6, 0, -8] },
-      { position: [-7, 0, -5] },
-      { position: [8, 0, 0] },
-      { position: [-9, 0, 4] },
+      { position: [-6, 0, 5] },
+      { position: [6, 0, -5] },
     ]
   },
    {
@@ -129,7 +123,7 @@ export const levels: Level[] = [
   {
     id: 6,
     name: 'The Maze',
-    par: 5,
+    par: 6,
     startPosition: [-8, 0.2, 8],
     holePosition: [8, 0.01, -8],
     holeRadius: 0.25,
