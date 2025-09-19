@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ScoreInfo } from '@/lib/supabase/scores';
 import type { Level } from '@/lib/levels';
@@ -17,7 +16,6 @@ type LevelsListProps = {
 
 export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
   const router = useRouter();
-  const [scoresMap] = useState(initialScoresMap);
 
   const handlePlayClick = (levelId: number) => {
     router.push(`/play?level=${levelId}`);
@@ -26,7 +24,7 @@ export function LevelsList({ levels, initialScoresMap }: LevelsListProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {levels.map((level) => {
-        const scoreInfo = scoresMap.get(level.id);
+        const scoreInfo = initialScoresMap.get(level.id);
         const bestScore = scoreInfo?.strokes;
 
         return (
