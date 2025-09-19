@@ -15,7 +15,11 @@ import { updateBestScore } from '@/lib/supabase/scores';
 
 const GolfCanvas = dynamic(() => import('@/components/game/GolfCanvas'), {
   ssr: false,
-  loading: () => <div className="w-full h-full flex items-center justify-center bg-gray-200"><Loader2 className="h-8 w-8 animate-spin" /></div>,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-gray-200">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
+  ),
 });
 
 export default function PlayPage() {
@@ -157,3 +161,5 @@ export default function PlayPage() {
     </div>
   );
 }
+
+    
