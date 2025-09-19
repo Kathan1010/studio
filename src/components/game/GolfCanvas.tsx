@@ -155,15 +155,26 @@ export class Game {
 
     // Obstacles
     this.level.obstacles.forEach(obs => {
-        const obsGeo = new THREE.BoxGeometry(...obs.size);
-        const obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
-        const obstacle = new THREE.Mesh(obsGeo, obsMat);
-        obstacle.position.fromArray(obs.position);
-        if (obs.rotation) obstacle.rotation.fromArray(obs.rotation as [number, number, number]);
-        obstacle.castShadow = true;
-        obstacle.receiveShadow = true;
-        this.scene.add(obstacle);
-        this.obstacles.push(obstacle);
+      let obsGeo: THREE.BoxGeometry;
+      let obsMat: THREE.MeshStandardMaterial;
+
+      if (obs.type === 'ramp') {
+          obsGeo = new THREE.BoxGeometry(...obs.size);
+          obsMat = new THREE.MeshStandardMaterial({ color: 0x999999, roughness: 0.7 });
+      } else { // 'box'
+          obsGeo = new THREE.BoxGeometry(...obs.size);
+          obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
+      }
+      
+      const obstacle = new THREE.Mesh(obsGeo, obsMat);
+      obstacle.position.fromArray(obs.position);
+      if (obs.rotation) {
+          obstacle.rotation.fromArray(obs.rotation as [number, number, number]);
+      }
+      obstacle.castShadow = true;
+      obstacle.receiveShadow = true;
+      this.scene.add(obstacle);
+      this.obstacles.push(obstacle);
     });
 
     // Sandpits
@@ -598,6 +609,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
