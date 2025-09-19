@@ -28,7 +28,7 @@ export default function Home() {
                 Web Golf
               </h1>
               <p className="mt-4 text-lg md:text-xl text-white/90 [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]">
-                An interactive 3D minigolf experience, ported from a C-based classic to the modern web with Next.js and Three.js.
+                Challenge the course in this 3D minigolf adventure, beautifully rebuilt for the modern web.
               </p>
               <div className="mt-8 flex justify-center">
                 <Button asChild size="lg">
