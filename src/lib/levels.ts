@@ -97,10 +97,10 @@ export const levels: Level[] = [
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
         // Blocks around the hole
-        { type: 'box', position: [0, 0.25, -11.5], size: [0.5, 0.5, 0.5] }, // Front
-        { type: 'box', position: [0, 0.25, -12.5], size: [0.5, 0.5, 0.5] }, // Back
-        { type: 'box', position: [0.5, 0.25, -12], size: [0.5, 0.5, 0.5] },  // Right
-        { type: 'box', position: [-0.5, 0.25, -12], size: [0.5, 0.5, 0.5] } // Left
+        { type: 'box', position: [0, 0.25, -11.25], size: [0.5, 0.5, 0.5] }, // Front
+        { type: 'box', position: [0, 0.25, -12.75], size: [0.5, 0.5, 0.5] }, // Back
+        { type: 'box', position: [0.75, 0.25, -12], size: [0.5, 0.5, 0.5] },  // Right
+        { type: 'box', position: [-0.75, 0.25, -12], size: [0.5, 0.5, 0.5] } // Left
     ],
     sandpits: [
         { position: [4, 0.02, 8], radius: 1.5 },
@@ -156,11 +156,11 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
-      // Simplified Winding Path (Guaranteed Solvable)
-      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] }, 
-      { type: 'box', position: [-1, 0.5, 2], size: [18, 1, 0.5] },
-      { type: 'box', position: [1, 0.5, -2], size: [18, 1, 0.5] },
-      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },
+      // Simple Winding Path
+      { type: 'box', position: [2.5, 0.5, 6], size: [15, 1, 0.5] }, 
+      { type: 'box', position: [-2.5, 0.5, 2], size: [15, 1, 0.5] },
+      { type: 'box', position: [2.5, 0.5, -2], size: [15, 1, 0.5] },
+      { type: 'box', position: [-2.5, 0.5, -6], size: [15, 1, 0.5] },
     ],
     sandpits: [],
     trees: []
