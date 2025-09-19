@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Layers, MousePointer, Target, Gamepad, Camera, Tv, Trophy, Database } from 'lucide-react';
+import { ArrowRight, Layers, MousePointer, Target, Gamepad, Camera, Tv, Trophy, Database, Map, CheckSquare } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { HowToPlay } from '@/components/home/HowToPlay';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -51,7 +51,7 @@ export default function Home() {
             <p className="text-center text-muted-foreground mb-8">
               An exercise in 3D web graphics, rendering, and interaction.
             </p>
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
                 { title: 'Scene & Asset Rendering', description: 'Initialized a Three.js scene with camera, lighting, and rendering. Loaded 3D models for the course and rendered the golf ball.', icon: <Layers/> },
                 { title: 'Basic Physics & Interaction', description: 'Implemented user input to apply velocity to the ball, with simplified friction for realistic movement.', icon: <MousePointer/> },
@@ -59,7 +59,8 @@ export default function Home() {
                 { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.', icon: <Gamepad/> },
                 { title: 'Interactive Camera System', description: 'Provided interactive camera controls, including orbit, pan, and zoom, for inspecting the course.', icon: <Camera/> },
                 { title: 'User Interface (UI)', description: 'A clean UI displays essential game info like hole number and stroke count, and provides interactive controls.', icon: <Tv /> },
-                { title: 'Level Management', description: 'A system for loading multiple levels with terrain variations like slopes and ramps. A level navigator allows players to transition between holes.', icon: <Trophy /> },
+                { title: 'Level Management', description: 'A system for loading multiple levels with terrain variations like slopes and ramps.', icon: <Map /> },
+                { title: 'Level Navigator', description: 'Created a UI for players to select levels and transition between them after completing a hole.', icon: <CheckSquare /> },
                 { title: 'Persistent Scoring', description: 'Tracked total scores across all levels, saved in a database linked to email-based authentication so players can continue their progress across sessions.', icon: <Database /> },
               ].map((item) => (
                 <Card key={item.title} className="flex flex-col">
