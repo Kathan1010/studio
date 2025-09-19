@@ -22,6 +22,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
+  const view = searchParams.get("view");
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -56,7 +57,7 @@ export default function LoginPage() {
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
               theme="dark"
-              view="sign_in"
+              view={view === 'sign_up' ? 'sign_up' : 'sign_in'}
               showLinks={true}
               providers={[]}
               redirectTo={`${new URL(location.href).origin}/auth/callback`}

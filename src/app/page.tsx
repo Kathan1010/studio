@@ -30,10 +30,15 @@ export default function Home() {
               <p className="mt-4 text-lg md:text-xl text-white/90 [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]">
                 Challenge the course in this 3D minigolf adventure, beautifully rebuilt for the modern web.
               </p>
-              <div className="mt-8 flex justify-center">
+              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
                 <Button asChild size="lg">
                   <Link href="/levels">
                     Play Now <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="text-white border-white bg-transparent hover:bg-white hover:text-primary">
+                   <Link href="/login?view=sign_up">
+                    Sign Up
                   </Link>
                 </Button>
               </div>
@@ -51,31 +56,87 @@ export default function Home() {
               An exercise in web-based 3D.
             </p>
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                { title: 'Scene & Asset Rendering', description: 'Initialized a Three.js scene with camera, lighting, and rendering. Loaded 3D models for the course and rendered the golf ball.', icon: <Layers/> },
-                { title: 'Basic Physics & Interaction', description: 'Implemented user input to apply velocity to the ball, with simplified friction for realistic movement.', icon: <MousePointer/> },
-                { title: 'Core Gameplay & State', description: 'Managed game state like hole, par, and strokes, and implemented goal detection to complete levels.', icon: <Target/> },
-                { title: 'Player Controls', description: 'Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.', icon: <Gamepad/> },
-                { title: 'Interactive Camera System', description: 'Provided interactive camera controls, including orbit, pan, and zoom, for inspecting the course.', icon: <Camera/> },
-                { title: 'User Interface (UI)', description: 'A clean UI displays essential game info like hole number and stroke count, and provides interactive controls.', icon: <Tv /> },
-                { title: 'Level Management', description: 'A system was implemented for loading multiple levels with terrain variations like slopes and ramps.', icon: <Map /> },
-                { title: 'Level Navigator', description: 'Created a UI for players to select levels and transition between them after completing a hole.', icon: <CheckSquare /> },
-                { title: 'Persistent Scoring', description: 'Tracked total scores across all levels, saved in a database linked to email-based authentication so players can continue their progress across sessions.', icon: <Database /> },
-              ].map((item) => (
-                <Card key={item.title} className="flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        {item.icon}
-                      </div>
-                      <span>{item.title}</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-1">
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Layers/></div>
+                    <span>Scene & Asset Rendering</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">A Three.js scene was initialized with camera, lighting, and rendering. 3D models for the course were loaded and the golf ball was rendered.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><MousePointer/></div>
+                    <span>Basic Physics & Interaction</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Implemented user input to apply velocity to the ball, with simplified friction for realistic movement, without a full physics engine.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Target/></div>
+                    <span>Core Gameplay & State</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Managed game state like hole, par, and strokes, and implemented goal detection to complete levels.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Gamepad/></div>
+                    <span>Player Controls</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Developed intuitive controls for aiming precision and power, with clear visual feedback for an enhanced user experience.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Camera/></div>
+                    <span>Interactive Camera System</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Provided interactive camera controls, including orbit, pan, and zoom, for inspecting the course.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Tv /></div>
+                    <span>User Interface (UI)</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">A clean UI displays essential game info like hole number and stroke count, and provides interactive controls.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Map /></div>
+                    <span>Level Management</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">A system was implemented for loading multiple levels with terrain variations like slopes and ramps.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><CheckSquare /></div>
+                    <span>Level Navigator</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Created a UI for players to select levels and transition between them after completing a hole.</p></CardContent>
+              </Card>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Database /></div>
+                    <span>Persistent Scoring</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1"><p className="text-muted-foreground">Tracked total scores across all levels, saved in a database linked to email-based authentication so players can continue their progress across sessions.</p></CardContent>
+              </Card>
             </div>
           </section>
         </div>

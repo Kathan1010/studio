@@ -64,7 +64,7 @@ export function Header() {
             {user && <MainNav />}
           </div>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           {user ? (
              <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -91,9 +91,14 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
-              <Link href="/login">Login</Link>
-            </Button>
+            <>
+              <Button asChild variant="ghost">
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/login?view=sign_up">Sign Up</Link>
+              </Button>
+            </>
           )}
           
           <Sheet>
