@@ -359,6 +359,8 @@ export class Game {
         this.setPower(this.chargePower);
     }
     
+    // --- Hole Completion Animation ---
+    // If the level is complete, just run the sinking animation.
     if (this.isHoleCompleted) {
         this.ballMesh.position.y -= 0.05; // Make the ball sink
         this.ballMesh.scale.multiplyScalar(0.95); // Shrink the ball
@@ -368,32 +370,35 @@ export class Game {
         return;
     }
 
+    // --- Gameplay Physics ---
     if (this.isBallMoving) {
         const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
         const distToHole = this.ballMesh.position.distanceTo(this.holeMesh.position);
         
         // --- HOLE COMPLETION LOGIC ---
-        // Condition to sink the ball
-        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.2) {
+        // Condition to sink the ball: must be close to the hole and moving slowly.
+        // The squared length is used for efficiency (avoids square root).
+        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.05) {
             this.isHoleCompleted = true;
             this.isBallMoving = false;
-            this.ballVelocity.set(0, 0, 0);
-            this.ballMesh.position.copy(this.holeMesh.position).setY(ballRadius);
+            this.ballVelocity.set(0, 0, 0); // Stop all movement
+            this.ballMesh.position.copy(this.holeMesh.position).setY(ballRadius); // Center it
             if (this.flagGroup) this.flagGroup.visible = false;
             this.onHoleComplete();
-            return;
+            return; // Exit update loop for this frame
         }
 
         // --- HOLE GRAVITY LOGIC ---
-        // If ball is near the hole, moving at a reasonable speed, and on the ground
-        if (distToHole < this.level.holeRadius * 2 && this.ballVelocity.lengthSq() < 1.0 && this.ballMesh.position.y <= ballRadius + 0.05) {
+        // If ball is near the hole, on the ground, and moving at a reasonable speed,
+        // apply a gentle pull towards the hole.
+        if (distToHole < this.level.holeRadius * 2.5 && this.ballVelocity.lengthSq() < 0.5 && this.ballMesh.position.y <= ballRadius + 0.05) {
             const pullVector = this.holeMesh.position.clone().sub(this.ballMesh.position).normalize();
-            pullVector.multiplyScalar(0.005); // Adjust pull strength
+            pullVector.multiplyScalar(0.0035); // Adjust pull strength for a subtle effect
             this.ballVelocity.add(pullVector);
-            this.ballVelocity.multiplyScalar(0.97); // Dampen velocity near hole
+            this.ballVelocity.multiplyScalar(0.975); // Slightly dampen velocity near hole
         }
 
-        // --- Standard Physics ---
+        // --- Standard Physics Update ---
         this.ballVelocity.add(this.gravity);
         this.ballMesh.position.add(this.ballVelocity);
         this.checkCollisions();
@@ -408,6 +413,7 @@ export class Game {
         }
         
         // --- Stop Condition ---
+        // If the ball is moving very slowly, bring it to a complete stop.
         if (this.ballVelocity.lengthSq() < 0.0001) {
             this.ballVelocity.set(0, 0, 0);
             this.isBallMoving = false;
@@ -497,6 +503,8 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
+
+    
 
     
 
