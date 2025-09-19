@@ -60,27 +60,8 @@ export const levels: Level[] = [
       { position: [-5, 0, -5] },
     ]
   },
-  // Hard Levels
   {
     id: 3,
-    name: 'The Ridge',
-    par: 4,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
-        { type: 'box', position: [0, 0.25, -10], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [2, 0.25, -11], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-2, 0.25, -11], size: [0.5, 0.5, 0.5] },
-    ],
-    sandpits: [
-        { position: [0, 0.02, -8], radius: 2}
-    ]
-  },
-  {
-    id: 4,
     name: 'Ricochet',
     par: 5,
     startPosition: [-10, 0.2, 10],
@@ -94,6 +75,21 @@ export const levels: Level[] = [
     trees: [
         { position: [5, 0, 8] },
         { position: [-5, 0, -8] },
+    ]
+  },
+  {
+    id: 4,
+    name: 'The Ridge',
+    par: 4,
+    startPosition: [0, 0.2, 12],
+    holePosition: [0, 0.01, -12],
+    holeRadius: 0.25,
+    obstacles: [
+        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
+        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
+    ],
+    sandpits: [
+        { position: [0, 0.02, -8], radius: 2}
     ]
   },
   {
@@ -143,21 +139,6 @@ export const levels: Level[] = [
     trees: [
         { position: [6, 0, 0] },
         { position: [-6, 0, 0] },
-    ]
-  },
-  {
-    id: 8,
-    name: 'Leap of Faith',
-    par: 4,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'ramp', position: [0, -0.5, 6], size: [3, 1, 8], rotation: [0.2, 0, 0] },
-        { type: 'box', position: [0, 0.5, -6], size: [3, 1, 6] },
-    ],
-    sandpits: [
-        { position: [0, 0.02, 0], radius: 2.5 }
     ]
   },
 ];
