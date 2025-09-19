@@ -81,6 +81,8 @@ export const levels: Level[] = [
     sandpits: [
       { position: [0, 0.02, 5], radius: 2 },
       { position: [-4, 0.02, -10], radius: 1.5 },
+      { position: [4.5, 0.02, 0], radius: 1 },
+      { position: [-3, 0.02, 8], radius: 1.5 }
     ],
     trees: [
       { position: [6, 0, 8] },
@@ -154,17 +156,12 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
-      // Maze Walls
-      // Path: Right, Down, Left, Down, Right
+      // Simple Zig-Zag Maze Path
+      // Path: Start -> Right -> Down -> Right -> Down -> Right -> End
       { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] },      // Wall 1 (Top) - Opening on left
       { type: 'box', position: [-1, 0.5, 2], size: [18, 1, 0.5] },     // Wall 2 - Opening on right
       { type: 'box', position: [1, 0.5, -2], size: [18, 1, 0.5] },     // Wall 3 - Opening on left
       { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },    // Wall 4 (Bottom) - Opening on right
-
-      // Vertical Dividers
-      { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 4] },      // Divider between wall 2 and 3 on left
-      { type: 'box', position: [8, 0.5, 4], size: [0.5, 1, 4] },       // Divider between wall 1 and 2 on right
-      { type: 'box', position: [0, 0.5, -4], size: [0.5, 1, 4] },      // Center divider between wall 3 and 4
     ],
     sandpits: [],
     trees: []
