@@ -329,16 +329,11 @@ export class Game {
     
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
-        // We need to check against the OBB (Oriented Bounding Box) of the obstacle
-        const obstacleAABB = new THREE.Box3().setFromObject(obstacle);
+        obstacle.updateWorldMatrix(true, false);
+        const obstacleBox = new THREE.Box3().setFromObject(obstacle);
 
-        if (obstacleAABB.intersectsSphere(ballSphere)) {
-            // This is a broad-phase check. Now we do a more accurate check.
+        if (obstacleBox.intersectsSphere(ballSphere)) {
             const closestPoint = new THREE.Vector3();
-            obstacle.geometry.computeBoundingBox();
-            const obstacleBox = obstacle.geometry.boundingBox!;
-            obstacleBox.applyMatrix4(obstacle.matrixWorld);
-
             obstacleBox.clampPoint(this.ballMesh.position, closestPoint);
 
             const distance = this.ballMesh.position.distanceTo(closestPoint);
