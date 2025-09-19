@@ -166,22 +166,21 @@ export const levels: Level[] = [
       { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] },
       
       // New Maze layout
-      { type: 'box', position: [-6, 0.5, 6], size: [1, 1, 12] },
-      { type: 'box', position: [0, 0.5, 8], size: [12, 1, 1] },
-      { type: 'box', position: [6, 0.5, 2], size: [1, 1, 12] },
-      { type: 'box', position: [0, 0.5, -4], size: [12, 1, 1] },
-      { type: 'box', position: [-6, 0.5, -8], size: [1, 1, 8] },
-      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 1] },
-      { type: 'box', position: [-4, 0.5, -2], size: [1, 1, 4] },
-      { type: 'box', position: [4, 0.5, -8], size: [1, 1, 8] },
-      { type: 'box', position: [8, 0.5, -6], size: [8, 1, 1] },
+      { type: 'box', position: [-6, 0.5, 10], size: [1, 1, 4] },
+      { type: 'box', position: [6, 0.5, -10], size: [1, 1, 4] },
+      { type: 'box', position: [-9, 0.5, 2], size: [6, 1, 1] },
+      { type: 'box', position: [9, 0.5, -2], size: [6, 1, 1] },
+      
+      { type: 'box', position: [0, 0.5, 6], size: [12, 1, 1] },
+      { type: 'box', position: [0, 0.5, -6], size: [12, 1, 1] },
+      
+      { type: 'box', position: [0, 0.5, 0], size: [8, 1, 8], rotation: [0, Math.PI / 4, 0]},
 
     ],
     sandpits: [],
     trees: [
       { position: [-10.5, 0, -10.5] },
       { position: [10.5, 0, 10.5] },
-      { position: [0, 0, 6] },
     ]
   }
 ];
