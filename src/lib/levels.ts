@@ -88,9 +88,9 @@ export const levels: Level[] = [
       { position: [5, 0, -15] },
     ]
   },
-  {
+   {
     id: 4,
-    name: 'Precision',
+    name: "Precision",
     par: 4,
     startPosition: [0, 0.2, 12],
     holePosition: [0, 0.01, -12],
@@ -125,11 +125,6 @@ export const levels: Level[] = [
       // Staggered horizontal barriers
       { type: 'box', position: [1.5, 0.5, 4], size: [9, 1, 0.5] }, // From right wall
       { type: 'box', position: [-1.5, 0.5, -2], size: [9, 1, 0.5] }, // From left wall
-
-      // Small blocks to make it harder
-      { type: 'box', position: [0, 0.25, -4.5], size: [0.75, 0.5, 0.75] },
-      { type: 'box', position: [2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
-      { type: 'box', position: [-2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
     ],
     sandpits: [
       { position: [0, 0.02, 10], radius: 2 },
@@ -160,17 +155,17 @@ export const levels: Level[] = [
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
 
       // Maze Walls
-      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] }, // 1st H wall from top
-      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 0.5] },  // 2nd H wall
-      { type: 'box', position: [2.5, 0.5, -2], size: [15, 1, 0.5] },// 3rd H wall
-      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] }, // 4th H wall
+      { type: 'box', position: [1, 0.5, 6], size: [18, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 0.5] },
+      { type: 'box', position: [2.5, 0.5, -2], size: [15, 1, 0.5] },
+      { type: 'box', position: [-1, 0.5, -6], size: [18, 1, 0.5] },
       
       // Vertical walls
-      { type: 'box', position: [-4, 0.5, 8], size: [0.5, 1, 4] },   // Top V wall
-      { type: 'box', position: [6, 0.5, 4], size: [0.5, 1, 4] },    // 2nd V wall
-      { type: 'box', position: [-7.5, 0.5, 0], size: [0.5, 1, 4] }, // 3rd V wall
-      { type: 'box', position: [-2.5, 0.5, -4], size: [0.5, 1, 4] },// 4th V wall
-      { type: 'box', position: [8, 0.5, -4], size: [0.5, 1, 4] },  // 5th V wall
+      { type: 'box', position: [-4, 0.5, 8], size: [0.5, 1, 4] },
+      { type: 'box', position: [6, 0.5, 4], size: [0.5, 1, 4] },
+      { type: 'box', position: [-7.5, 0.5, 0], size: [0.5, 1, 4] },
+      { type: 'box', position: [-2.5, 0.5, -4], size: [0.5, 1, 4] },
+      { type: 'box', position: [8, 0.5, -4], size: [0.5, 1, 4] },
     ],
     sandpits: [],
     trees: []
