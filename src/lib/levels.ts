@@ -162,15 +162,12 @@ export const levels: Level[] = [
       { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
       { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
       
-      // Inner Maze Walls - A solvable path
-      { type: 'box', position: [-2.5, 0.5, 5], size: [15, 1, 0.5] },
-      { type: 'box', position: [2.5, 0.5, 0], size: [15, 1, 0.5] },
-      { type: 'box', position: [-2.5, 0.5, -5], size: [15, 1, 0.5] },
-      
-      { type: 'box', position: [5, 0.5, 7.5], size: [0.5, 1, 5] },
-      { type: 'box', position: [-5, 0.5, 2.5], size: [0.5, 1, 5] },
-      { type: 'box', position: [5, 0.5, -2.5], size: [0.5, 1, 5] },
-      { type: 'box', position: [-5, 0.5, -7.5], size: [0.5, 1, 5] },
+      // Inner Maze Walls
+      { type: 'box', position: [-2, 0.5, 6], size: [16, 1, 0.5] }, // Top horizontal
+      { type: 'box', position: [2, 0.5, -6], size: [16, 1, 0.5] }, // Bottom horizontal
+      { type: 'box', position: [6, 0.5, 2], size: [0.5, 1, 8] },   // Right vertical
+      { type: 'box', position: [-6, 0.5, -2], size: [0.5, 1, 8] }, // Left vertical
+      { type: 'box', position: [-2, 0.5, -2], size: [8, 1, 0.5] },  // Center horizontal
     ],
     sandpits: [],
     trees: []
