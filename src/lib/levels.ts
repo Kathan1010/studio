@@ -94,6 +94,27 @@ export const levels: Level[] = [
   },
   {
     id: 4,
+    name: 'Precision',
+    par: 3,
+    startPosition: [0, 0.2, 12],
+    holePosition: [0, 0.01, -12],
+    holeRadius: 0.2,
+    obstacles: [
+        { type: 'box', position: [0, 0.5, 5], size: [8, 1, 0.5] },
+        { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
+        { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
+    ],
+    sandpits: [
+        { position: [4, 0.02, 8], radius: 1.5 },
+        { position: [0, 0.02, -8], radius: 2 },
+    ],
+    trees: [
+        { position: [6, 0, 0] },
+        { position: [-6, 0, 0] },
+    ]
+  },
+  {
+    id: 5,
     name: "The Slingshot",
     par: 4,
     startPosition: [0, 0.2, 14],
@@ -124,27 +145,6 @@ export const levels: Level[] = [
       { position: [-8, 0, 8] },
       { position: [8, 0, -10] },
       { position: [-8, 0, -10] },
-    ]
-  },
-  {
-    id: 5,
-    name: 'Precision',
-    par: 3,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.2,
-    obstacles: [
-        { type: 'box', position: [0, 0.5, 5], size: [8, 1, 0.5] },
-        { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
-        { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
-    ],
-    sandpits: [
-        { position: [4, 0.02, 8], radius: 1.5 },
-        { position: [0, 0.02, -8], radius: 2 },
-    ],
-    trees: [
-        { position: [6, 0, 0] },
-        { position: [-6, 0, 0] },
     ]
   },
   {
