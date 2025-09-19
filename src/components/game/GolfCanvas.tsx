@@ -304,13 +304,14 @@ export class Game {
   
  private checkCollisions() {
     const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
-    const ballSphere = new THREE.Sphere(this.ballMesh.position, ballRadius);
     let onSurface = false;
     let inSand = false;
-
+    
     // --- Ground collision ---
-    if (this.ballMesh.position.y < ballRadius && this.ballVelocity.y < 0) {
-        this.ballMesh.position.y = ballRadius;
+    // A simple plane at y=0. More complex terrain needs a different approach.
+    const groundLevel = 0;
+    if (this.ballMesh.position.y < groundLevel + ballRadius && this.ballVelocity.y < 0) {
+        this.ballMesh.position.y = groundLevel + ballRadius;
         this.ballVelocity.y *= -0.3; // Dampen bounce
         onSurface = true;
     }
@@ -330,24 +331,40 @@ export class Game {
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
         obstacle.updateWorldMatrix(true, false);
-        const obstacleBox = new THREE.Box3().setFromObject(obstacle);
+        const inverseMatrix = new THREE.Matrix4().copy(obstacle.matrixWorld).invert();
+        
+        const center = this.ballMesh.position.clone().applyMatrix4(inverseMatrix);
+        const velocity = this.ballVelocity.clone().transformDirection(inverseMatrix);
 
-        if (obstacleBox.intersectsSphere(ballSphere)) {
-            const closestPoint = new THREE.Vector3();
-            obstacleBox.clampPoint(this.ballMesh.position, closestPoint);
+        const halfSize = (obstacle.geometry as THREE.BoxGeometry).parameters;
+        const boxMin = new THREE.Vector3(-halfSize.width / 2, -halfSize.height / 2, -halfSize.depth / 2);
+        const boxMax = new THREE.Vector3(halfSize.width / 2, halfSize.height / 2, halfSize.depth / 2);
 
-            const distance = this.ballMesh.position.distanceTo(closestPoint);
+        const closestPoint = new THREE.Vector3().copy(center).clamp(boxMin, boxMax);
+        const distance = center.distanceTo(closestPoint);
+
+        if (distance < ballRadius) {
+            const penetrationDepth = ballRadius - distance;
+            const collisionNormal = center.clone().sub(closestPoint).normalize();
+
+            // Reposition the ball in local space
+            center.add(collisionNormal.clone().multiplyScalar(penetrationDepth));
             
-            if (distance < ballRadius) {
-                // Penetration has occurred
-                const penetrationDepth = ballRadius - distance;
-                const collisionNormal = this.ballMesh.position.clone().sub(closestPoint).normalize();
-                
-                // 1. Reposition the ball to be just outside the obstacle
-                this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(penetrationDepth));
-                
-                // 2. Reflect the velocity
-                this.ballVelocity.reflect(collisionNormal).multiplyScalar(0.7);
+            // Reflect the velocity in local space
+            velocity.reflect(collisionNormal).multiplyScalar(0.7);
+
+            // Transform back to world space
+            this.ballMesh.position.copy(center).applyMatrix4(obstacle.matrixWorld);
+            this.ballVelocity.copy(velocity).transformDirection(obstacle.matrixWorld);
+             
+            // Check if the collision is with a "floor" surface of the obstacle
+            // We use a small threshold to consider it a floor
+            const localNormal = collisionNormal.clone();
+            const worldNormal = localNormal.transformDirection(obstacle.matrixWorld).normalize();
+
+            // If the normal is pointing mostly upwards, we are on top of the obstacle
+            if (worldNormal.y > 0.7) {
+                 onSurface = true;
             }
         }
     }
@@ -357,6 +374,10 @@ export class Game {
       const friction = inSand ? 0.85 : 0.96;
       this.ballVelocity.x *= friction;
       this.ballVelocity.z *= friction;
+      // Also apply a little friction to vertical bounce on surfaces
+      if (Math.abs(this.ballVelocity.y) < 0.01) {
+          this.ballVelocity.y = 0;
+      }
     }
   }
 
@@ -391,11 +412,12 @@ export class Game {
         // --- HOLE COMPLETION LOGIC ---
         // Condition to sink the ball: must be close to the hole and moving slowly.
         // The squared length is used for efficiency (avoids square root).
-        if (distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.05) {
+        const onHolePlane = Math.abs(this.ballMesh.position.y - this.holeMesh.position.y) < ballRadius;
+        if (onHolePlane && distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.05) {
             this.isHoleCompleted = true;
             this.isBallMoving = false;
             this.ballVelocity.set(0, 0, 0); // Stop all movement
-            this.ballMesh.position.copy(this.holeMesh.position).setY(ballRadius); // Center it
+            this.ballMesh.position.copy(this.holeMesh.position).setY(this.holeMesh.position.y + ballRadius); // Center it
             if (this.flagGroup) this.flagGroup.visible = false;
             this.onHoleComplete();
             return; // Exit update loop for this frame
@@ -404,8 +426,9 @@ export class Game {
         // --- HOLE GRAVITY LOGIC ---
         // If ball is near the hole, on the ground, and moving at a reasonable speed,
         // apply a gentle pull towards the hole.
-        if (distToHole < this.level.holeRadius * 2.5 && this.ballVelocity.lengthSq() < 0.5 && this.ballMesh.position.y <= ballRadius + 0.05) {
+        if (onHolePlane && distToHole < this.level.holeRadius * 2.5 && this.ballVelocity.lengthSq() < 0.5) {
             const pullVector = this.holeMesh.position.clone().sub(this.ballMesh.position).normalize();
+            pullVector.y = 0; // Only pull on the XZ plane
             pullVector.multiplyScalar(0.0035); // Adjust pull strength for a subtle effect
             this.ballVelocity.add(pullVector);
             this.ballVelocity.multiplyScalar(0.975); // Slightly dampen velocity near hole
