@@ -83,7 +83,9 @@ export const levels: Level[] = [
       { type: 'box', position: [-2, 0.25, -6.5], size: [0.75, 0.5, 0.75] },
     ],
     sandpits: [
-      { position: [0, 0.02, 1], radius: 1.5 }
+      { position: [0, 0.02, 10], radius: 2 },
+      { position: [0, 0.02, 1], radius: 1.5 },
+      { position: [4.5, 0.02, -5], radius: 1 },
     ],
     trees: [
       { position: [8, 0, 8] },
