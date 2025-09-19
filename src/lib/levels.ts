@@ -102,7 +102,7 @@ export const levels: Level[] = [
   {
     id: 4,
     name: 'The Corridor',
-    par: 4,
+    par: 3,
     startPosition: [0, 0.2, 14],
     holePosition: [0, 0.01, -14],
     holeRadius: 0.25,
