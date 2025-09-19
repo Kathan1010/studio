@@ -153,6 +153,28 @@ export class Game {
     this.holeMesh.rotation.x = -Math.PI / 2;
     this.scene.add(this.holeMesh);
 
+    // Boundaries
+    const boundaryMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
+    const boundaryHeight = 0.5;
+    const boundaryThickness = 0.5;
+
+    const boundaries = [
+      { size: [50 + boundaryThickness, boundaryHeight, boundaryThickness], position: [0, boundaryHeight / 2, 25] }, // Bottom
+      { size: [50 + boundaryThickness, boundaryHeight, boundaryThickness], position: [0, boundaryHeight / 2, -25] }, // Top
+      { size: [boundaryThickness, boundaryHeight, 50 + boundaryThickness], position: [25, boundaryHeight / 2, 0] }, // Right
+      { size: [boundaryThickness, boundaryHeight, 50 + boundaryThickness], position: [-25, boundaryHeight / 2, 0] } // Left
+    ];
+
+    boundaries.forEach(b => {
+      const boundaryGeo = new THREE.BoxGeometry(...(b.size as [number,number,number]));
+      const boundaryMesh = new THREE.Mesh(boundaryGeo, boundaryMat);
+      boundaryMesh.position.fromArray(b.position as [number,number,number]);
+      boundaryMesh.castShadow = true;
+      boundaryMesh.receiveShadow = true;
+      this.scene.add(boundaryMesh);
+      this.obstacles.push(boundaryMesh);
+    });
+
     // Obstacles
     this.level.obstacles.forEach(obs => {
       let obsGeo: THREE.BoxGeometry;
@@ -467,7 +489,7 @@ export class Game {
 
         // --- Out of Bounds Check ---
         const { x, y, z } = this.ballMesh.position;
-        if (y < -2 || Math.abs(x) > 25 || Math.abs(z) > 25) {
+        if (y < -2) { // Only reset if it falls below the boundaries
             this.onStroke(); // Penalty stroke
             this.ballMesh.position.fromArray(this.level.startPosition);
             this.ballVelocity.set(0, 0, 0);
@@ -583,6 +605,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
