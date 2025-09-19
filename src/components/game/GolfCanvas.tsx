@@ -374,7 +374,7 @@ export class Game {
 
     // --- Apply friction if on any surface ---
     if(onSurface) {
-      const friction = inSand ? 0.85 : 0.96;
+      const friction = inSand ? 0.85 : 0.98;
       this.ballVelocity.x *= friction;
       this.ballVelocity.z *= friction;
       // Also apply a little friction to vertical bounce on surfaces
@@ -558,4 +558,5 @@ export default GolfCanvas;
 
 
     
+
 

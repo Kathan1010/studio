@@ -62,21 +62,17 @@ export const levels: Level[] = [
   },
   {
     id: 3,
-    name: 'The Bridge',
-    par: 4,
-    startPosition: [0, 0.2, 10],
-    holePosition: [0, 0.01, -10],
+    name: 'The Ridge',
+    par: 3,
+    startPosition: [0, 0.2, 12],
+    holePosition: [0, 0.01, -12],
     holeRadius: 0.25,
     obstacles: [
-        { type: 'ramp', position: [0, 0.1, 0], size: [2, 0.2, 12], rotation: [0, 0, 0] },
+        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
+        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
     ],
     sandpits: [
-        { position: [3.5, 0.02, 0], radius: 2 },
-        { position: [-3.5, 0.02, 0], radius: 2 },
-    ],
-    trees: [
-      { position: [6, 0, 8] },
-      { position: [-6, 0, -8] },
+        { position: [0, 0.02, -8], radius: 2}
     ]
   },
   // Medium Levels
