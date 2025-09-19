@@ -128,6 +128,12 @@ export const levels: Level[] = [
     holePosition: [8, 0.01, -8],
     holeRadius: 0.25,
     obstacles: [
+      // Boundary Walls
+      { type: 'box', position: [0, 0.5, 10], size: [20, 1, 0.5] },
+      { type: 'box', position: [0, 0.5, -10], size: [20, 1, 0.5] },
+      { type: 'box', position: [-10, 0.5, 0], size: [0.5, 1, 20] },
+      { type: 'box', position: [10, 0.5, 0], size: [0.5, 1, 20] },
+
       // A solvable maze layout
       { type: 'box', position: [-4, 0.5, 8], size: [8, 1, 0.5] },
       { type: 'box', position: [4, 0.5, 4], size: [8, 1, 0.5] },
