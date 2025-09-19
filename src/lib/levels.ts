@@ -68,7 +68,7 @@ export const levels: Level[] = [
   {
     id: 3,
     name: "The Serpent",
-    par: 5,
+    par: 4,
     startPosition: [-6, 0.2, 12],
     holePosition: [6, 0.01, -12],
     holeRadius: 0.25,
@@ -78,17 +78,8 @@ export const levels: Level[] = [
       { type: 'box', position: [0, 0.5, -14], size: [16, 1, 0.5] },
       { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 28] },
       { type: 'box', position: [8, 0.5, 0], size: [0.5, 1, 28] },
-      // Inner Serpent Walls
-      { type: 'box', position: [2, 0.5, 8], size: [12, 1, 0.5] },
-      { type: 'box', position: [-2, 0.5, 2], size: [12, 1, 0.5] },
-      { type: 'box', position: [2, 0.5, -4], size: [12, 1, 0.5] },
-      { type: 'box', position: [-2, 0.5, -10], size: [12, 1, 0.5] },
     ],
-    sandpits: [
-        { position: [-6, 0.02, 5], radius: 1.8 },
-        { position: [6, 0.02, -1], radius: 1.8 },
-        { position: [-6, 0.02, -7], radius: 1.8 },
-    ],
+    sandpits: [],
     trees: []
   },
    {
@@ -103,10 +94,10 @@ export const levels: Level[] = [
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
         // Blocks around the hole, spaced out
-        { type: 'box', position: [0, 0.25, -11.2], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0, 0.25, -12.8], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0.8, 0.25, -12], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-0.8, 0.25, -12], size: [0.5, 0.5, 0.5] }
+        { type: 'box', position: [0, 0.25, -11], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -13], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [1, 0.25, -12], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [-1, 0.25, -12], size: [0.5, 0.5, 0.5] }
     ],
     sandpits: [
         { position: [4, 0.02, 8], radius: 1.5 },
