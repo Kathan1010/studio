@@ -200,19 +200,13 @@ export class Game {
     });
 
     // Obstacles
+    const obstacleMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
     this.level.obstacles.forEach(obs => {
       let obsGeo: THREE.BoxGeometry;
-      let obsMat: THREE.MeshStandardMaterial;
-
-      if (obs.type === 'ramp') {
-          obsGeo = new THREE.BoxGeometry(...obs.size);
-          obsMat = new THREE.MeshStandardMaterial({ color: 0x999999, roughness: 0.7 });
-      } else { // 'box'
-          obsGeo = new THREE.BoxGeometry(...obs.size);
-          obsMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
-      }
       
-      const obstacle = new THREE.Mesh(obsGeo, obsMat);
+      obsGeo = new THREE.BoxGeometry(...obs.size);
+      
+      const obstacle = new THREE.Mesh(obsGeo, obstacleMat);
       obstacle.position.fromArray(obs.position);
       if (obs.rotation) {
           obstacle.rotation.fromArray(obs.rotation as [number, number, number]);
@@ -629,6 +623,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
