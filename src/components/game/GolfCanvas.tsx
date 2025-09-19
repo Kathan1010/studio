@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useRef, useEffect, MutableRefObject } from 'react';
@@ -303,6 +304,7 @@ export class Game {
   
  private checkCollisions() {
     const ballRadius = (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius;
+    const ballSphere = new THREE.Sphere(this.ballMesh.position, ballRadius);
     let onSurface = false;
     let inSand = false;
 
@@ -327,17 +329,27 @@ export class Game {
     
     // --- Obstacle collision ---
     for (const obstacle of this.obstacles) {
+        // We need to check against the OBB (Oriented Bounding Box) of the obstacle
         const obstacleAABB = new THREE.Box3().setFromObject(obstacle);
 
-        if (obstacleAABB.intersectsSphere(new THREE.Sphere(this.ballMesh.position, ballRadius))) {
+        if (obstacleAABB.intersectsSphere(ballSphere)) {
+            // This is a broad-phase check. Now we do a more accurate check.
             const closestPoint = new THREE.Vector3();
             obstacleAABB.clampPoint(this.ballMesh.position, closestPoint);
 
-            const collisionNormal = this.ballMesh.position.clone().sub(closestPoint).normalize();
+            const distance = this.ballMesh.position.distanceTo(closestPoint);
             
-            this.ballVelocity.reflect(collisionNormal).multiplyScalar(0.7);
-
-            this.ballMesh.position.add(collisionNormal.multiplyScalar(0.01));
+            if (distance < ballRadius) {
+                // Penetration has occurred
+                const penetrationDepth = ballRadius - distance;
+                const collisionNormal = this.ballMesh.position.clone().sub(closestPoint).normalize();
+                
+                // 1. Reposition the ball to be just outside the obstacle
+                this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(penetrationDepth));
+                
+                // 2. Reflect the velocity
+                this.ballVelocity.reflect(collisionNormal).multiplyScalar(0.7);
+            }
         }
     }
 
@@ -517,3 +529,4 @@ export default GolfCanvas;
     
 
     
+
