@@ -62,14 +62,14 @@ export const levels: Level[] = [
   },
   {
     id: 3,
-    name: 'The Ridge',
+    name: 'The Ascent',
     par: 3,
     startPosition: [0, 0.2, 12],
     holePosition: [0, 0.01, -12],
     holeRadius: 0.25,
     obstacles: [
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, 0.2] },
-        { type: 'ramp', position: [0, 0.2, 0], size: [8, 0.5, 4], rotation: [0, 0, -0.2] },
+        { type: 'ramp', position: [0, 0.5, 3], size: [4, 1, 6], rotation: [0.2, 0, 0] },
+        { type: 'ramp', position: [0, 0.5, -3], size: [4, 1, 6], rotation: [-0.2, 0, 0] },
     ],
     sandpits: [
         { position: [0, 0.02, -8], radius: 2}
