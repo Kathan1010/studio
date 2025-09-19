@@ -155,33 +155,35 @@ export const levels: Level[] = [
     id: 6,
     name: "The Labyrinth",
     par: 4,
-    startPosition: [-4, 0.2, 12],
-    holePosition: [4, 0.01, -12],
+    startPosition: [-10, 0.2, 10],
+    holePosition: [10, 0.01, -10],
     holeRadius: 0.3,
     obstacles: [
-      // Outer walls are part of the default course boundaries now
+      // Outer walls
+      { type: 'box', position: [0, 0.5, 12], size: [24, 1, 1] }, // Top
+      { type: 'box', position: [0, 0.5, -12], size: [24, 1, 1] }, // Bottom
+      { type: 'box', position: [-12, 0.5, 0], size: [1, 1, 24] }, // Left
+      { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] }, // Right
 
       // Internal maze walls
-      { type: 'box', position: [0, 0.5, 10], size: [12, 1, 1] },
-      { type: 'box', position: [0, 0.5, 6], size: [12, 1, 1] },
-      { type: 'box', position: [ -2, 0.5, 8 ], size: [1, 1, 4] },
-      { type: 'box', position: [ 2, 0.5, 8 ], size: [1, 1, 4] },
-      
-      { type: 'box', position: [0, 0.5, 2], size: [12, 1, 1] },
-      { type: 'box', position: [0, 0.5, -2], size: [12, 1, 1] },
+      { type: 'box', position: [-2, 0.5, 8], size: [20, 1, 1] },
+      { type: 'box', position: [2, 0.5, 4], size: [20, 1, 1] },
+      { type: 'box', position: [-2, 0.5, 0], size: [20, 1, 1] },
+      { type: 'box', position: [2, 0.5, -4], size: [20, 1, 1] },
+      { type: 'box', position: [-2, 0.5, -8], size: [20, 1, 1] },
 
-      { type: 'box', position: [ -4, 0.5, 0 ], size: [1, 1, 4] },
-      { type: 'box', position: [ 4, 0.5, 0 ], size: [1, 1, 4] },
-      { type: 'box', position: [ -2, 0.5, -4 ], size: [1, 1, 4] },
-      { type: 'box', position: [ 2, 0.5, -4 ], size: [1, 1, 4] },
-
-      { type: 'box', position: [0, 0.5, -6], size: [12, 1, 1] },
-      { type: 'box', position: [0, 0.5, -10], size: [12, 1, 1] },
+      // Vertical connectors
+      { type: 'box', position: [-10, 0.5, 10], size: [1, 1, 4] },
+      { type: 'box', position: [8, 0.5, 6], size: [1, 1, 4] },
+      { type: 'box', position: [-8, 0.5, 2], size: [1, 1, 4] },
+      { type: 'box', position: [8, 0.5, -2], size: [1, 1, 4] },
+      { type: 'box', position: [-8, 0.5, -6], size: [1, 1, 4] },
     ],
     sandpits: [],
     trees: [
-      { position: [5, 0, 12] },
-      { position: [-5, 0, -5] },
+      { position: [-10.5, 0, -10.5] },
+      { position: [10.5, 0, 10.5] },
+      { position: [0, 0, 0] },
     ]
   }
 ];
