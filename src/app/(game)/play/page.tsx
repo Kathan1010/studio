@@ -8,7 +8,7 @@ import { levels, type Level } from '@/lib/levels';
 import { GameUI } from '@/components/game/GameUI';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PartyPopper, Loader2, Home, RotateCcw, ArrowRight, Music, MusicOff } from 'lucide-react';
+import { PartyPopper, Loader2, Home, RotateCcw, ArrowRight, Music, VolumeX } from 'lucide-react';
 import type { Game } from '@/components/game/GolfCanvas';
 import { MobileControls } from '@/components/game/MobileControls';
 import { updateBestScore } from '@/lib/supabase/scores';
@@ -143,7 +143,7 @@ export default function PlayPage() {
       />
       <div className="absolute top-4 right-4 z-10">
         <Button onClick={toggleMute} variant="ghost" size="icon" aria-label="Toggle Music">
-          {isMuted ? <MusicOff className="h-5 w-5" /> : <Music className="h-5 w-5" />}
+          {isMuted ? <VolumeX className="h-5 w-5" /> : <Music className="h-5 w-5" />}
         </Button>
       </div>
       <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin" />}>
