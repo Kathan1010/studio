@@ -125,4 +125,46 @@ export const levels: Level[] = [
         { position: [-6, 0, 0] },
     ]
   },
+  {
+    id: 6,
+    name: 'The Maze',
+    par: 5,
+    startPosition: [-10, 0.2, 10],
+    holePosition: [10, 0.01, -10],
+    holeRadius: 0.25,
+    obstacles: [
+        { type: 'box', position: [-5, 0.5, 5], size: [10, 1, 0.5] },
+        { type: 'box', position: [5, 0.5, -5], size: [10, 1, 0.5] },
+        { type: 'box', position: [0, 0.5, 0], size: [0.5, 1, 10] },
+    ],
+    sandpits: [
+      { position: [0, 0.02, 8], radius: 2 },
+      { position: [0, 0.02, -8], radius: 2 },
+    ],
+    trees: [
+        { position: [-12, 0, -5] },
+        { position: [12, 0, 5] },
+    ]
+  },
+  {
+    id: 7,
+    name: 'Island Hop',
+    par: 4,
+    startPosition: [0, 0.2, 10],
+    holePosition: [0, 0.01, -10],
+    holeRadius: 0.25,
+    obstacles: [
+        // Starting platform
+        { type: 'box', position: [0, -0.5, 10], size: [6, 1, 8] },
+        // Target platform
+        { type: 'box', position: [0, -0.5, -10], size: [6, 1, 8] },
+    ],
+    sandpits: [
+      { position: [0, 0.02, -12], radius: 1.5 },
+    ],
+    trees: [
+        { position: [-4, 0.5, -10] },
+        { position: [4, 0.5, -10] },
+    ]
+  }
 ];
