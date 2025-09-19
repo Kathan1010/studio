@@ -330,6 +330,7 @@ export class Game {
     // --- Obstacle Collision (with Raycasting for Tunneling) ---
     const movementVector = this.ballVelocity.clone();
     const movementDistance = movementVector.length();
+    let collisionDetected = false;
 
     if (movementDistance > 0) {
         const raycaster = new THREE.Raycaster(this.ballMesh.position, movementVector.normalize(), 0, movementDistance + ballRadius);
@@ -339,13 +340,14 @@ export class Game {
             const intersection = intersects[0];
             // Check if the intersection is closer than the ball's intended movement
             if (intersection.distance <= movementDistance + ballRadius) {
+                collisionDetected = true;
                 const collisionNormal = intersection.face!.normal.clone();
                 // Make sure normal is pointing out of the face from the obstacle's perspective
-                collisionNormal.transformDirection(intersection.object.matrixWorld);
+                collisionNormal.transformDirection(intersection.object.matrixWorld).normalize();
 
                 // Position the ball at the point of collision
                 this.ballMesh.position.copy(intersection.point);
-                this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(ballRadius));
+                this.ballMesh.position.add(collisionNormal.clone().multiplyScalar(ballRadius * 1.01)); // Epsilon to avoid getting stuck
                 
                 // Reflect velocity
                 this.ballVelocity.reflect(collisionNormal);
@@ -358,24 +360,21 @@ export class Game {
                 if (collisionNormal.y > 0.7) {
                     onSurface = true;
                     surfaceNormal = collisionNormal; // This is a slope!
-                    if (this.ballVelocity.y < 0) {
-                        this.ballVelocity.y *= -0.3; // Dampen bounce on the obstacle's surface
-                    }
                 }
             }
         }
     }
     
     // --- Sandpit check ---
-    // This check should happen after obstacle collision has determined if we are `onSurface`.
-    // It determines if the surface the ball is on is sand.
-    if (onSurface) {
+    if (!collisionDetected) { // Only check for sand if we didn't just bounce off a wall
         for (const sandpit of this.sandpits) {
             const distToSandpitCenter = this.ballMesh.position.clone().setY(sandpit.position.y).distanceTo(sandpit.position);
             const sandpitRadius = (sandpit.geometry as THREE.CircleGeometry).parameters.radius;
-            // Check if ball is horizontally within the sandpit and vertically very close to it.
+
+            // Check if the ball is horizontally within the sandpit and vertically very close to it.
             if (distToSandpitCenter < sandpitRadius && Math.abs(this.ballMesh.position.y - (sandpit.position.y + ballRadius)) < 0.2) {
                 inSand = true;
+                onSurface = true; // Being in sand means we are on a surface
                 break;
             }
         }
@@ -385,7 +384,7 @@ export class Game {
     // --- Apply friction and slope gravity if on any surface ---
     if(onSurface) {
       const isFlat = surfaceNormal.y > 0.99; // Check if the surface is nearly flat
-      const friction = inSand ? 0.85 : 0.98;
+      const friction = inSand ? 0.7 : 0.98;
       
       this.ballVelocity.x *= friction;
       this.ballVelocity.z *= friction;
@@ -584,6 +583,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
