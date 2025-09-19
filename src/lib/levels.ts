@@ -60,24 +60,9 @@ export const levels: Level[] = [
       { position: [-5, 0, -5] },
     ]
   },
-  {
-    id: 3,
-    name: 'The Ascent',
-    par: 3,
-    startPosition: [0, 0.2, 12],
-    holePosition: [0, 0.01, -12],
-    holeRadius: 0.25,
-    obstacles: [
-        { type: 'ramp', position: [0, 0.5, 3], size: [4, 1, 6], rotation: [0.2, 0, 0] },
-        { type: 'ramp', position: [0, 0.5, -3], size: [4, 1, 6], rotation: [-0.2, 0, 0] },
-    ],
-    sandpits: [
-        { position: [0, 0.02, -8], radius: 2}
-    ]
-  },
   // Medium Levels
   {
-    id: 4,
+    id: 3,
     name: 'The S-Curve',
     par: 3,
     startPosition: [-4, 0.2, 10],
@@ -92,7 +77,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 5,
+    id: 4,
     name: 'The Tunnel',
     par: 2,
     startPosition: [0, 0.2, 10],
@@ -109,7 +94,7 @@ export const levels: Level[] = [
   },
   // Hard Levels
   {
-    id: 6,
+    id: 5,
     name: 'The Ridge',
     par: 3,
     startPosition: [0, 0.2, 12],
@@ -124,7 +109,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 7,
+    id: 6,
     name: 'Ricochet',
     par: 5,
     startPosition: [-10, 0.2, 10],
@@ -141,7 +126,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 8,
+    id: 7,
     name: 'The Gauntlet',
     par: 5,
     startPosition: [0, 0.2, 14],
@@ -160,7 +145,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 9,
+    id: 8,
     name: 'Vertigo',
     par: 4,
     startPosition: [0, 0.2, 10],
@@ -173,7 +158,7 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: 10,
+    id: 9,
     name: 'Precision',
     par: 3,
     startPosition: [0, 0.2, 12],
@@ -190,7 +175,7 @@ export const levels: Level[] = [
     ]
   },
   {
-    id: 11,
+    id: 10,
     name: 'Leap of Faith',
     par: 4,
     startPosition: [0, 0.2, 12],
