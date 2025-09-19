@@ -271,10 +271,12 @@ export class Game {
   private handleKeyDown = (event: KeyboardEvent) => {
     switch(event.key.toLowerCase()) {
         case 'arrowleft':
+        case 'a':
             event.preventDefault();
             this.aimLeft();
             break;
         case 'arrowright':
+        case 'd':
             event.preventDefault();
             this.aimRight();
             break;
