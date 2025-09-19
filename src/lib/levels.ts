@@ -67,20 +67,24 @@ export const levels: Level[] = [
   },
   {
     id: 3,
-    name: "The Serpent",
-    par: 4,
-    startPosition: [-6, 0.2, 12],
-    holePosition: [6, 0.01, -12],
+    name: "The Bottleneck",
+    par: 3,
+    startPosition: [0, 0.2, 10],
+    holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
-      // Outer Walls
-      { type: 'box', position: [0, 0.5, 14], size: [16, 1, 0.5] },
-      { type: 'box', position: [0, 0.5, -14], size: [16, 1, 0.5] },
-      { type: 'box', position: [-8, 0.5, 0], size: [0.5, 1, 28] },
-      { type: 'box', position: [8, 0.5, 0], size: [0.5, 1, 28] },
+      // The bottleneck walls
+      { type: 'box', position: [1.5, 0.5, 0], size: [1, 1, 6] },
+      { type: 'box', position: [-1.5, 0.5, 0], size: [1, 1, 6] },
     ],
-    sandpits: [],
-    trees: []
+    sandpits: [
+      { position: [0, 0.02, 5], radius: 2.5 },
+      { position: [4, 0.02, -5], radius: 2 },
+    ],
+    trees: [
+      { position: [-6, 0, 8] },
+      { position: [6, 0, -2] },
+    ]
   },
    {
     id: 4,
@@ -94,10 +98,10 @@ export const levels: Level[] = [
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
         // Blocks around the hole, spaced out
-        { type: 'box', position: [0, 0.25, -11], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [0, 0.25, -13], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [1, 0.25, -12], size: [0.5, 0.5, 0.5] },
-        { type: 'box', position: [-1, 0.25, -12], size: [0.5, 0.5, 0.5] }
+        { type: 'box', position: [0, 0.25, -10.5], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [0, 0.25, -13.5], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [1.5, 0.25, -12], size: [0.5, 0.5, 0.5] },
+        { type: 'box', position: [-1.5, 0.25, -12], size: [0.5, 0.5, 0.5] }
     ],
     sandpits: [
         { position: [4, 0.02, 8], radius: 1.5 },
