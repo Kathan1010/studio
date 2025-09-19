@@ -359,8 +359,7 @@ export class Game {
              
             // Check if the collision is with a "floor" surface of the obstacle
             // We use a small threshold to consider it a floor
-            const worldNormal = collisionNormal.clone().transformDirection(obstacle.matrixWorld).normalize().sub(obstacle.position).normalize();
-
+            const worldNormal = collisionNormal.clone().transformDirection(new THREE.Matrix4().extractRotation(obstacle.matrixWorld));
 
             // If the normal is pointing mostly upwards, we are on top of the obstacle
             if (worldNormal.y > 0.7) {
@@ -559,3 +558,4 @@ export default GolfCanvas;
 
 
     
+
