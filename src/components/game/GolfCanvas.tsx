@@ -335,7 +335,11 @@ export class Game {
         if (obstacleAABB.intersectsSphere(ballSphere)) {
             // This is a broad-phase check. Now we do a more accurate check.
             const closestPoint = new THREE.Vector3();
-            obstacleAABB.clampPoint(this.ballMesh.position, closestPoint);
+            obstacle.geometry.computeBoundingBox();
+            const obstacleBox = obstacle.geometry.boundingBox!;
+            obstacleBox.applyMatrix4(obstacle.matrixWorld);
+
+            obstacleBox.clampPoint(this.ballMesh.position, closestPoint);
 
             const distance = this.ballMesh.position.distanceTo(closestPoint);
             
@@ -530,3 +534,6 @@ export default GolfCanvas;
 
     
 
+
+
+    
