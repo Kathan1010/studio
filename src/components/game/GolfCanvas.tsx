@@ -139,8 +139,8 @@ export class Game {
     canvas.height = textureSize;
     const context = canvas.getContext('2d')!;
 
-    const color1 = '#348034'; // Darker green
-    const color2 = '#449044'; // Lighter green
+    const color1 = '#2A6A2A'; // Darker green
+    const color2 = '#3A7A3A'; // Lighter green
     const squareSize = textureSize / 2;
 
     context.fillStyle = color1;
@@ -630,6 +630,7 @@ export default GolfCanvas;
 
 
     
+
 
 
 
