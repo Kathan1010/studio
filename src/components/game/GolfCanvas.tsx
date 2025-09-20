@@ -80,12 +80,7 @@ export class Game {
     this.mount.appendChild(this.renderer.domElement);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.1;
-    this.controls.screenSpacePanning = false;
-    this.controls.maxPolarAngle = Math.PI / 2.1;
-    this.controls.minDistance = 5;
-    this.controls.maxDistance = 30;
+    this.controls.enabled = false;
 
     this.addLights();
     this.loadSounds();
@@ -294,11 +289,11 @@ export class Game {
             // Invert direction for aiming
             this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
 
-            const maxDrag = 150;
+            const maxDrag = 100;
             this.chargePower = Math.min((dragDistance / maxDrag) * 100, 100);
             this.setPower(this.chargePower);
 
-            lineLength = (this.chargePower / 100) * 10;
+            lineLength = (this.chargePower / 100) * 5;
         } else {
             // Reset power if not dragging
             this.chargePower = 0;
@@ -452,13 +447,44 @@ export class Game {
   }
 
 
+ private updateCamera() {
+    const cameraOffset = new THREE.Vector3(0, 5, 8); // x, y, z offset from the ball
+    
+    // Get camera's current direction
+    const cameraDirection = new THREE.Vector3();
+    this.camera.getWorldDirection(cameraDirection);
+    cameraDirection.y = 0;
+    cameraDirection.normalize();
+    
+    // Calculate the desired position based on the ball's position and the fixed offset
+    const desiredPosition = new THREE.Vector3(
+        this.ballMesh.position.x,
+        this.ballMesh.position.y,
+        this.ballMesh.position.z
+    ).add(cameraOffset);
+    
+    // Create a target position that only considers the ball's horizontal movement
+    const targetPosition = new THREE.Vector3(
+        this.ballMesh.position.x,
+        0,
+        this.ballMesh.position.z
+    );
+
+    // Smoothly interpolate the camera's position
+    const lerpFactor = 0.05;
+    this.camera.position.lerp(desiredPosition, lerpFactor);
+    
+    // The camera should always look at the ball's horizontal plane to prevent vibration
+    const lookAtPosition = new THREE.Vector3(this.ballMesh.position.x, 0, this.ballMesh.position.z);
+    this.camera.lookAt(lookAtPosition);
+  }
+
   private update() {
     if (this.isGamePaused()) {
         return;
     }
     
-    this.controls.update();
-    this.controls.target.copy(this.ballMesh.position);
+    this.updateCamera();
 
     this.updateAimLine();
     
@@ -631,5 +657,6 @@ export default GolfCanvas;
     
 
     
+
 
 
