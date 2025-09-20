@@ -206,10 +206,7 @@ export class Game {
     // Obstacles
     const obstacleMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
     this.level.obstacles.forEach(obs => {
-      let obsGeo: THREE.BoxGeometry;
-      
-      obsGeo = new THREE.BoxGeometry(...obs.size);
-      
+      const obsGeo = new THREE.BoxGeometry(...obs.size);
       const obstacle = new THREE.Mesh(obsGeo, obstacleMat);
       obstacle.position.fromArray(obs.position);
       if (obs.rotation) {
@@ -245,14 +242,14 @@ export class Game {
     // Flag
     this.flagGroup = new THREE.Group();
     const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
-    const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+    const poleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, transparent: true });
     const poleMesh = new THREE.Mesh(poleGeo, poleMat);
     poleMesh.position.y = 0.75; // Half of height
     poleMesh.castShadow = true;
     this.flagGroup.add(poleMesh);
 
     const flagGeo = new THREE.PlaneGeometry(0.6, 0.4);
-    const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    const flagMat = new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide, transparent: true });
     const flagMesh = new THREE.Mesh(flagGeo, flagMat);
     flagMesh.position.set(0.3, 1.2, 0); // Position relative to the pole top
     this.flagGroup.add(flagMesh);
@@ -462,12 +459,26 @@ export class Game {
     }
     
     // --- Hole Completion Animation ---
-    // If the level is complete, just run the sinking animation.
     if (this.isHoleCompleted) {
-        this.ballMesh.position.y -= 0.05; // Make the ball sink
-        this.ballMesh.scale.multiplyScalar(0.95); // Shrink the ball
+        // Sink the ball
+        this.ballMesh.position.y -= 0.05;
+        this.ballMesh.scale.multiplyScalar(0.95);
         if (this.ballMesh.scale.x < 0.1) {
             this.ballMesh.visible = false;
+        }
+
+        // Fade out the flag
+        if (this.flagGroup && this.flagGroup.visible) {
+            let flag faded = true;
+            this.flagGroup.traverse(child => {
+                if (child instanceof THREE.Mesh && child.material.opacity > 0) {
+                    child.material.opacity -= 0.05;
+                    faded = false;
+                }
+            });
+            if (faded) {
+                this.flagGroup.visible = false;
+            }
         }
         return;
     }
@@ -478,7 +489,6 @@ export class Game {
         this.ballVelocity.add(this.gravity);
         
         // Move and check for collisions
-        // The checkCollisions method now also handles slope gravity and tunneling
         this.checkCollisions();
         this.ballMesh.position.add(this.ballVelocity);
 
@@ -487,23 +497,20 @@ export class Game {
         const distToHole = this.ballMesh.position.distanceTo(this.holeMesh.position);
         
         // --- HOLE COMPLETION LOGIC ---
-        // Condition to sink the ball: must be close to the hole and moving slowly.
-        // The squared length is used for efficiency (avoids square root).
         const onHolePlane = Math.abs(this.ballMesh.position.y - this.holeMesh.position.y) < ballRadius;
         if (onHolePlane && distToHole < this.level.holeRadius && this.ballVelocity.lengthSq() < 0.05) {
             this.isHoleCompleted = true;
             this.isBallMoving = false;
             this.ballVelocity.set(0, 0, 0); // Stop all movement
             this.ballMesh.position.copy(this.holeMesh.position).setY(this.holeMesh.position.y + ballRadius); // Center it
-            if (this.flagGroup) this.flagGroup.visible = false;
+            
+            // Start the animations, don't just hide things
             this.playSound('hole');
             this.onHoleComplete();
             return; // Exit update loop for this frame
         }
 
         // --- HOLE GRAVITY LOGIC ---
-        // If ball is near the hole, on the ground, and moving at a reasonable speed,
-        // apply a gentle pull towards the hole.
         if (onHolePlane && distToHole < this.level.holeRadius * 2.5 && this.ballVelocity.lengthSq() < 0.5) {
             const pullVector = this.holeMesh.position.clone().sub(this.ballMesh.position).normalize();
             pullVector.y = 0; // Only pull on the XZ plane
@@ -523,8 +530,6 @@ export class Game {
         }
         
         // --- Stop Condition ---
-        // If the ball is moving very slowly on a near-flat surface, bring it to a complete stop.
-        // This threshold is now checked inside checkCollisions where we know the surface normal.
         const onAnySurface = this.ballMesh.position.y <= (this.ballMesh.geometry as THREE.SphereGeometry).parameters.radius + 0.01;
         if (onAnySurface && this.ballVelocity.lengthSq() < 0.0001) {
             this.ballVelocity.set(0, 0, 0);
@@ -615,3 +620,5 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
+
+    
