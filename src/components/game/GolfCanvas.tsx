@@ -4,9 +4,6 @@
 
 import React, { useRef, useEffect, MutableRefObject } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import type { Level } from '@/lib/levels';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // --- A dedicated class to manage the Three.js game world ---
@@ -18,10 +15,9 @@ export class Game {
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
-  private aimLine: THREE.Line;
+  private aimLine: THREE.Mesh;
   private flagGroup: THREE.Group;
   private raycaster = new THREE.Raycaster();
-  private controls: OrbitControls;
   private interactionIndicator: THREE.Mesh;
 
 
@@ -79,9 +75,6 @@ export class Game {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.mount.appendChild(this.renderer.domElement);
-
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enabled = false;
 
     this.addLights();
     this.loadSounds();
@@ -284,13 +277,14 @@ export class Game {
     this.scene.add(this.flagGroup);
 
 
-    // Aim Line
-    const aimLineMat = new THREE.LineDashedMaterial({ color: 0xffffff, dashSize: 0.2, gapSize: 0.1, transparent: true, opacity: 0.8 });
-    const aimLineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
-    this.aimLine = new THREE.Line(aimLineGeo, aimLineMat);
-    this.aimLine.computeLineDistances();
-    this.aimLine.renderOrder = 999; 
-    this.aimLine.material.depthTest = false;
+    // Aim Line (now a cylinder)
+    const aimLineGeo = new THREE.CylinderGeometry(0.02, 0.02, 1, 8);
+    const aimLineMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.8 });
+    this.aimLine = new THREE.Mesh(aimLineGeo, aimLineMat);
+    this.aimLine.renderOrder = 999;
+    (this.aimLine.material as THREE.Material).depthTest = false;
+    (this.aimLine.material as THREE.Material).depthWrite = false;
+    this.aimLine.visible = false;
     this.scene.add(this.aimLine);
   }
 
@@ -302,33 +296,54 @@ export class Game {
   }
 
   private updateAimLine() {
-    this.aimLine.visible = !this.isBallMoving && !this.isHoleCompleted;
-    if (this.aimLine.visible) {
-        const startPoint = this.ballMesh.position;
-        let lineLength = 0;
+    if (this.isBallMoving || this.isHoleCompleted) {
+        this.aimLine.visible = false;
+        return;
+    }
+    
+    let lineLength = 0;
+
+    if (this.isDragging) {
+        this.aimLine.visible = true;
+        const dragVector = this.dragCurrentPosition.clone().sub(this.dragStartPosition);
+        const dragDistance = dragVector.length();
         
-        if (this.isDragging) {
-            const dragVector = this.dragCurrentPosition.clone().sub(this.dragStartPosition);
-            const dragDistance = dragVector.length();
-            
-            // Invert direction for aiming
-            this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
+        // Invert direction for aiming
+        this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
 
-            const maxDrag = 80; // Reduced from 100
-            this.chargePower = Math.min((dragDistance / maxDrag) * 100, 100);
-            this.setPower(this.chargePower);
+        const maxDrag = 80;
+        this.chargePower = Math.min((dragDistance / maxDrag) * 100, 100);
+        this.setPower(this.chargePower);
 
-            lineLength = (this.chargePower / 100) * 4; // Reduced from 5
+        lineLength = (this.chargePower / 100) * 4;
+
+        // Update color based on power
+        const powerColor = new THREE.Color();
+        if (this.chargePower < 50) {
+            powerColor.setHSL(0.33, 1, 0.5); // Green
+        } else if (this.chargePower < 85) {
+            powerColor.setHSL(0.16, 1, 0.5); // Yellow
         } else {
-            // Reset power if not dragging
-            this.chargePower = 0;
-            this.setPower(0);
+            powerColor.setHSL(0, 1, 0.5); // Red
         }
+        (this.aimLine.material as THREE.MeshBasicMaterial).color = powerColor;
 
+    } else {
+        this.aimLine.visible = false;
+        this.chargePower = 0;
+        this.setPower(0);
+    }
+    
+    if (lineLength > 0) {
+        // Update aim line cylinder
+        const startPoint = this.ballMesh.position;
         const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
-        this.aimLine.geometry.setFromPoints([startPoint, endPoint]);
-        this.aimLine.geometry.attributes.position.needsUpdate = true;
-        this.aimLine.computeLineDistances();
+        const midpoint = new THREE.Vector3().addVectors(startPoint, endPoint).multiplyScalar(0.5);
+        
+        this.aimLine.scale.y = lineLength;
+        this.aimLine.position.copy(midpoint);
+        this.aimLine.lookAt(endPoint);
+        this.aimLine.rotateX(Math.PI / 2); // Align cylinder along the aim direction
     }
   }
   
@@ -338,7 +353,6 @@ export class Game {
     this.isDragging = true;
     this.dragStartPosition.set(event.clientX, event.clientY);
     this.dragCurrentPosition.copy(this.dragStartPosition);
-    this.controls.enabled = false;
   };
 
   private handlePointerMove = (event: PointerEvent) => {
@@ -354,11 +368,11 @@ export class Game {
     if (!this.isDragging) return;
 
     this.isDragging = false;
-    this.controls.enabled = true;
     
     if (this.chargePower < 5) { // Cancel shot if not enough power
         this.setPower(0);
         this.chargePower = 0;
+        this.aimLine.visible = false;
         return;
     }
 
@@ -371,6 +385,7 @@ export class Game {
     // Reset charge state
     this.setPower(0);
     this.chargePower = 0;
+    this.aimLine.visible = false;
   };
 
   private handleResize = () => {
@@ -476,7 +491,7 @@ export class Game {
     const cameraOffset = new THREE.Vector3(0, 5, 8);
     const targetPosition = new THREE.Vector3(
         this.ballMesh.position.x,
-        0, // IMPORTANT: Ignore ball's y position
+        0, // IMPORTANT: Ignore ball's y position for the target calculation
         this.ballMesh.position.z
     ).add(cameraOffset);
 
@@ -685,6 +700,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
