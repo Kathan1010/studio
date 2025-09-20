@@ -465,10 +465,22 @@ export class Game {
     }
 
     const idealPosition = ballPosition.clone().add(idealOffset);
+    // This is the important change: We don't want the camera's Y position to be directly tied to the ball's Y.
+    // Instead, we'll keep the camera's Y relatively stable, but still allow it to change smoothly.
+    idealPosition.y = 3; // a fixed height for simplicity, can be lerped later
 
     // Smoothly move the camera to the ideal position and look at the target
     const lerpFactor = 0.05;
-    this.camera.position.lerp(idealPosition, lerpFactor);
+    
+    // Create a new vector for the camera position to smoothly transition to
+    const targetPosition = new THREE.Vector3();
+    targetPosition.x = idealPosition.x;
+    targetPosition.z = idealPosition.z;
+    // We lerp the Y separately to give it a smoother, less bouncy feel.
+    targetPosition.y = THREE.MathUtils.lerp(this.camera.position.y, Math.max(idealPosition.y, ballPosition.y + 1), lerpFactor);
+
+
+    this.camera.position.lerp(targetPosition, lerpFactor);
     this.camera.lookAt(lookAtTarget);
   }
 
