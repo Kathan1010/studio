@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,12 @@ type GameUIProps = {
 };
 
 export function GameUI({ level, par, strokes, power, onReset, onGoToLevels }: GameUIProps) {
+  const getPowerColor = () => {
+    if (power < 50) return 'bg-green-500';
+    if (power < 85) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
+
   return (
     <TooltipProvider>
       <div className="absolute top-4 left-4 z-10 text-foreground">
@@ -69,7 +76,7 @@ export function GameUI({ level, par, strokes, power, onReset, onGoToLevels }: Ga
         <Card className="bg-background/80 backdrop-blur-sm">
           <CardContent className="p-3">
              <label htmlFor="power" className="text-sm font-medium mb-2 block text-center">Power</label>
-             <Progress id="power" value={power} className="w-full" />
+             <Progress id="power" value={power} indicatorClassName={getPowerColor()} />
           </CardContent>
         </Card>
       </div>
