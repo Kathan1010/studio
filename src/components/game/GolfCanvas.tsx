@@ -21,6 +21,7 @@ export class Game {
   private aimLine: THREE.Line;
   private flagGroup: THREE.Group;
   private raycaster = new THREE.Raycaster();
+  private controls: OrbitControls;
 
 
   // Game state
@@ -77,6 +78,14 @@ export class Game {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.mount.appendChild(this.renderer.domElement);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.1;
+    this.controls.screenSpacePanning = false;
+    this.controls.maxPolarAngle = Math.PI / 2.1;
+    this.controls.minDistance = 5;
+    this.controls.maxDistance = 30;
 
     this.addLights();
     this.loadSounds();
@@ -306,23 +315,18 @@ export class Game {
   private handlePointerDown = (event: PointerEvent) => {
     if (this.isGamePaused() || this.isBallMoving || this.isHoleCompleted) return;
 
-    const pointer = new THREE.Vector2();
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-    this.raycaster.setFromCamera(pointer, this.camera);
-    const intersects = this.raycaster.intersectObject(this.ballMesh);
-
-    if (intersects.length > 0) {
-        this.isDragging = true;
-        this.dragStartPosition.set(event.clientX, event.clientY);
-        this.dragCurrentPosition.copy(this.dragStartPosition);
-    }
+    this.isDragging = true;
+    this.dragStartPosition.set(event.clientX, event.clientY);
+    this.dragCurrentPosition.copy(this.dragStartPosition);
+    this.controls.enabled = false;
   };
 
   private handlePointerMove = (event: PointerEvent) => {
     if (this.isDragging) {
-      this.dragCurrentPosition.set(event.clientX, event.clientY);
+      const sensitivity = 0.25; // Lower is less sensitive
+      const deltaX = (event.clientX - this.dragStartPosition.x) * sensitivity;
+      const deltaY = (event.clientY - this.dragStartPosition.y) * sensitivity;
+      this.dragCurrentPosition.set(this.dragStartPosition.x + deltaX, this.dragStartPosition.y + deltaY);
     }
   };
 
@@ -330,6 +334,7 @@ export class Game {
     if (!this.isDragging) return;
 
     this.isDragging = false;
+    this.controls.enabled = true;
     
     if (this.chargePower < 5) { // Cancel shot if not enough power
         this.setPower(0);
@@ -446,53 +451,14 @@ export class Game {
     }
   }
 
-  private updateCamera() {
-    const ballPosition = this.ballMesh.position;
-    
-    // The camera will look at a point slightly above the ball on the ground plane
-    const lookAtTarget = new THREE.Vector3(ballPosition.x, 0, ballPosition.z);
-    
-    // Determine the ideal camera position
-    let idealOffset: THREE.Vector3;
-    if (this.isBallMoving) {
-        // While moving, camera is behind the direction of movement
-        idealOffset = this.ballVelocity.clone().normalize().multiplyScalar(-8).add(new THREE.Vector3(0, 4, 0));
-    } else {
-        // When stationary, camera is behind the aim direction
-        idealOffset = this.aimDirection.clone().multiplyScalar(-8).add(new THREE.Vector3(0, 4, 0));
-    }
-    
-    // Calculate ideal position ignoring the ball's Y
-    const idealPosition = new THREE.Vector3(ballPosition.x, 0, ballPosition.z).add(idealOffset);
-
-    // Set a minimum height for the camera to avoid it going through the floor
-    idealPosition.y = Math.max(idealPosition.y, 1);
-
-    // Smoothly move the camera to the ideal position
-    const lerpFactor = 0.05;
-    
-    // Create a temporary vector for the next camera position
-    const nextPosition = this.camera.position.clone();
-
-    // Only LERP the X and Z, copy the Y
-    nextPosition.x = THREE.MathUtils.lerp(this.camera.position.x, idealPosition.x, lerpFactor);
-    nextPosition.z = THREE.MathUtils.lerp(this.camera.position.z, idealPosition.z, lerpFactor);
-
-    // Smoothly interpolate the camera's height
-    nextPosition.y = THREE.MathUtils.lerp(this.camera.position.y, idealPosition.y, lerpFactor);
-
-
-    this.camera.position.copy(nextPosition);
-    this.camera.lookAt(lookAtTarget);
-  }
-
 
   private update() {
     if (this.isGamePaused()) {
         return;
     }
     
-    this.updateCamera();
+    this.controls.update();
+    this.controls.target.copy(this.ballMesh.position);
 
     this.updateAimLine();
     
@@ -665,4 +631,5 @@ export default GolfCanvas;
     
 
     
+
 
