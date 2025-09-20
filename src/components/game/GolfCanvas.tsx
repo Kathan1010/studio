@@ -12,7 +12,6 @@ export class Game {
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
   private ballMesh: THREE.Mesh;
-  private ballOutlineMesh: THREE.Mesh;
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
@@ -190,20 +189,6 @@ export class Game {
     this.ballMesh.position.fromArray(this.level.startPosition);
     this.scene.add(this.ballMesh);
 
-    // --- Occlusion Outline for Ball ---
-    const outlineGeo = new THREE.SphereGeometry(0.15, 32, 16);
-    const outlineMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        side: THREE.BackSide,
-        transparent: true,
-        opacity: 0.5,
-    });
-    this.ballOutlineMesh = new THREE.Mesh(outlineGeo, outlineMat);
-    this.ballOutlineMesh.scale.multiplyScalar(1.2);
-    this.ballOutlineMesh.renderOrder = 0; // Render before the main ball
-    this.scene.add(this.ballOutlineMesh);
-
-
     // --- Interaction Indicator ---
     const indicatorTextureCanvas = document.createElement('canvas');
     indicatorTextureCanvas.width = 128;
@@ -357,7 +342,7 @@ export class Game {
         
         this.aimLine.scale.y = lineLength;
         this.aimLine.position.copy(midpoint);
-        thisain.lookAt(endPoint);
+        this.aimLine.lookAt(endPoint);
         this.aimLine.rotateX(Math.PI / 2); // Align cylinder along the aim direction
     }
   }
@@ -546,10 +531,6 @@ export class Game {
     // Only show the indicator if the ball can be hit
     this.interactionIndicator.visible = !this.isBallMoving && !this.isHoleCompleted && !this.isDragging;
     
-    // --- Update Ball Outline ---
-    this.ballOutlineMesh.position.copy(this.ballMesh.position);
-    this.ballOutlineMesh.visible = !this.isHoleCompleted;
-
     // --- Hole Completion Animation ---
     if (this.isHoleCompleted) {
         // Sink the ball
@@ -635,22 +616,7 @@ export class Game {
 
     this.update();
     
-    // Occlusion Logic
-    // 1. Render the outline with a material that shows it only when it's behind other objects.
-    (this.ballOutlineMesh.material as THREE.Material).depthFunc = THREE.GreaterDepth;
-    (this.ballMesh.material as THREE.Material).visible = false; // Hide the main ball temporarily
-
     this.renderer.render(this.scene, this.camera);
-    
-    // 2. Render the main scene, but clear the depth buffer first so the ball renders correctly.
-    this.renderer.autoClear = false;
-    this.renderer.clearDepth();
-    
-    (this.ballOutlineMesh.material as THREE.Material).depthFunc = THREE.LessEqualDepth;
-    (this.ballMesh.material as THREE.Material).visible = true; // Make the main ball visible again
-
-    this.renderer.render(this.scene, this.camera);
-    this.renderer.autoClear = true;
   };
 
   public cleanup() {
@@ -736,6 +702,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
