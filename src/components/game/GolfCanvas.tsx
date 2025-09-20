@@ -74,12 +74,9 @@ export class Game {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.mount.appendChild(this.renderer.domElement);
 
+    // Controls are disabled by default now, we'll manage camera manually
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.1;
-    this.controls.screenSpacePanning = false; // Right-click to pan
-    this.controls.maxPolarAngle = Math.PI / 2 - 0.05;
-    this.controls.target.set(this.level.startPosition[0], this.level.startPosition[1], this.level.startPosition[2]);
+    this.controls.enabled = false;
 
     this.addLights();
     this.loadSounds();
@@ -147,7 +144,6 @@ export class Game {
     treeGroup.position.copy(position);
     this.scene.add(treeGroup);
     
-    // Add tree trunk to obstacles for collision
     const trunkObstacle = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.5, 0.6), new THREE.MeshStandardMaterial({visible: false}));
     trunkObstacle.position.set(position.x, 0.75, position.z);
     this.obstacles.push(trunkObstacle);
@@ -189,7 +185,7 @@ export class Game {
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
-    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 });
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0 });
     this.ballMesh = new THREE.Mesh(ballGeo, ballMat);
     this.ballMesh.castShadow = true;
     this.ballMesh.position.fromArray(this.level.startPosition);
@@ -260,10 +256,12 @@ export class Game {
 
 
     // Aim Line
-    const aimLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, depthTest: false });
+    const aimLineMat = new THREE.LineDashedMaterial({ color: 0xffffff, dashSize: 0.2, gapSize: 0.1, transparent: true, opacity: 0.8 });
     const aimLineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
     this.aimLine = new THREE.Line(aimLineGeo, aimLineMat);
-    this.aimLine.renderOrder = 999;
+    this.aimLine.computeLineDistances();
+    this.aimLine.renderOrder = 999; 
+    this.aimLine.material.depthTest = false;
     this.scene.add(this.aimLine);
   }
 
@@ -277,8 +275,12 @@ export class Game {
     this.aimLine.visible = !this.isBallMoving && !this.isHoleCompleted;
     if (this.aimLine.visible) {
         const startPoint = this.ballMesh.position;
-        const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(3));
+        const maxLineLength = 10;
+        // The line length is now proportional to chargePower
+        const lineLength = (this.chargePower / 100) * maxLineLength;
+        const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
         this.aimLine.geometry.setFromPoints([startPoint, endPoint]);
+        this.aimLine.computeLineDistances();
     }
   }
 
@@ -446,10 +448,37 @@ export class Game {
     }
   }
 
+  private updateCamera() {
+    const ballPosition = this.ballMesh.position;
+    
+    // Determine the target for the camera to look at
+    const lookAtTarget = ballPosition.clone();
+    
+    // Determine the ideal camera position
+    let idealOffset: THREE.Vector3;
+    if (this.isBallMoving) {
+        // While moving, camera is behind the direction of movement
+        idealOffset = this.ballVelocity.clone().normalize().multiplyScalar(-6).add(new THREE.Vector3(0, 3, 0));
+    } else {
+        // When stationary, camera is behind the aim direction
+        idealOffset = this.aimDirection.clone().multiplyScalar(-6).add(new THREE.Vector3(0, 3, 0));
+    }
+
+    const idealPosition = ballPosition.clone().add(idealOffset);
+
+    // Smoothly move the camera to the ideal position and look at the target
+    const lerpFactor = 0.05;
+    this.camera.position.lerp(idealPosition, lerpFactor);
+    this.camera.lookAt(lookAtTarget);
+  }
+
+
   private update() {
     if (this.isGamePaused()) {
         return;
     }
+    
+    this.updateCamera();
 
     this.updateAimLine();
     if (this.isCharging) {
@@ -540,7 +569,7 @@ export class Game {
 
   public animate = () => {
     requestAnimationFrame(this.animate);
-    this.controls.update();
+    // this.controls.update(); // We no longer need to update controls in the loop
     this.update();
     this.renderer.render(this.scene, this.camera);
   };
@@ -622,4 +651,6 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 export default GolfCanvas;
 
     
+    
+
     
