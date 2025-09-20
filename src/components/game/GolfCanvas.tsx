@@ -292,7 +292,7 @@ export class Game {
     window.addEventListener('resize', this.handleResize);
     this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown);
     this.renderer.domElement.addEventListener('pointermove', this.handlePointerMove);
-    this.renderer.domElement.addEventListener('pointerup', this.handlePointerUp);
+    window.addEventListener('pointerup', this.handlePointerUp); // Use window for pointerup
   }
 
   private updateAimLine() {
@@ -621,7 +621,7 @@ export class Game {
     window.removeEventListener('resize', this.handleResize);
     this.renderer.domElement.removeEventListener('pointerdown', this.handlePointerDown);
     this.renderer.domElement.removeEventListener('pointermove', this.handlePointerMove);
-    this.renderer.domElement.removeEventListener('pointerup', this.handlePointerUp);
+    window.removeEventListener('pointerup', this.handlePointerUp);
 
 
     if (this.mount && this.renderer.domElement) {
@@ -700,6 +700,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
