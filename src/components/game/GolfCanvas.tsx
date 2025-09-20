@@ -14,13 +14,13 @@ export class Game {
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
-  private controls: OrbitControls;
   private ballMesh: THREE.Mesh;
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
   private aimLine: THREE.Line;
   private flagGroup: THREE.Group;
+  private raycaster = new THREE.Raycaster();
 
 
   // Game state
@@ -30,6 +30,10 @@ export class Game {
   private aimDirection = new THREE.Vector3(0, 0, -1);
   private ballVelocity = new THREE.Vector3();
   private isHoleCompleted = false;
+  private isDragging = false;
+  private dragStartPosition = new THREE.Vector2();
+  private dragCurrentPosition = new THREE.Vector2();
+
   
   // Constants
   private gravity = new THREE.Vector3(0, -0.01, 0);
@@ -73,10 +77,6 @@ export class Game {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.mount.appendChild(this.renderer.domElement);
-
-    // Controls are disabled by default now, we'll manage camera manually
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enabled = false;
 
     this.addLights();
     this.loadSounds();
@@ -266,89 +266,87 @@ export class Game {
   }
 
   private bindEventHandlers() {
-    window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('keyup', this.handleKeyUp);
     window.addEventListener('resize', this.handleResize);
+    this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown);
+    this.renderer.domElement.addEventListener('pointermove', this.handlePointerMove);
+    this.renderer.domElement.addEventListener('pointerup', this.handlePointerUp);
   }
 
   private updateAimLine() {
     this.aimLine.visible = !this.isBallMoving && !this.isHoleCompleted;
     if (this.aimLine.visible) {
         const startPoint = this.ballMesh.position;
-        const maxLineLength = 10;
-        // The line length is now proportional to chargePower
-        const lineLength = (this.chargePower / 100) * maxLineLength;
+        let lineLength = 0;
+        
+        if (this.isDragging) {
+            const dragVector = this.dragCurrentPosition.clone().sub(this.dragStartPosition);
+            const dragDistance = dragVector.length();
+            
+            // Invert direction for aiming
+            this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
+
+            const maxDrag = 150;
+            this.chargePower = Math.min((dragDistance / maxDrag) * 100, 100);
+            this.setPower(this.chargePower);
+
+            lineLength = (this.chargePower / 100) * 10;
+        } else {
+            // Reset power if not dragging
+            this.chargePower = 0;
+            this.setPower(0);
+        }
+
         const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
         this.aimLine.geometry.setFromPoints([startPoint, endPoint]);
+        this.aimLine.geometry.attributes.position.needsUpdate = true;
         this.aimLine.computeLineDistances();
     }
   }
-
-  public aimLeft() {
+  
+  private handlePointerDown = (event: PointerEvent) => {
     if (this.isGamePaused() || this.isBallMoving || this.isHoleCompleted) return;
-    this.aimDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 45);
-  }
 
-  public aimRight() {
-    if (this.isGamePaused() || this.isBallMoving || this.isHoleCompleted) return;
-    this.aimDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 45);
-  }
+    const pointer = new THREE.Vector2();
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-  public startPowerCharge() {
-    if (this.isGamePaused() || this.isBallMoving || this.isHoleCompleted) return;
-    if (!this.isCharging) {
-        this.isCharging = true;
+    this.raycaster.setFromCamera(pointer, this.camera);
+    const intersects = this.raycaster.intersectObject(this.ballMesh);
+
+    if (intersects.length > 0) {
+        this.isDragging = true;
+        this.dragStartPosition.set(event.clientX, event.clientY);
+        this.dragCurrentPosition.copy(this.dragStartPosition);
     }
-  }
+  };
 
-  public releasePowerCharge() {
-      if (this.isGamePaused() || this.isHoleCompleted) return;
-      if (!this.isCharging) return;
-      
-      if (this.chargePower < 5) { // Cancel shot if not enough power
-          this.isCharging = false;
-          this.setPower(0);
-          this.chargePower = 0;
-          return;
-      }
-
-      const powerMultiplier = 0.007;
-      this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
-      this.isBallMoving = true;
-      this.playSound('hit');
-      this.onStroke();
-
-      // Reset charge state AFTER the shot is taken
-      this.isCharging = false;
-      this.setPower(0);
-      this.chargePower = 0;
-  }
-
-  private handleKeyDown = (event: KeyboardEvent) => {
-    switch(event.key.toLowerCase()) {
-        case 'arrowleft':
-        case 'a':
-            event.preventDefault();
-            this.aimLeft();
-            break;
-        case 'arrowright':
-        case 'd':
-            event.preventDefault();
-            this.aimRight();
-            break;
-        case ' ':
-            event.preventDefault();
-            this.startPowerCharge();
-            break;
+  private handlePointerMove = (event: PointerEvent) => {
+    if (this.isDragging) {
+      this.dragCurrentPosition.set(event.clientX, event.clientY);
     }
-  }
+  };
 
-  private handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key.toLowerCase() === ' ') {
-        event.preventDefault();
-        this.releasePowerCharge();
+  private handlePointerUp = () => {
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+    
+    if (this.chargePower < 5) { // Cancel shot if not enough power
+        this.setPower(0);
+        this.chargePower = 0;
+        return;
     }
-  }
+
+    const powerMultiplier = 0.007;
+    this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
+    this.isBallMoving = true;
+    this.playSound('hit');
+    this.onStroke();
+
+    // Reset charge state
+    this.setPower(0);
+    this.chargePower = 0;
+  };
 
   private handleResize = () => {
     this.camera.aspect = this.mount.clientWidth / this.mount.clientHeight;
@@ -452,24 +450,39 @@ export class Game {
     const ballPosition = this.ballMesh.position;
     
     // The camera will look at a point slightly above the ball on the ground plane
-    const lookAtTarget = new THREE.Vector3(ballPosition.x, 0.2, ballPosition.z);
+    const lookAtTarget = new THREE.Vector3(ballPosition.x, 0, ballPosition.z);
     
     // Determine the ideal camera position
     let idealOffset: THREE.Vector3;
     if (this.isBallMoving) {
         // While moving, camera is behind the direction of movement
-        idealOffset = this.ballVelocity.clone().normalize().multiplyScalar(-6).add(new THREE.Vector3(0, 3, 0));
+        idealOffset = this.ballVelocity.clone().normalize().multiplyScalar(-8).add(new THREE.Vector3(0, 4, 0));
     } else {
         // When stationary, camera is behind the aim direction
-        idealOffset = this.aimDirection.clone().multiplyScalar(-6).add(new THREE.Vector3(0, 3, 0));
+        idealOffset = this.aimDirection.clone().multiplyScalar(-8).add(new THREE.Vector3(0, 4, 0));
     }
     
     // Calculate ideal position ignoring the ball's Y
     const idealPosition = new THREE.Vector3(ballPosition.x, 0, ballPosition.z).add(idealOffset);
 
+    // Set a minimum height for the camera to avoid it going through the floor
+    idealPosition.y = Math.max(idealPosition.y, 1);
+
     // Smoothly move the camera to the ideal position
     const lerpFactor = 0.05;
-    this.camera.position.lerp(idealPosition, lerpFactor);
+    
+    // Create a temporary vector for the next camera position
+    const nextPosition = this.camera.position.clone();
+
+    // Only LERP the X and Z, copy the Y
+    nextPosition.x = THREE.MathUtils.lerp(this.camera.position.x, idealPosition.x, lerpFactor);
+    nextPosition.z = THREE.MathUtils.lerp(this.camera.position.z, idealPosition.z, lerpFactor);
+
+    // Smoothly interpolate the camera's height
+    nextPosition.y = THREE.MathUtils.lerp(this.camera.position.y, idealPosition.y, lerpFactor);
+
+
+    this.camera.position.copy(nextPosition);
     this.camera.lookAt(lookAtTarget);
   }
 
@@ -482,11 +495,6 @@ export class Game {
     this.updateCamera();
 
     this.updateAimLine();
-    if (this.isCharging) {
-        const chargeSpeed = 0.75;
-        this.chargePower = Math.min(this.chargePower + chargeSpeed, 100);
-        this.setPower(this.chargePower);
-    }
     
     // --- Hole Completion Animation ---
     if (this.isHoleCompleted) {
@@ -570,15 +578,16 @@ export class Game {
 
   public animate = () => {
     requestAnimationFrame(this.animate);
-    // this.controls.update(); // We no longer need to update controls in the loop
     this.update();
     this.renderer.render(this.scene, this.camera);
   };
 
   public cleanup() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-    window.removeEventListener('keyup', this.handleKeyUp);
     window.removeEventListener('resize', this.handleResize);
+    this.renderer.domElement.removeEventListener('pointerdown', this.handlePointerDown);
+    this.renderer.domElement.removeEventListener('pointermove', this.handlePointerMove);
+    this.renderer.domElement.removeEventListener('pointerup', this.handlePointerUp);
+
 
     if (this.mount && this.renderer.domElement) {
         try {
@@ -599,7 +608,6 @@ export class Game {
       }
     });
     this.renderer.dispose();
-    this.controls.dispose();
   }
 }
 
@@ -657,3 +665,4 @@ export default GolfCanvas;
     
 
     
+

@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { PartyPopper, Loader2, Home, RotateCcw, ArrowRight } from 'lucide-react';
 import type { Game } from '@/components/game/GolfCanvas';
-import { MobileControls } from '@/components/game/MobileControls';
 import { updateBestScore } from '@/lib/supabase/scores';
 
 const GolfCanvas = dynamic(() => import('@/components/game/GolfCanvas'), {
@@ -121,12 +120,6 @@ export default function PlayPage() {
               gameRef={gameRef}
           />
       </Suspense>
-       <MobileControls
-        onAimLeft={() => gameRef.current?.aimLeft()}
-        onAimRight={() => gameRef.current?.aimRight()}
-        onPowerChargeStart={() => gameRef.current?.startPowerCharge()}
-        onPowerChargeRelease={() => gameRef.current?.releasePowerCharge()}
-      />
       {isHoleComplete && (
         <div className="absolute inset-0 bg-black/50 z-20 flex items-center justify-center p-4">
           <Card className="max-w-sm text-center">
