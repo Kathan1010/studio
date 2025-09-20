@@ -2,7 +2,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mouse, Smartphone, Hand, Keyboard, Target } from "lucide-react";
+import { Mouse, Smartphone, Target, Camera } from "lucide-react";
 
 export function HowToPlay() {
 
@@ -17,19 +17,19 @@ export function HowToPlay() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Target />
-              Gameplay
+              Objective
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
               <li>
-                <strong>Objective:</strong> Get the golf ball into the hole in as few strokes as possible.
+                <strong>Goal:</strong> Get the golf ball into the hole in as few strokes as possible.
               </li>
               <li>
-                <strong>Par:</strong> Each hole has a 'Par' score, which is the target number of strokes.
+                <strong>Par:</strong> Each hole has a 'Par' score, which is the target number of strokes to aim for.
               </li>
               <li>
-                <strong>Camera:</strong> Use your mouse or touch gestures to look around the course before your shot.
+                <strong>Power Bar:</strong> The power bar at the bottom fills from green to red, indicating shot strength.
               </li>
             </ul>
           </CardContent>
@@ -37,20 +37,17 @@ export function HowToPlay() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
-              <Keyboard />
-              For PC & Laptop
+              <Mouse />
+              Desktop Controls
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
               <li>
-                <strong>Aim:</strong> Use the <strong>A/D</strong> or <strong>Left/Right arrow keys</strong> to set your direction.
+                <strong>Aim & Shoot:</strong> Click and drag away from the ball. The direction and distance determine aim and power. Release to shoot.
               </li>
               <li>
-                <strong>Power:</strong> Press and hold the <strong>Spacebar</strong> to charge your shot, then release to shoot.
-              </li>
-              <li>
-                <strong>Camera:</strong> Use your <strong>mouse</strong> to orbit (left-click), pan (right-click), and zoom (scroll).
+                <strong>Camera View:</strong> The camera automatically follows the ball to keep the action in frame.
               </li>
             </ul>
           </CardContent>
@@ -59,19 +56,16 @@ export function HowToPlay() {
           <CardHeader>
              <CardTitle className="flex items-center gap-3">
                 <Smartphone />
-                For Phones & Tablets
+                Mobile Controls
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
                 <li>
-                  <strong>Aim:</strong> Use the on-screen <strong>Left/Right arrow buttons</strong> to set direction.
+                  <strong>Aim & Shoot:</strong> Tap and drag on the screen away from the ball. Release to shoot.
                 </li>
-                <li>
-                  <strong>Power:</strong> Press and hold the on-screen <strong>'Power' button</strong> to charge your shot, then release to shoot.
-                </li>
-                <li>
-                  <strong>Camera:</strong> Use standard touch gestures (<strong>one-finger drag</strong> to orbit, <strong>two-finger pinch</strong> to zoom).
+                 <li>
+                  <strong>Camera View:</strong> The camera automatically follows the ball to keep the action in frame.
                 </li>
             </ul>
           </CardContent>
