@@ -189,7 +189,7 @@ export class Game {
 
     // Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 16);
-    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.1 });
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 });
     this.ballMesh = new THREE.Mesh(ballGeo, ballMat);
     this.ballMesh.castShadow = true;
     this.ballMesh.position.fromArray(this.level.startPosition);
