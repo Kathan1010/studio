@@ -12,6 +12,7 @@ export class Game {
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
   private ballMesh: THREE.Mesh;
+  private ballOutlineMesh: THREE.Mesh;
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
@@ -188,6 +189,20 @@ export class Game {
     this.ballMesh.castShadow = true;
     this.ballMesh.position.fromArray(this.level.startPosition);
     this.scene.add(this.ballMesh);
+
+    // --- Occlusion Outline for Ball ---
+    const outlineGeo = new THREE.SphereGeometry(0.15, 32, 16);
+    const outlineMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.BackSide,
+        transparent: true,
+        opacity: 0.5,
+    });
+    this.ballOutlineMesh = new THREE.Mesh(outlineGeo, outlineMat);
+    this.ballOutlineMesh.scale.multiplyScalar(1.2);
+    this.ballOutlineMesh.renderOrder = 0; // Render before the main ball
+    this.scene.add(this.ballOutlineMesh);
+
 
     // --- Interaction Indicator ---
     const indicatorTextureCanvas = document.createElement('canvas');
@@ -531,6 +546,10 @@ export class Game {
     // Only show the indicator if the ball can be hit
     this.interactionIndicator.visible = !this.isBallMoving && !this.isHoleCompleted && !this.isDragging;
     
+    // --- Update Ball Outline ---
+    this.ballOutlineMesh.position.copy(this.ballMesh.position);
+    this.ballOutlineMesh.visible = !this.isHoleCompleted;
+
     // --- Hole Completion Animation ---
     if (this.isHoleCompleted) {
         // Sink the ball
@@ -613,8 +632,19 @@ export class Game {
 
   public animate = () => {
     requestAnimationFrame(this.animate);
+
+    // Occlusion Logic
+    // Render the outline first
+    (this.ballMesh.material as THREE.Material).depthFunc = THREE.GreaterDepth;
+    this.renderer.render(this.scene, this.camera);
+    
+    // Clear the depth buffer and render the main scene
+    this.renderer.autoClear = false;
+    this.renderer.clearDepth();
+    (this.ballMesh.material as THREE.Material).depthFunc = THREE.LessEqualDepth;
     this.update();
     this.renderer.render(this.scene, this.camera);
+    this.renderer.autoClear = true;
   };
 
   public cleanup() {
@@ -700,6 +730,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
