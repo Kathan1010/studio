@@ -22,6 +22,7 @@ export class Game {
   private flagGroup: THREE.Group;
   private raycaster = new THREE.Raycaster();
   private controls: OrbitControls;
+  private interactionIndicator: THREE.Mesh;
 
 
   // Game state
@@ -195,6 +196,30 @@ export class Game {
     this.ballMesh.position.fromArray(this.level.startPosition);
     this.scene.add(this.ballMesh);
 
+    // --- Interaction Indicator ---
+    const indicatorTextureCanvas = document.createElement('canvas');
+    indicatorTextureCanvas.width = 128;
+    indicatorTextureCanvas.height = 128;
+    const indicatorContext = indicatorTextureCanvas.getContext('2d')!;
+    indicatorContext.strokeStyle = 'white';
+    indicatorContext.lineWidth = 8;
+    indicatorContext.setLineDash([10, 8]); // Dashed line
+    indicatorContext.beginPath();
+    indicatorContext.arc(64, 64, 56, 0, Math.PI * 2);
+    indicatorContext.stroke();
+    const indicatorTexture = new THREE.CanvasTexture(indicatorTextureCanvas);
+
+    const indicatorGeo = new THREE.RingGeometry(0.25, 0.35, 32);
+    const indicatorMat = new THREE.MeshBasicMaterial({ 
+        map: indicatorTexture, 
+        transparent: true,
+        opacity: 0.7,
+        side: THREE.DoubleSide
+    });
+    this.interactionIndicator = new THREE.Mesh(indicatorGeo, indicatorMat);
+    this.interactionIndicator.rotation.x = -Math.PI / 2;
+    this.scene.add(this.interactionIndicator);
+
     // Hole
     const holeGeo = new THREE.CircleGeometry(this.level.holeRadius, 32);
     const holeMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
@@ -289,11 +314,11 @@ export class Game {
             // Invert direction for aiming
             this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
 
-            const maxDrag = 100;
+            const maxDrag = 80; // Reduced from 100
             this.chargePower = Math.min((dragDistance / maxDrag) * 100, 100);
             this.setPower(this.chargePower);
 
-            lineLength = (this.chargePower / 100) * 5;
+            lineLength = (this.chargePower / 100) * 4; // Reduced from 5
         } else {
             // Reset power if not dragging
             this.chargePower = 0;
@@ -448,31 +473,24 @@ export class Game {
 
 
  private updateCamera() {
-    const cameraOffset = new THREE.Vector3(0, 5, 8); // x, y, z offset from the ball
-    
-    // Get camera's current direction
-    const cameraDirection = new THREE.Vector3();
-    this.camera.getWorldDirection(cameraDirection);
-    cameraDirection.y = 0;
-    cameraDirection.normalize();
-    
-    // Calculate the desired position based on the ball's position and the fixed offset
-    const desiredPosition = new THREE.Vector3(
-        this.ballMesh.position.x,
-        this.ballMesh.position.y,
-        this.ballMesh.position.z
-    ).add(cameraOffset);
-    
-    // Create a target position that only considers the ball's horizontal movement
+    const cameraOffset = new THREE.Vector3(0, 5, 8);
     const targetPosition = new THREE.Vector3(
         this.ballMesh.position.x,
-        0,
+        0, // IMPORTANT: Ignore ball's y position
         this.ballMesh.position.z
-    );
+    ).add(cameraOffset);
 
     // Smoothly interpolate the camera's position
     const lerpFactor = 0.05;
-    this.camera.position.lerp(desiredPosition, lerpFactor);
+    
+    // Smoothly interpolate x and z
+    this.camera.position.x = THREE.MathUtils.lerp(this.camera.position.x, targetPosition.x, lerpFactor);
+    this.camera.position.z = THREE.MathUtils.lerp(this.camera.position.z, targetPosition.z, lerpFactor);
+    
+    // Smoothly interpolate y, but prevent it from going below a certain height
+    const minCameraHeight = 1;
+    const targetY = Math.max(targetPosition.y, minCameraHeight);
+    this.camera.position.y = THREE.MathUtils.lerp(this.camera.position.y, targetY, lerpFactor);
     
     // The camera should always look at the ball's horizontal plane to prevent vibration
     const lookAtPosition = new THREE.Vector3(this.ballMesh.position.x, 0, this.ballMesh.position.z);
@@ -481,12 +499,22 @@ export class Game {
 
   private update() {
     if (this.isGamePaused()) {
+        // Update the indicator rotation even when paused
+        this.interactionIndicator.rotation.z += 0.01;
         return;
     }
     
     this.updateCamera();
 
     this.updateAimLine();
+
+    // --- Update Interaction Indicator ---
+    this.interactionIndicator.position.copy(this.ballMesh.position);
+    this.interactionIndicator.position.y = this.ballMesh.position.y - 0.14; // Slightly below the ball
+    this.interactionIndicator.rotation.z += 0.01; // Spin it
+    
+    // Only show the indicator if the ball can be hit
+    this.interactionIndicator.visible = !this.isBallMoving && !this.isHoleCompleted && !this.isDragging;
     
     // --- Hole Completion Animation ---
     if (this.isHoleCompleted) {
@@ -657,6 +685,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
