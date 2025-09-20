@@ -202,7 +202,7 @@ export class Game {
     // Obstacles
     const obstacleMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
     this.level.obstacles.forEach(obs => {
-      const obsGeo = new THREE.BoxGeometry(...obs.size);
+      const obsGeo = new THREE.BoxGeometry(obs.size[0], obs.size[1], obs.size[2]);
       const obstacle = new THREE.Mesh(obsGeo, obstacleMat);
       obstacle.position.fromArray(obs.position);
       if (obs.rotation) {
@@ -451,8 +451,8 @@ export class Game {
   private updateCamera() {
     const ballPosition = this.ballMesh.position;
     
-    // Determine the target for the camera to look at
-    const lookAtTarget = ballPosition.clone();
+    // The camera will look at a point slightly above the ball on the ground plane
+    const lookAtTarget = new THREE.Vector3(ballPosition.x, 0.2, ballPosition.z);
     
     // Determine the ideal camera position
     let idealOffset: THREE.Vector3;
@@ -463,21 +463,13 @@ export class Game {
         // When stationary, camera is behind the aim direction
         idealOffset = this.aimDirection.clone().multiplyScalar(-6).add(new THREE.Vector3(0, 3, 0));
     }
-
-    const idealPosition = ballPosition.clone().add(idealOffset);
-
-    // Smoothly move the camera to the ideal position and look at the target
-    const lerpFactor = 0.05;
     
-    // Create a new vector for the camera position to smoothly transition to
-    const targetPosition = this.camera.position.clone().lerp(idealPosition, lerpFactor);
+    // Calculate ideal position ignoring the ball's Y
+    const idealPosition = new THREE.Vector3(ballPosition.x, 0, ballPosition.z).add(idealOffset);
 
-    // This is the important change: We lerp the Y separately to give it a smoother, less bouncy feel,
-    // and ensure it doesn't dip too low.
-    targetPosition.y = THREE.MathUtils.lerp(this.camera.position.y, Math.max(idealPosition.y, ballPosition.y + 1, 2), lerpFactor);
-
-
-    this.camera.position.copy(targetPosition);
+    // Smoothly move the camera to the ideal position
+    const lerpFactor = 0.05;
+    this.camera.position.lerp(idealPosition, lerpFactor);
     this.camera.lookAt(lookAtTarget);
   }
 
