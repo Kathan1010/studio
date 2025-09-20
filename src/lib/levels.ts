@@ -33,7 +33,13 @@ export const levels: Level[] = [
     startPosition: [0, 0.2, 8],
     holePosition: [0, 0.01, -8],
     holeRadius: 0.25,
-    obstacles: [],
+    obstacles: [
+      // Borders
+      { type: 'box', position: [0, 0.5, 15.5], size: [16, 1, 1] },
+      { type: 'box', position: [0, 0.5, -15.5], size: [16, 1, 1] },
+      { type: 'box', position: [8.5, 0.5, 0], size: [1, 1, 32] },
+      { type: 'box', position: [-8.5, 0.5, 0], size: [1, 1, 32] },
+    ],
     sandpits: [
       { position: [3, 0.02, 0], radius: 1.5 },
     ],
@@ -49,6 +55,11 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
+        // Borders
+        { type: 'box', position: [0, 0.5, 15.5], size: [16, 1, 1] },
+        { type: 'box', position: [0, 0.5, -15.5], size: [16, 1, 1] },
+        { type: 'box', position: [8.5, 0.5, 0], size: [1, 1, 32] },
+        { type: 'box', position: [-8.5, 0.5, 0], size: [1, 1, 32] },
         { type: 'ramp', position: [0, 0.2, 3], size: [4, 0.5, 8], rotation: [0.25, 0, 0] },
         { type: 'ramp', position: [0, 0.2, -5], size: [4, 0.5, 8], rotation: [-0.25, 0, 0] },
         // Railings for the bridge
@@ -76,6 +87,11 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -10],
     holeRadius: 0.25,
     obstacles: [
+      // Borders
+      { type: 'box', position: [0, 0.5, 15.5], size: [16, 1, 1] },
+      { type: 'box', position: [0, 0.5, -15.5], size: [16, 1, 1] },
+      { type: 'box', position: [8.5, 0.5, 0], size: [1, 1, 32] },
+      { type: 'box', position: [-8.5, 0.5, 0], size: [1, 1, 32] },
       // The bottleneck walls
       { type: 'box', position: [1.5, 0.5, 0], size: [1, 1, 6] },
       { type: 'box', position: [-1.5, 0.5, 0], size: [1, 1, 6] },
@@ -102,6 +118,11 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -12],
     holeRadius: 0.2,
     obstacles: [
+        // Borders
+        { type: 'box', position: [0, 0.5, 15.5], size: [16, 1, 1] },
+        { type: 'box', position: [0, 0.5, -15.5], size: [16, 1, 1] },
+        { type: 'box', position: [8.5, 0.5, 0], size: [1, 1, 32] },
+        { type: 'box', position: [-8.5, 0.5, 0], size: [1, 1, 32] },
         { type: 'box', position: [0, 0.5, 5], size: [8, 1, 0.5] },
         { type: 'box', position: [-3, 0.5, -5], size: [2, 1, 0.5] },
         { type: 'box', position: [3, 0.5, -5], size: [2, 1, 0.5] },
@@ -128,6 +149,11 @@ export const levels: Level[] = [
     holePosition: [0, 0.01, -6],
     holeRadius: 0.25,
     obstacles: [
+      // Borders
+      { type: 'box', position: [0, 0.5, 15.5], size: [16, 1, 1] },
+      { type: 'box', position: [0, 0.5, -15.5], size: [16, 1, 1] },
+      { type: 'box', position: [8.5, 0.5, 0], size: [1, 1, 32] },
+      { type: 'box', position: [-8.5, 0.5, 0], size: [1, 1, 32] },
       // U-shaped structure
       { type: 'box', position: [6, 0.5, 0], size: [1, 1, 16] },
       { type: 'box', position: [-6, 0.5, 0], size: [1, 1, 16] },
@@ -165,7 +191,7 @@ export const levels: Level[] = [
       { type: 'box', position: [-12, 0.5, 0], size: [1, 1, 24] },
       { type: 'box', position: [12, 0.5, 0], size: [1, 1, 24] },
       
-      // New Maze layout
+      // Maze layout
       { type: 'box', position: [-4, 0.5, 8], size: [16, 1, 1] },
       { type: 'box', position: [4, 0.5, 4], size: [16, 1, 1] },
       { type: 'box', position: [-4, 0.5, 0], size: [16, 1, 1] },
