@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useRef, useEffect, MutableRefObject } from 'react';
@@ -36,10 +35,6 @@ export class Game {
   
   // Constants
   private gravity = new THREE.Vector3(0, -0.01, 0);
-
-  // Sound Effects
-  private sounds: { [key: string]: HTMLAudioElement } = {};
-
 
   // Callbacks
   private onStroke: () => void;
@@ -78,32 +73,10 @@ export class Game {
     this.mount.appendChild(this.renderer.domElement);
 
     this.addLights();
-    this.loadSounds();
     this.createLevel();
     this.bindEventHandlers();
     this.updateAimLine();
   }
-
-  private loadSounds() {
-    this.sounds.hit = new Audio('/sounds/hit.mp3');
-    this.sounds.collision = new Audio('/sounds/collision.mp3');
-    this.sounds.hole = new Audio('/sounds/hole.mp3');
-    this.sounds.reset = new Audio('/sounds/reset.mp3');
-    
-    // Set volume for all sounds
-    Object.values(this.sounds).forEach(sound => {
-        sound.volume = 0.7;
-    });
-  }
-
-  private playSound(soundName: string) {
-    const sound = this.sounds[soundName];
-    if (sound) {
-        sound.currentTime = 0; // Rewind to start
-        sound.play().catch(e => console.log("Sound play failed", e));
-    }
-  }
-
 
   private addLights() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
@@ -304,6 +277,11 @@ export class Game {
     this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown);
     this.renderer.domElement.addEventListener('pointermove', this.handlePointerMove);
     window.addEventListener('pointerup', this.handlePointerUp); // Use window for pointerup
+    
+    // Touch events
+    this.renderer.domElement.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+    this.renderer.domElement.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    window.addEventListener('touchend', this.handleTouchEnd);
   }
 
   private updateAimLine() {
@@ -365,6 +343,24 @@ export class Game {
     });
   }
   
+    private handleTouchStart = (event: TouchEvent) => {
+        if (event.touches.length === 1) {
+            event.preventDefault();
+            this.handlePointerDown(event.touches[0] as unknown as PointerEvent);
+        }
+    };
+
+    private handleTouchMove = (event: TouchEvent) => {
+        if (event.touches.length === 1) {
+            event.preventDefault();
+            this.handlePointerMove(event.touches[0] as unknown as PointerEvent);
+        }
+    };
+
+    private handleTouchEnd = (event: TouchEvent) => {
+         this.handlePointerUp();
+    };
+
   private handlePointerDown = (event: PointerEvent) => {
     if (this.isGamePaused() || this.isBallMoving || this.isHoleCompleted) return;
 
@@ -397,7 +393,6 @@ export class Game {
     const powerMultiplier = 0.007;
     this.ballVelocity.copy(this.aimDirection).multiplyScalar(this.chargePower * powerMultiplier);
     this.isBallMoving = true;
-    this.playSound('hit');
     this.onStroke();
 
     // Reset charge state
@@ -441,7 +436,6 @@ export class Game {
             // Check if the intersection is closer than the ball's intended movement
             if (intersection.distance <= movementDistance + ballRadius) {
                 collisionDetected = true;
-                this.playSound('collision');
                 const collisionNormal = intersection.face!.normal.clone();
                 // Make sure normal is pointing out of the face from the obstacle's perspective
                 collisionNormal.transformDirection(intersection.object.matrixWorld).normalize();
@@ -595,8 +589,6 @@ export class Game {
             this.ballVelocity.set(0, 0, 0); // Stop all movement
             this.ballMesh.position.copy(this.holeMesh.position).setY(this.holeMesh.position.y + ballRadius); // Center it
             
-            // Start the animations, don't just hide things
-            this.playSound('hole');
             this.onHoleComplete();
             return; // Exit update loop for this frame
         }
@@ -613,7 +605,6 @@ export class Game {
         // --- Out of Bounds Check ---
         const { x, y, z } = this.ballMesh.position;
         if (y < -2) { // Only reset if it falls below the boundaries
-            this.playSound('reset');
             this.onStroke(); // Penalty stroke
             this.ballMesh.position.fromArray(this.level.startPosition);
             this.ballVelocity.set(0, 0, 0);
@@ -642,6 +633,9 @@ export class Game {
     this.renderer.domElement.removeEventListener('pointerdown', this.handlePointerDown);
     this.renderer.domElement.removeEventListener('pointermove', this.handlePointerMove);
     window.removeEventListener('pointerup', this.handlePointerUp);
+    this.renderer.domElement.removeEventListener('touchstart', this.handleTouchStart);
+    this.renderer.domElement.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleTouchEnd);
 
 
     if (this.mount && this.renderer.domElement) {
@@ -709,7 +703,9 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]); // Key change: This effect now ONLY re-runs if the level changes.
 
-  return <div ref={mountRef} className="absolute top-0 left-0 w-full h-full" />;
+  return <div ref={mountRef} className="absolute top-0 left-0 w-full h-full touch-action-none" />;
 };
 
 export default GolfCanvas;
+
+    
