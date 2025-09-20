@@ -181,7 +181,7 @@ export const levels: Level[] = [
     id: 6,
     name: "The Labyrinth",
     par: 5,
-    startPosition: [-12, 0.2, 10],
+    startPosition: [-24, 0.2, 24],
     holePosition: [10, 0.01, -10],
     holeRadius: 0.3,
     obstacles: [
