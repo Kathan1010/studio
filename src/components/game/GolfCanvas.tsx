@@ -15,7 +15,7 @@ export class Game {
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
-  private aimLine: THREE.Mesh;
+  private aimLine: THREE.Line;
   private flagGroup: THREE.Group;
   private raycaster = new THREE.Raycaster();
   private interactionIndicator: THREE.Mesh;
@@ -277,10 +277,17 @@ export class Game {
     this.scene.add(this.flagGroup);
 
 
-    // Aim Line (now a cylinder)
-    const aimLineGeo = new THREE.CylinderGeometry(0.02, 0.02, 1, 8);
-    const aimLineMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.8 });
-    this.aimLine = new THREE.Mesh(aimLineGeo, aimLineMat);
+    // Aim Line (now a dashed line)
+    const aimLineMat = new THREE.LineDashedMaterial({ 
+        color: 0x00ff00, 
+        linewidth: 5, 
+        dashSize: 0.1, 
+        gapSize: 0.1,
+        transparent: true,
+        opacity: 0.8
+    });
+    const aimLineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+    this.aimLine = new THREE.Line(aimLineGeo, aimLineMat);
     this.aimLine.renderOrder = 999;
     (this.aimLine.material as THREE.Material).depthTest = false;
     (this.aimLine.material as THREE.Material).depthWrite = false;
@@ -326,7 +333,7 @@ export class Game {
         } else {
             powerColor.setHSL(0, 1, 0.5); // Red
         }
-        (this.aimLine.material as THREE.MeshBasicMaterial).color = powerColor;
+        (this.aimLine.material as THREE.LineDashedMaterial).color = powerColor;
 
     } else {
         this.aimLine.visible = false;
@@ -334,17 +341,13 @@ export class Game {
         this.setPower(0);
     }
     
-    if (lineLength > 0) {
-        // Update aim line cylinder
-        const startPoint = this.ballMesh.position;
-        const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
-        const midpoint = new THREE.Vector3().addVectors(startPoint, endPoint).multiplyScalar(0.5);
-        
-        this.aimLine.scale.y = lineLength;
-        this.aimLine.position.copy(midpoint);
-        this.aimLine.lookAt(endPoint);
-        this.aimLine.rotateX(Math.PI / 2); // Align cylinder along the aim direction
-    }
+    // Update aim line geometry and compute dashes
+    const startPoint = this.ballMesh.position.clone();
+    startPoint.y = 0.1; // Lift the line slightly off the ground
+    const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
+    
+    this.aimLine.geometry.setFromPoints([startPoint, endPoint]);
+    this.aimLine.computeLineDistances();
   }
   
   private handlePointerDown = (event: PointerEvent) => {
@@ -702,6 +705,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
