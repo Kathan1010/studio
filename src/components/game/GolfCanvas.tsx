@@ -357,7 +357,7 @@ export class Game {
         
         this.aimLine.scale.y = lineLength;
         this.aimLine.position.copy(midpoint);
-        this.aimLine.lookAt(endPoint);
+        thisain.lookAt(endPoint);
         this.aimLine.rotateX(Math.PI / 2); // Align cylinder along the aim direction
     }
   }
@@ -633,16 +633,22 @@ export class Game {
   public animate = () => {
     requestAnimationFrame(this.animate);
 
+    this.update();
+    
     // Occlusion Logic
-    // Render the outline first
-    (this.ballMesh.material as THREE.Material).depthFunc = THREE.GreaterDepth;
+    // 1. Render the outline with a material that shows it only when it's behind other objects.
+    (this.ballOutlineMesh.material as THREE.Material).depthFunc = THREE.GreaterDepth;
+    (this.ballMesh.material as THREE.Material).visible = false; // Hide the main ball temporarily
+
     this.renderer.render(this.scene, this.camera);
     
-    // Clear the depth buffer and render the main scene
+    // 2. Render the main scene, but clear the depth buffer first so the ball renders correctly.
     this.renderer.autoClear = false;
     this.renderer.clearDepth();
-    (this.ballMesh.material as THREE.Material).depthFunc = THREE.LessEqualDepth;
-    this.update();
+    
+    (this.ballOutlineMesh.material as THREE.Material).depthFunc = THREE.LessEqualDepth;
+    (this.ballMesh.material as THREE.Material).visible = true; // Make the main ball visible again
+
     this.renderer.render(this.scene, this.camera);
     this.renderer.autoClear = true;
   };
@@ -730,6 +736,7 @@ export default GolfCanvas;
     
 
     
+
 
 
 
