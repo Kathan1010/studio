@@ -5,6 +5,7 @@
 import React, { useRef, useEffect, MutableRefObject } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { Level } from '@/lib/levels';
 
 // --- A dedicated class to manage the Three.js game world ---
 export class Game {
@@ -279,7 +280,7 @@ export class Game {
 
     // Aim Line
     const dotCount = 10;
-    const dotGeo = new THREE.CircleGeometry(0.05, 16);
+    const dotGeo = new THREE.CircleGeometry(0.08, 16);
     const dotMat = new THREE.MeshBasicMaterial({ 
         color: 0x00ff00, 
         transparent: true,
@@ -712,10 +713,3 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 };
 
 export default GolfCanvas;
-
-    
-    
-
-    
-
-    
