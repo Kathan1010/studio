@@ -469,10 +469,10 @@ export class Game {
 
         // Fade out the flag
         if (this.flagGroup && this.flagGroup.visible) {
-            let flag faded = true;
+            let faded = true;
             this.flagGroup.traverse(child => {
-                if (child instanceof THREE.Mesh && child.material.opacity > 0) {
-                    child.material.opacity -= 0.05;
+                if (child instanceof THREE.Mesh && (child.material as THREE.Material).transparent && (child.material as THREE.Material).opacity > 0) {
+                    (child.material as THREE.Material).opacity -= 0.05;
                     faded = false;
                 }
             });
@@ -621,4 +621,5 @@ const GolfCanvas: React.FC<GolfCanvasProps> = ({ level, onStroke, onHoleComplete
 
 export default GolfCanvas;
 
+    
     
