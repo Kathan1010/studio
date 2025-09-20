@@ -15,7 +15,7 @@ export class Game {
   private holeMesh: THREE.Mesh;
   private obstacles: THREE.Mesh[] = [];
   private sandpits: THREE.Mesh[] = [];
-  private aimLine: THREE.Line;
+  private aimLineDots: THREE.Mesh[] = [];
   private flagGroup: THREE.Group;
   private raycaster = new THREE.Raycaster();
   private interactionIndicator: THREE.Mesh;
@@ -277,22 +277,25 @@ export class Game {
     this.scene.add(this.flagGroup);
 
 
-    // Aim Line (now a dashed line)
-    const aimLineMat = new THREE.LineDashedMaterial({ 
+    // Aim Line
+    const dotCount = 10;
+    const dotGeo = new THREE.CircleGeometry(0.05, 16);
+    const dotMat = new THREE.MeshBasicMaterial({ 
         color: 0x00ff00, 
-        linewidth: 5, 
-        dashSize: 0.1, 
-        gapSize: 0.1,
         transparent: true,
         opacity: 0.8
     });
-    const aimLineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
-    this.aimLine = new THREE.Line(aimLineGeo, aimLineMat);
-    this.aimLine.renderOrder = 999;
-    (this.aimLine.material as THREE.Material).depthTest = false;
-    (this.aimLine.material as THREE.Material).depthWrite = false;
-    this.aimLine.visible = false;
-    this.scene.add(this.aimLine);
+    dotMat.depthTest = false;
+    dotMat.depthWrite = false;
+
+    for (let i = 0; i < dotCount; i++) {
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.rotation.x = -Math.PI / 2;
+        dot.visible = false;
+        dot.renderOrder = 999;
+        this.aimLineDots.push(dot);
+        this.scene.add(dot);
+    }
   }
 
   private bindEventHandlers() {
@@ -303,19 +306,15 @@ export class Game {
   }
 
   private updateAimLine() {
-    if (this.isBallMoving || this.isHoleCompleted) {
-        this.aimLine.visible = false;
-        return;
-    }
+    const areDotsVisible = !(this.isBallMoving || this.isHoleCompleted);
     
     let lineLength = 0;
+    let powerColor = new THREE.Color(0x00ff00); // Default to green
 
     if (this.isDragging) {
-        this.aimLine.visible = true;
         const dragVector = this.dragCurrentPosition.clone().sub(this.dragStartPosition);
         const dragDistance = dragVector.length();
         
-        // Invert direction for aiming
         this.aimDirection.set(-dragVector.x, 0, -dragVector.y).normalize();
 
         const maxDrag = 80;
@@ -324,8 +323,6 @@ export class Game {
 
         lineLength = (this.chargePower / 100) * 4;
 
-        // Update color based on power
-        const powerColor = new THREE.Color();
         if (this.chargePower < 50) {
             powerColor.setHSL(0.33, 1, 0.5); // Green
         } else if (this.chargePower < 85) {
@@ -333,21 +330,38 @@ export class Game {
         } else {
             powerColor.setHSL(0, 1, 0.5); // Red
         }
-        (this.aimLine.material as THREE.LineDashedMaterial).color = powerColor;
 
     } else {
-        this.aimLine.visible = false;
         this.chargePower = 0;
         this.setPower(0);
     }
     
-    // Update aim line geometry and compute dashes
+    // Update aim line dots
     const startPoint = this.ballMesh.position.clone();
     startPoint.y = 0.1; // Lift the line slightly off the ground
-    const endPoint = startPoint.clone().add(this.aimDirection.clone().multiplyScalar(lineLength));
-    
-    this.aimLine.geometry.setFromPoints([startPoint, endPoint]);
-    this.aimLine.computeLineDistances();
+
+    this.aimLineDots.forEach((dot, index) => {
+        if (!areDotsVisible || !this.isDragging || lineLength <= 0) {
+            dot.visible = false;
+            return;
+        }
+        
+        dot.visible = true;
+        
+        // Position dots along the aim direction
+        const segmentLength = lineLength / this.aimLineDots.length;
+        const dotPosition = startPoint.clone().add(
+            this.aimDirection.clone().multiplyScalar((index + 1) * segmentLength)
+        );
+        dot.position.copy(dotPosition);
+
+        // Update color
+        (dot.material as THREE.MeshBasicMaterial).color = powerColor;
+        
+        // Make dots smaller as they get further away
+        const scale = 1.0 - (index / this.aimLineDots.length) * 0.5;
+        dot.scale.set(scale, scale, scale);
+    });
   }
   
   private handlePointerDown = (event: PointerEvent) => {
@@ -375,7 +389,7 @@ export class Game {
     if (this.chargePower < 5) { // Cancel shot if not enough power
         this.setPower(0);
         this.chargePower = 0;
-        this.aimLine.visible = false;
+        this.aimLineDots.forEach(d => d.visible = false);
         return;
     }
 
@@ -388,7 +402,7 @@ export class Game {
     // Reset charge state
     this.setPower(0);
     this.chargePower = 0;
-    this.aimLine.visible = false;
+    this.aimLineDots.forEach(d => d.visible = false);
   };
 
   private handleResize = () => {
@@ -705,13 +719,3 @@ export default GolfCanvas;
     
 
     
-
-
-
-
-
-
-
-
-
-
